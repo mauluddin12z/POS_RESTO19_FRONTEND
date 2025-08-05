@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState, FormEvent, useEffect } from "react";
-import { login } from "@/utils/auth";
+import React, { useState, FormEvent } from "react";
+import { login } from "@/app/api/auth";
 
 export default function Page() {
    const [username, setUsername] = useState<string>("");
@@ -13,7 +13,7 @@ export default function Page() {
       e.preventDefault();
       try {
          await login(username, password);
-         router.push("/dashboard");
+         router.push("/home");
       } catch (error: any) {
          setMessage(error?.message || "An error occurred.");
          setTimeout(() => {
@@ -22,7 +22,7 @@ export default function Page() {
       }
    };
    return (
-      <div className="w-full h-screen flex justify-center items-center relative border overflow-hidden">
+      <div className="w-full h-screen flex justify-center items-center relative overflow-hidden">
          <div className="absolute w-1/2 aspect-square rounded-full bg-red-600/10 top-[-50%] left-0 translate-x-[-50%] blur-2xl"></div>
          <div className="absolute w-1/2 aspect-square rounded-full bg-blue-600/10 bottom-[-50%] right-0 translate-x-[50%] blur-2xl"></div>
          <div className="px-14 py-14 flex flex-col justify-center border border-gray-200 rounded-lg shadow-sm bg-white">

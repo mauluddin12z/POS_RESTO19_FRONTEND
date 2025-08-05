@@ -1,1 +1,6 @@
 @import "tailwindcss";
+.truncates {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

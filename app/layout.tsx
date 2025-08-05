@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import '../utils/fontawesome';
+import './utils/fontawesome';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "POS RESTO 19",
-  description: "POS RESTO 19",
+  title: "Pempek & Resto 19",
+  description: "Pempek & Resto 19",
 };
 
 export default function RootLayout({

@@ -10,14 +10,14 @@ export function middleware(req: NextRequest) {
    // If user is not logged in and tries to access a protected route
    if (
       !isLoggedIn &&
-      ["/dashboard", "/menus", "/categories"].includes(pathname)
+      ["/home", "/menus", "/categories"].includes(pathname)
    ) {
       return NextResponse.redirect(new URL("/login", req.url));
    }
 
    // If user is logged in and tries to access login page
    if (isLoggedIn && pathname === "/login") {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+      return NextResponse.redirect(new URL("/home", req.url));
    }
 
    // Otherwise, allow request to continue
@@ -25,5 +25,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-   matcher: ["/dashboard", "/menus", "/categories", "/login"],
+   matcher: ["/home", "/menus", "/categories", "/login"],
 };

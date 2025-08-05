@@ -2,30 +2,20 @@
 import React, { ReactNode, useEffect } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import useAuth from "@/utils/authProvider";
-import { useRouter } from "next/navigation";
 
 interface MainLayoutProps {
    children: ReactNode;
 }
 
 export default function MainLayout({ children }: MainLayoutProps) {
-   const { isLoggedIn, user } = useAuth();
-   const router = useRouter();
-   useEffect(() => {
-      if (!isLoggedIn) {
-      }
-   }, []);
-
    return (
-      <div className="flex flex-col w-full h-screen bg-white text-gray-900">
-         <Header />
-         <div className="flex w-full h-full">
+      <div className="bg-white text-gray-900">
+         <div className="flex">
+            {/* Fixed Sidebar */}
             <Sidebar />
-            <main className="p-4 flex-1 overflow-y-auto">
-               <div className="flex min-h-full border border-gray-200 rounded-lg p-4">
-                  {children}
-               </div>
+            {/* Main Content */}
+            <main className="sm:ml-24 ml-14 sm:p-4 p-2 w-full max-w-[calc(100vw-3.5rem)] sm:max-w-[calc(100vw-6rem)] bg-white">
+               {children}
             </main>
          </div>
       </div>

@@ -1,0 +1,68 @@
+import Image from "next/image";
+import {
+   MenuGridPropsInterface,
+} from "../types";
+import ProductCard from "./ProductCard";
+import SkeletonLoading from "./SkeletonLoading";
+
+const MenuGrid: React.FC<MenuGridPropsInterface> = ({
+   menus,
+   loading,
+   onAddToCart,
+}) => {
+   if (loading) {
+      return (
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[...Array(8)].map((_, index) => (
+               <div
+                  key={index}
+                  className="w-full h-fit flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm"
+               >
+                  <div className="w-full h-full">
+                     <Image
+                        className="rounded-t-lg w-full object-cover"
+                        src="/no-image.png"
+                        width={500}
+                        height={500}
+                        alt="No Image Available"
+                        priority
+                     />
+                  </div>
+                  <div className="p-4 flex flex-col gap-y-2">
+                     <div className="w-full h-3">
+                        <SkeletonLoading />
+                     </div>
+                     <div className="w-full h-3">
+                        <SkeletonLoading />
+                     </div>
+                  </div>
+               </div>
+            ))}
+         </div>
+      );
+   }
+
+   if (menus?.length === 0)
+      return (
+         <div className="flex justify-center items-center h-[calc(100vh-12rem)]">
+            <span className="text-gray-400">No menus available.</span>
+         </div>
+      );
+   return (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+         {menus?.map((menu, index) => (
+            <ProductCard
+               key={index}
+               id={menu.menuId}
+               productName={menu.menuName}
+               productImageUrl={menu.menuImageUrl}
+               productPrice={menu.price}
+               stock={menu.stock}
+               onAddToCart={onAddToCart}
+            />
+         ))}
+      </div>
+   );
+};
+
+export default MenuGrid;

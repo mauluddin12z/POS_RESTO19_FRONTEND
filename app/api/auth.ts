@@ -17,18 +17,17 @@ export const refreshAccessToken = async (): Promise<string | null> => {
       if (accessToken) {
          return accessToken;
       }
-
+      window.location.href = "/login";
       return null;
    } catch (error: any) {
       console.error("Failed to refresh access token:", error.message || error);
+      window.location.href = "/login";
       return null;
    }
 };
 
-
-
 // Login user
-export const login = async (username: string, password: string) => {
+export const login = async (username:string, password:string) => {
    try {
       const response = await axios.post(
          `${process.env.NEXT_PUBLIC_MY_BACKEND_URL}/login`,
@@ -45,9 +44,7 @@ export const login = async (username: string, password: string) => {
 // Logout user
 export const logout = async (): Promise<void> => {
    try {
-      await axiosInstance.delete(`${API_BASE_URL}/logout`, {
-         withCredentials: true,
-      });
+      await axiosInstance.delete(`/logout`, {});
    } catch (error: any) {
       console.warn("Logout request failed", error.message || error);
    }

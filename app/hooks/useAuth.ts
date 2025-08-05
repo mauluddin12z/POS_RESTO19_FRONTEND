@@ -1,5 +1,5 @@
 "use client";
-import axiosInstance from "@/utils/axiosInstance";
+import axiosInstance from "@/app/api/axiosInstance";
 import React, { useEffect, useState } from "react";
 
 function useAuth() {
