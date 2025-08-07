@@ -1,6 +1,10 @@
 import useSWR from "swr";
 import axiosInstance from "./axiosInstance";
-import { AddMenuFormInterface, EditMenuFormInterface, MenuFilterInterface } from "@/app/types";
+import {
+   AddMenuFormInterface,
+   EditMenuFormInterface,
+   MenuFilterInterface,
+} from "@/app/types";
 
 // ----------------------------
 // Query Params Utility
@@ -41,14 +45,14 @@ export const getMenuById = async (menuId: number) => {
    return response.data;
 };
 
-export const createMenu = async (menuData: AddMenuFormInterface) => {
+export const createMenu = async (menuData: FormData) => {
    const response = await axiosInstance.post("/menu", menuData);
    return response.data;
 };
 
 export const updateMenu = async (
    id: string | number,
-   updatedData: EditMenuFormInterface
+   updatedData: FormData
 ) => {
    const response = await axiosInstance.patch(`/menu/${id}`, updatedData);
    return response.data;
@@ -64,7 +68,7 @@ export const deleteMenu = async (id: string | number) => {
 // ----------------------------
 
 export const useMenus = (filters: MenuFilterInterface) => {
-   const key = filters ? ["menus", filters] : null;
+   const key = filters ? ["menus", filters] : "menus";
 
    const {
       data: response,

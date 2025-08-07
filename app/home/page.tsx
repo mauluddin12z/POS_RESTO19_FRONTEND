@@ -1,21 +1,21 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import MainLayout from "../components/MainLayout";
-import MenuFilters from "../components/MenuFilters";
-import MenuGrid from "../components/MenuGrid";
-import Cart from "../components/Cart";
-import Pagination from "../components/Pagination";
+import MainLayout from "../components/layout/MainLayout";
+import MenuFilters from "../components/menu/MenuFilters";
+import MenuGrid from "../components/menu/MenuGrid";
+import Pagination from "../components/ui/Pagination";
 import useCart from "@/app/hooks/useCart";
-import useCheckout from "@/app/hooks/useCheckout";
 import { useMenus } from "@/app/api/menuServices";
 import useAuth from "@/app/hooks/useAuth";
 import { MenuFilterInterface, UserInterface } from "../types";
-import PaymentSuccessful from "../components/PaymentSuccessful";
-import { useSales } from "@/app/api/saleServices";
-import MenuSearch from "../components/MenuSearch";
-import ShowCartModalButton from "../components/ShowCartModalButton";
 import { useCategories } from "../api/categoryServices";
-import Modal from "../components/Modal";
+import Modal from "../components/ui/Modal";
+import Search from "../components/ui/Search";
+import Alert from "../components/ui/Alert";
+import { useOrders } from "../api/orderServices";
+import Cart from "../components/cart/Cart";
+import ShowCartModalButton from "../components/cart/ShowCartModalButton";
+import useOrderActions from "../hooks/useOrderActions";
 
 export default function Page() {
    const { user } = useAuth() as { user: UserInterface | null };
@@ -26,7 +26,7 @@ export default function Page() {
       minPrice: null,
       maxPrice: null,
       searchQuery: "",
-      sortBy: "menuName",
+      sortBy: "categoryId",
       sortOrder: "asc",
       page: 1,
       pageSize: 8,
@@ -56,27 +56,25 @@ export default function Page() {
       return () => clearTimeout(timeout);
    }, [searchQuery]);
 
-
    const {
       cart,
       setCart,
       handleAddToCart,
       handleRemove,
       handleQuantityChange,
+      handleNotesChange,
       stockMessage,
-      handlePaymentMethod,
-      handleNotes,
    } = useCart();
 
    // Handle Checkout
-   const { handleCheckout, loading, error, paymentSuccessVisible } =
-      useCheckout({
+   const { handleOrder, alert, handleCloseAlert, isSubmitting } =
+      useOrderActions({
          cart,
          user,
          setCart,
       });
 
-   const { sales } = useSales();
+   const { orders } = useOrders();
 
    const [IsCartOpen, setIsCartOpen] = useState(false);
    const closeCart = () => setIsCartOpen(false);
@@ -86,7 +84,7 @@ export default function Page() {
             <div className="flex flex-col w-full gap-2 p-2 border border-gray-200 rounded-lg">
                <div className="flex flex-col md:flex-row gap-2">
                   {/* Search Input */}
-                  <MenuSearch
+                  <Search
                      searchQuery={searchQuery}
                      setSearchQuery={setSearchQuery}
                   />
@@ -117,16 +115,16 @@ export default function Page() {
             </div>
             <Modal isOpen={IsCartOpen} onClose={closeCart}>
                <Cart
-                  orderId={sales?.length}
+                  orderId={orders?.data[0]?.orderId}
                   cart={cart}
                   cartItems={cart.cartItems}
                   onRemove={handleRemove}
                   onQuantityChange={handleQuantityChange}
-                  onPaymentMethod={handlePaymentMethod}
-                  onOrderNotes={handleNotes}
-                  onCheckout={handleCheckout}
+                  onNotesChange={handleNotesChange}
+                  onOrder={handleOrder}
                   stockMessage={stockMessage}
                   closeCart={closeCart}
+                  isSubmitting={isSubmitting}
                />
             </Modal>
             <ShowCartModalButton
@@ -135,20 +133,26 @@ export default function Page() {
             />
             <div className="hidden lg:flex w-96 bg-white md:max-h-[calc(100vh-5rem)] lg:max-h-[calc(100vh-2rem)] sticky top-4 right-0">
                <Cart
-                  orderId={sales?.length}
+                  orderId={orders?.data?.length}
                   cart={cart}
                   cartItems={cart.cartItems}
                   onRemove={handleRemove}
                   onQuantityChange={handleQuantityChange}
-                  onPaymentMethod={handlePaymentMethod}
-                  onOrderNotes={handleNotes}
-                  onCheckout={handleCheckout}
+                  onNotesChange={handleNotesChange}
+                  onOrder={handleOrder}
                   stockMessage={stockMessage}
                   closeCart={closeCart}
+                  isSubmitting={isSubmitting}
                />
             </div>
          </div>
-         {paymentSuccessVisible && <PaymentSuccessful />}
+         {alert && (
+            <Alert
+               type={alert.type}
+               message={alert.message}
+               onClose={handleCloseAlert}
+            />
+         )}
       </MainLayout>
    );
 }

@@ -1,6 +1,6 @@
+import { ShowCartModalButtonProps } from "@/app/types";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ShowCartModalButtonProps } from "../types";
 
 export default function ShowCartModalButton({
    setCartModalVisible,

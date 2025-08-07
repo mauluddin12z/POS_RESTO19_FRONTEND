@@ -8,8 +8,6 @@ import { useEffect, useState } from "react";
 const useCart = () => {
    const [cart, setCart] = useState<CartInterface>({
       total: "0",
-      paymentMethod: "",
-      notes: "",
       cartItems: [],
    });
 
@@ -21,7 +19,7 @@ const useCart = () => {
       if (!stored) return;
       try {
          const parsed: CartInterface = JSON.parse(stored);
-         if (parsed && parsed.cartItems && Array.isArray(parsed.cartItems)) {
+         if (parsed && Array.isArray(parsed.cartItems)) {
             setCart(parsed);
          }
       } catch (err) {
@@ -34,127 +32,147 @@ const useCart = () => {
       localStorage.setItem("cart", JSON.stringify(cart));
    }, [cart]);
 
-   // Ensure quantity doesn't exceed stock and handle stockMessage
+   // Ensure quantity doesn't exceed stock
    const getValidQuantity = (quantity: number, stock: number) => {
       if (quantity > stock) {
-         setStockMessage(`Out of stock.`);
-         return stock; // Cap the quantity at stock level
+         setStockMessage("Out of stock.");
+         return stock;
       }
-      if (quantity < stock) {
-         setStockMessage(""); // Clear message if quantity is valid
-      }
+      setStockMessage("");
       return quantity;
    };
 
-   // Handle adding items to the cart
+   // Utility to calculate subtotal and total
+   const calculateTotals = (cartItems: CartItemInterface[]) => {
+      const updatedCartItems = cartItems.map((item) => ({
+         ...item,
+         subtotal: parseFloat((item.price * item.quantity).toFixed(2)),
+      }));
+
+      const total = updatedCartItems
+         .reduce((acc, item) => acc + item.subtotal, 0)
+         .toFixed(2);
+
+      return { updatedCartItems, total };
+   };
+
+   // Add to cart
    const handleAddToCart = (product: ProductInterface) => {
       setCart((prev: CartInterface) => {
          const existingItem = prev.cartItems.find(
             (item) => item.id === product.id
          );
 
-         const updatedCartItems = existingItem
-            ? prev.cartItems.map((item) =>
-                 item.id === product.id
-                    ? {
-                         ...item,
-                         quantity: getValidQuantity(
-                            item.quantity + 1,
-                            product.stock
-                         ),
-                      }
-                    : item
-              )
-            : [
-                 ...prev.cartItems,
-                 { ...product, quantity: 1 }, // New item starts with quantity 1
-              ];
+         let updatedItems: CartItemInterface[];
 
-         const updatedTotal = updatedCartItems
-            .reduce(
-               (accumulator: number, item: CartItemInterface) =>
-                  accumulator + item.price * item.quantity,
-               0
-            )
-            .toFixed(2);
+         if (existingItem) {
+            updatedItems = prev.cartItems.map((item) =>
+               item.id === product.id
+                  ? {
+                       ...item,
+                       quantity: getValidQuantity(
+                          item.quantity + 1,
+                          product.stock
+                       ),
+                    }
+                  : item
+            );
+         } else {
+            updatedItems = [
+               ...prev.cartItems,
+               {
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  quantity: 1,
+                  subtotal: product.price,
+                  notes: "",
+                  stock: product.stock,
+               },
+            ];
+         }
 
-         return { ...prev, cartItems: updatedCartItems, total: updatedTotal };
+         const { updatedCartItems, total } = calculateTotals(updatedItems);
+
+         return {
+            ...prev,
+            cartItems: updatedCartItems,
+            total,
+         };
       });
    };
 
-   // Handle removing items from the cart
+   // Remove from cart
    const handleRemove = (id: number | null) => {
       setCart((prev: CartInterface) => {
          if (id === 0) {
-            return { ...prev, cartItems: [], total: "0.00" };
+            return { ...prev, cartItems: [], total: "0" };
          }
 
-         const updatedCartItems = prev.cartItems.filter(
-            (item) => item.id !== id
-         );
+         const updatedItems = prev.cartItems.filter((item) => item.id !== id);
+         const { updatedCartItems, total } = calculateTotals(updatedItems);
 
-         const updatedTotal = updatedCartItems
-            .reduce(
-               (accumulator: number, item: CartItemInterface) =>
-                  accumulator + item.price * item.quantity,
-               0
-            )
-            .toFixed(2);
-
-         return { ...prev, cartItems: updatedCartItems, total: updatedTotal };
+         return {
+            ...prev,
+            cartItems: updatedCartItems,
+            total,
+         };
       });
    };
 
-   // Handle changing item quantity in the cart
+   // Update quantity
    const handleQuantityChange = (id: number, quantity: number) => {
       if (quantity <= 0) return handleRemove(id);
+
       setCart((prev: CartInterface) => {
-         const updatedCartItems = prev.cartItems.map((item) =>
+         const updatedItems = prev.cartItems.map((item) =>
             item.id === id
                ? {
                     ...item,
-                    quantity: getValidQuantity(quantity, item.stock), // Ensure quantity doesn't exceed stock
+                    quantity: getValidQuantity(quantity, item.stock),
                  }
                : item
          );
 
-         const updatedTotal = updatedCartItems
-            .reduce(
-               (accumulator: number, item: CartItemInterface) =>
-                  accumulator + item.price * item.quantity,
-               0
-            )
-            .toFixed(2);
+         const { updatedCartItems, total } = calculateTotals(updatedItems);
 
-         return { ...prev, cartItems: updatedCartItems, total: updatedTotal };
+         return {
+            ...prev,
+            cartItems: updatedCartItems,
+            total,
+         };
       });
    };
 
-   // Handle the payment method
-   const handlePaymentMethod = (paymentMethod: string) => {
-      setCart((prevCart) => ({
-         ...prevCart,
-         paymentMethod: paymentMethod, // Update only the payment method
-      }));
-   };
+   // Update notes for a specific cart item
+   const handleNotesChange = (id: number, newNotes: string) => {
+      setCart((prev: CartInterface) => {
+         const updatedItems = prev.cartItems.map((item) =>
+            item.id === id
+               ? {
+                    ...item,
+                    notes: newNotes,
+                 }
+               : item
+         );
 
-   // Handle notes
-   const handleNotes = (notes: string) => {
-      setCart((prevCart) => ({
-         ...prevCart,
-         notes: notes, // Update only the payment method
-      }));
-   };
+         const { updatedCartItems, total } = calculateTotals(updatedItems);
 
+         return {
+            ...prev,
+            cartItems: updatedCartItems,
+            total,
+         };
+      });
+   };
    return {
       cart,
       setCart,
       handleAddToCart,
       handleRemove,
       handleQuantityChange,
+      handleNotesChange,
       stockMessage,
-      handlePaymentMethod,
-      handleNotes,
    };
 };
 

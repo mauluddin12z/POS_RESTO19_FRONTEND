@@ -1,7 +1,7 @@
+import { ProductCardPropsInterface } from "@/app/types";
 import { priceFormat } from "@/app/utils/priceFormat";
 import Image, { ImageLoader } from "next/image";
 import React from "react";
-import { ProductCardPropsInterface } from "../types";
 
 export default function ProductCard({
    id,
@@ -27,7 +27,7 @@ export default function ProductCard({
             </div>
          )}
          <Image
-            className="w-full aspect-5/4 object-cover"
+            className="w-full aspect-5/4 hover:object-contain object-cover"
             loader={myLoader}
             src={productImageUrl ?? "no-image.png"}
             width={500}

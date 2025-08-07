@@ -1,9 +1,9 @@
 import Image from "next/image";
 import {
    MenuGridPropsInterface,
-} from "../types";
+} from "../../types";
+import SkeletonLoading from "../ui/SkeletonLoading";
 import ProductCard from "./ProductCard";
-import SkeletonLoading from "./SkeletonLoading";
 
 const MenuGrid: React.FC<MenuGridPropsInterface> = ({
    menus,

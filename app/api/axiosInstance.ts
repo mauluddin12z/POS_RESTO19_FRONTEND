@@ -6,7 +6,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_MY_BACKEND_URL as string;
 const axiosInstance = axios.create({
    baseURL: API_BASE_URL,
    headers: {
-      "Content-Type": "application/json",
+      "Content-type": "multipart/form-data"
    },
    withCredentials: true,
 });

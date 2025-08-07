@@ -14,6 +14,14 @@ export interface MenuInterface {
    categoryId: number | null;
    category: CategoryInterface;
 }
+export interface AddMenuFormInterface {
+   menuName: string;
+   menuDescription: string;
+   price: number;
+   stock: number;
+   categoryId: number | null;
+   menuImage?: File | null;
+}
 
 export interface EditMenuFormInterface {
    menuId: number;
@@ -22,25 +30,39 @@ export interface EditMenuFormInterface {
    price: number;
    stock: number;
    categoryId: number | null;
-   image?: File | null;
+   menuImage?: File | null;
+   imagePreview?: string;
 }
-export interface AddMenuFormInterface {
-   menuName: string;
-   menuDescription: string;
-   price: number;
-   stock: number;
-   categoryId: number | null;
-   image?: File | null;
+export interface AddUserFormInterface {
+   name: string;
+   username: string;
+   password: string;
+   role: string;
+}
+export interface EditUserFormInterface {
+   userId: number;
+   name: string;
+   username: string;
+   password: string;
+   role: string;
+}
+
+export type AlertType = "success" | "error" | "warning" | "info";
+
+export interface AlertPropsInterface {
+   type: AlertType;
+   message: string;
+   onClose: () => void;
 }
 
 export interface MenuFilterInterface {
-   categoryId: number | null;
+   categoryId?: number | null;
    categoryName?: string;
    menuName?: string;
    minPrice?: number | null;
    maxPrice?: number | null;
    searchQuery?: string;
-   sortBy?: "menuName" | "category" | "price" | "stock";
+   sortBy?: "menuName" | "categoryId" | "price" | "stock";
    sortOrder?: "asc" | "desc";
    page?: number | null;
    pageSize?: number | null;
@@ -69,25 +91,20 @@ export interface MenuGridPropsInterface {
    loading: boolean;
    onAddToCart: (product: ProductInterface) => void;
 }
-export interface MenuPropsInterface {
-   menus: MenuInterface[];
-   loading: boolean;
-}
 
 // Cart Interfaces
 export interface CartInterface {
    total: string;
-   paymentMethod: string;
-   notes: string;
    cartItems: CartItemInterface[];
 }
 
 export interface CartItemInterface {
    id: number;
    name: string;
-   image: string;
    price: number;
    quantity: number;
+   subtotal: number;
+   notes: string;
    stock: number;
 }
 
@@ -98,25 +115,17 @@ export interface CartPropsInterface {
    stockMessage: string;
    onRemove: (id: number) => void;
    onQuantityChange: (id: number, quantity: number) => void;
-   onCheckout: () => void;
-   onPaymentMethod: (paymentMethod: string) => void;
-   onOrderNotes: (notes: string) => void;
+   onNotesChange: (id: number, notes: string) => void;
+   onOrder: () => void;
+   isSubmitting: boolean;
    closeCart: () => void;
 }
-
-export interface CartModalPropsInterface {
-   orderId: number | null;
-   cart: CartInterface;
-   cartItems: CartItemInterface[];
-   setCart: React.Dispatch<React.SetStateAction<CartInterface>>;
+export interface CartItemPropsInterface {
+   item: CartItemInterface;
    stockMessage: string;
-   onRemove: (id: number) => void;
    onQuantityChange: (id: number, quantity: number) => void;
-   onCheckout: () => void;
-   onPaymentMethod: (paymentMethod: string) => void;
-   onOrderNotes: (notes: string) => void;
-   cartModalVisible: boolean;
-   setCartModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+   onNotesChange: (id: number, notes: string) => void;
+   onRemove: (id: number) => void;
 }
 
 export interface ShowCartModalButtonProps {
@@ -124,38 +133,34 @@ export interface ShowCartModalButtonProps {
    cartItemLength: number | null;
 }
 
-// Checkout Interfaces
-export interface PaymentMethodPropsInterface {
-   paymentOptions: string[]; // Predefined payment methods could be improved with an Enum
-   onPaymentMethod: (paymentMethod: string) => void;
-   currentPaymentMethod: string;
-}
-
-export interface OrderNotesPropsInterface {
-   onOrderNotes: (notes: string) => void;
-   currentOrderNotes: string;
-}
-
 // User Interface (for login or user info)
 export interface UserInterface {
    userId: number;
+   name: string;
    username: string;
    password: string;
    role: string;
 }
 
-// Sale Interface (related to sales transactions)
-export interface SaleInterface {
-   userId: number;
+// Order Interface (related to orders transactions)
+export interface OrderInterface {
+   orderId: number;
+   createdAt: string;
+   orderDetails: OrderDetailInterface[];
    total: number;
-   paymentMethod: string;
-   notes: string;
+   subtotal: number;
+   paymentMethod?: string;
+   paymentStatus?: string;
 }
 
-export interface UseCheckoutPropsInterface {
-   cart: CartInterface;
-   user: UserInterface | null;
-   setCart: React.Dispatch<React.SetStateAction<CartInterface>>;
+export interface OrderDetailInterface {
+   quantity: number;
+   menu: {
+      menuName: string;
+   };
+   price: number;
+   subtotal: number;
+   notes: string;
 }
 
 // Pagination Interface
@@ -173,6 +178,6 @@ export interface PaginationPropsInterface {
 export interface CategoryCardPropsInterface {
    categoryId: number | null;
    categoryName: string;
-   activeCategoryId: number | null;
+   activeCategoryId: number | null | undefined;
    onClick: (categoryId: number | null, categoryName: string) => void;
 }

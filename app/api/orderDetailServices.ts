@@ -2,16 +2,16 @@ import useSWR from "swr";
 import axiosInstance from "./axiosInstance";
 
 // Fetcher function for SWR (using axios)
-export const fetchSaleDetails = async () => {
-   const res = await axiosInstance.get(`/sale-details`);
+export const fetchOrderDetails = async () => {
+   const res = await axiosInstance.get(`/order-details`);
    return res.data.data;
 };
 
-export const useSaleDetails = () => {
-   // Using SWR to fetch salesDetails
+export const useOrderDetails = () => {
+   // Using SWR to fetch orderDetails
    const { data, error, isValidating } = useSWR(
-      "sale-details",
-      fetchSaleDetails,
+      "order-details",
+      fetchOrderDetails,
       {
          revalidateOnFocus: false,
          revalidateOnReconnect: false,
@@ -20,14 +20,14 @@ export const useSaleDetails = () => {
 
    // Return loading state, data, and error
    return {
-      salesDetail: data,
+      orderDetail: data,
       isLoading: isValidating,
       isError: error,
    };
 };
 
-// create sale detail function
-export const createSaleDetail = async (formData: any) => {
-   const res = await axiosInstance.post(`/sale-detail`, formData);
+// create order detail function
+export const createOrderDetail = async (formData: any) => {
+   const res = await axiosInstance.post(`/order-detail`, formData);
    return res.data;
 };

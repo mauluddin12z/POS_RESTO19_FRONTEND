@@ -1,16 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import MainLayout from "../components/MainLayout";
+import MainLayout from "../components/layout/MainLayout";
 import { useMenus } from "../api/menuServices";
 import { MenuFilterInterface, MenuInterface } from "../types";
-import Image, { ImageLoader } from "next/image";
-import MenuTable from "../components/MenuTable";
-import MenuSearch from "../components/MenuSearch";
-import Pagination from "../components/Pagination";
-import AddMenuForm from "../components/AddMenuForm";
-import Link from "next/link";
-import EditMenuForm from "../components/EditMenuForm";
-import Modal from "../components/Modal";
+import MenuTable from "../components/menu/MenuTable";
+import Pagination from "../components/ui/Pagination";
+import Modal from "../components/ui/Modal";
+import Search from "../components/ui/Search";
+import AddMenuForm from "../components/menu/AddMenuForm";
 
 export default function page() {
    const [searchQuery, setSearchQuery] = useState("");
@@ -20,12 +17,12 @@ export default function page() {
       minPrice: null,
       maxPrice: null,
       searchQuery: "",
-      sortBy: "menuName",
+      sortBy: "price",
       sortOrder: "asc",
       page: 1,
       pageSize: 5,
    });
-   const { menus, isLoading: loadingMenus } = useMenus(filters);
+   const { menus, isLoading: loadingMenus, mutate } = useMenus(filters);
    // Debounce search query update
    useEffect(() => {
       const timeout = setTimeout(() => {
@@ -40,13 +37,11 @@ export default function page() {
    const [IsAddModalOpen, setIsAddModalOpen] = useState(false);
    const openAddModal = () => setIsAddModalOpen(true);
    const closeAddModal = () => setIsAddModalOpen(false);
-
-   const [editModalVisible, setEditModalVisible] = useState(false);
    return (
       <MainLayout>
          <div className="flex flex-col w-full gap-2 p-2 border border-gray-200 rounded-lg">
-            <div className="flex flex-wrap w-full justify-between">
-               <MenuSearch
+            <div className="flex flex-wrap w-full justify-between gap-2">
+               <Search
                   searchQuery={searchQuery}
                   setSearchQuery={setSearchQuery}
                />
@@ -57,7 +52,11 @@ export default function page() {
                   Add menu
                </button>
             </div>
-            <MenuTable menus={menus?.data} loading={loadingMenus} />
+            <MenuTable
+               menus={menus?.data}
+               loading={loadingMenus}
+               mutate={mutate}
+            />
             <div className="flex justify-center items-center">
                <Pagination
                   totalItems={menus?.pagination?.totalItems}
@@ -72,7 +71,7 @@ export default function page() {
          </div>
 
          <Modal isOpen={IsAddModalOpen} onClose={closeAddModal}>
-            <AddMenuForm />
+            <AddMenuForm closeAddModal={closeAddModal} mutate={mutate} />
          </Modal>
       </MainLayout>
    );

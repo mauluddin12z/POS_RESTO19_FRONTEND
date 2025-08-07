@@ -12,21 +12,28 @@ export const fetchUsers = async () => {
    return response.data.data; // Adjust if your API returns differently
 };
 
+//get user by id
+export const getUserById = async (userId: number) => {
+   const response = await axiosInstance.get(`/user/${userId}`);
+   return response.data;
+};
+
 // Create a new user
 export const createUser = async (userData: any) => {
-   const response = await axiosInstance.post("/users", userData);
-   return response.data.data;
+   const response = await axiosInstance.post("/user", userData);
+   return response.data;
 };
 
 // Update a user by ID
 export const updateUser = async (id: string | number, updatedData: any) => {
-   const response = await axiosInstance.patch(`/users/${id}`, updatedData);
-   return response.data.data;
+   console.log("test")
+   const response = await axiosInstance.patch(`/user/${id}`, updatedData);
+   return response.data;
 };
 
 // Delete a user by ID
 export const deleteUser = async (id: string | number) => {
-   const response = await axiosInstance.delete(`/users/${id}`);
+   const response = await axiosInstance.delete(`/user/${id}`);
    return response.data;
 };
 

@@ -1,12 +1,12 @@
 import React from "react";
+import SkeletonLoading from "../ui/SkeletonLoading";
 import CategoryCard from "./CategoryCard";
-import SkeletonLoading from "./SkeletonLoading";
 
 interface Props {
    categories: { categoryId: number; categoryName: string }[];
-   activeCategoryId: number | null;
-   onCategoryClick: (id: number | null) => void;
+   activeCategoryId: number | null | undefined;
    loadingCategories: boolean;
+   onCategoryClick: (id: number | null) => void;
 }
 
 const MenuFilters: React.FC<Props> = ({

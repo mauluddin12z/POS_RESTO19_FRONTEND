@@ -1,42 +1,32 @@
+import { CartPropsInterface } from "@/app/types";
 import { priceFormat } from "@/app/utils/priceFormat";
-import {
-   faCartShopping,
-   faMinus,
-   faPlus,
-   faTrashAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image, { ImageLoader } from "next/image";
-import React, { useState } from "react";
-import { CartPropsInterface } from "../types";
-import OrderNotes from "./OrderNotes";
+import React from "react";
 import CartItem from "./CartItem";
-import PaymentMethod from "./PaymentMethod";
-
 const Cart: React.FC<CartPropsInterface> = ({
    orderId,
-   cart,
    cartItems,
    stockMessage,
    onRemove,
    onQuantityChange,
-   onPaymentMethod,
-   onOrderNotes,
-   onCheckout,
+   onNotesChange,
+   onOrder,
+   isSubmitting,
    closeCart,
 }) => {
    const total = cartItems.reduce(
       (sum, cartItems) => sum + cartItems.price * cartItems.quantity,
       0
    );
-   const paymentOptions = ["QRIS", "CASH", "BANK"];
 
    return (
-      <aside className="w-full h-full overflow-y-auto flex flex-col border border-gray-200 rounded-lg px-4 bg-white">
+      <div className="w-full h-full overflow-y-auto flex flex-col border border-gray-200 rounded-lg px-4 bg-white">
          <div className="flex justify-between  mb-2 pb-2 border-b border-gray-200 gap-x-2 items-center sticky top-0 bg-white pt-4">
             <h2 className="text-lg font-semibold">
                <FontAwesomeIcon icon={faCartShopping} />
-               Order #{cartItems.length === 0 ? "" : orderId ? orderId + 1 : 1}
+               Order #
+               {cartItems.length === 0 ? "" : orderId ? orderId + 1 : "1"}
             </h2>
             <button
                onClick={() => {
@@ -60,6 +50,7 @@ const Cart: React.FC<CartPropsInterface> = ({
                      item={item}
                      stockMessage={stockMessage}
                      onQuantityChange={onQuantityChange}
+                     onNotesChange={onNotesChange}
                      onRemove={onRemove}
                   />
                ))}
@@ -68,21 +59,7 @@ const Cart: React.FC<CartPropsInterface> = ({
 
          {cartItems.length > 0 && (
             <>
-               {/* PaymentMethod */}
-               <div className="mt-2 border-t border-gray-200 pt-2 flex flex-col gap-1">
-                  <PaymentMethod
-                     paymentOptions={paymentOptions}
-                     onPaymentMethod={onPaymentMethod}
-                     currentPaymentMethod={cart.paymentMethod}
-                  />
-                  {/* Order notes */}
-                  <OrderNotes
-                     onOrderNotes={onOrderNotes}
-                     currentOrderNotes={cart.notes}
-                  />
-               </div>
-
-               {/* Summary + Checkout */}
+               {/* Summary + Order */}
                <div className="sticky bottom-0 bg-white pt-2 pb-4 border-t border-gray-200 mt-auto">
                   <div className="flex justify-between mb-3">
                      <span className="text-sm font-medium">Total:</span>
@@ -92,17 +69,21 @@ const Cart: React.FC<CartPropsInterface> = ({
                   </div>
                   <button
                      onClick={() => {
-                        onCheckout();
+                        onOrder();
                         closeCart();
                      }}
-                     className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm font-medium"
+                     className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm font-medium ${
+                        isSubmitting
+                           ? "opacity-50 cursor-not-allowed"
+                           : "cursor-pointer"
+                     }`}
                   >
-                     Bayar
+                     {isSubmitting ? "Loading..." : "Add a new order"}
                   </button>
                </div>
             </>
          )}
-      </aside>
+      </div>
    );
 };
 
