@@ -9,12 +9,16 @@ export default function Page() {
    const [message, setMessage] = useState<string>("");
    const router = useRouter();
 
+   const [isSubmitting, setisSubmitting] = useState(false);
    const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+      setisSubmitting(true);
       e.preventDefault();
       try {
          await login(username, password);
+         setisSubmitting(false);
          router.push("/home");
       } catch (error: any) {
+         setisSubmitting(false);
          setMessage(error?.message || "An error occurred.");
          setTimeout(() => {
             setMessage("");
@@ -90,9 +94,13 @@ export default function Page() {
                   <div>
                      <button
                         type="submit"
-                        className="flex w-full justify-center cursor-pointer rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className={`flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+                           isSubmitting
+                              ? "opacity-50 cursor-not-allowed"
+                              : "cursor-pointer"
+                        }`}
                      >
-                        Sign in
+                        {isSubmitting ? "Loading..." : "Sign In"}
                      </button>
                   </div>
                </form>

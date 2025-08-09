@@ -1,4 +1,5 @@
 import { OrderDetailInterface } from "@/app/types";
+import { priceFormat } from "@/app/utils/priceFormat";
 
 // Reusable component for Order Details Table
 const OrderDetailsTable = ({
@@ -39,7 +40,7 @@ const OrderDetailsTable = ({
                >
                   <td className="py-2">{item.quantity}</td>
                   <td className="py-2">{item.menu.menuName}</td>
-                  <td className="py-2">{item.price}</td>
+                  <td className="py-2">{priceFormat(item.price)}</td>
                </tr>
             ))}
             {!isExpanded && orderDetails.length > 4 && (
@@ -52,7 +53,7 @@ const OrderDetailsTable = ({
             <tr className="bg-white border-gray-200 border-t text-gray-600">
                <td className="py-2">Total</td>
                <td className="py-2"></td>
-               <td className="py-2">{total}</td>
+               <td className="py-2">{priceFormat(total)}</td>
             </tr>
          </tbody>
       </table>

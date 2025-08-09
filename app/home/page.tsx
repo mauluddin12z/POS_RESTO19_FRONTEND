@@ -18,7 +18,6 @@ import ShowCartModalButton from "../components/cart/ShowCartModalButton";
 import useOrderActions from "../hooks/useOrderActions";
 
 export default function Page() {
-   const { user } = useAuth() as { user: UserInterface | null };
    const [searchQuery, setSearchQuery] = useState("");
    const [filters, setFilters] = useState<MenuFilterInterface>({
       categoryId: null,
@@ -66,15 +65,18 @@ export default function Page() {
       stockMessage,
    } = useCart();
 
+   const { orders, mutate } = useOrders();
    // Handle Checkout
-   const { handleOrder, alert, handleCloseAlert, isSubmitting } =
-      useOrderActions({
-         cart,
-         user,
-         setCart,
-      });
-
-   const { orders } = useOrders();
+   const {
+      handleOrder,
+      alert,
+      handleCloseAlert,
+      isSubmitting: isOrderSubmitting,
+   } = useOrderActions({
+      cart,
+      setCart,
+      mutate,
+   });
 
    const [IsCartOpen, setIsCartOpen] = useState(false);
    const closeCart = () => setIsCartOpen(false);
@@ -113,7 +115,28 @@ export default function Page() {
                   />
                </div>
             </div>
-            <Modal isOpen={IsCartOpen} onClose={closeCart}>
+            {IsCartOpen && (
+               <Modal isOpen={IsCartOpen} onClose={closeCart}>
+                  <Cart
+                     orderId={orders?.data[0]?.orderId}
+                     cart={cart}
+                     cartItems={cart.cartItems}
+                     onRemove={handleRemove}
+                     onQuantityChange={handleQuantityChange}
+                     onNotesChange={handleNotesChange}
+                     onOrder={handleOrder}
+                     stockMessage={stockMessage}
+                     closeCart={closeCart}
+                     isSubmitting={isOrderSubmitting}
+                  />
+               </Modal>
+            )}
+
+            <ShowCartModalButton
+               setCartModalVisible={setIsCartOpen}
+               cartItemLength={cart?.cartItems?.length}
+            />
+            <div className="hidden lg:flex w-96 bg-white md:max-h-[calc(100vh-5rem)] lg:max-h-[calc(100vh-2rem)] sticky top-4 right-0">
                <Cart
                   orderId={orders?.data[0]?.orderId}
                   cart={cart}
@@ -124,25 +147,7 @@ export default function Page() {
                   onOrder={handleOrder}
                   stockMessage={stockMessage}
                   closeCart={closeCart}
-                  isSubmitting={isSubmitting}
-               />
-            </Modal>
-            <ShowCartModalButton
-               setCartModalVisible={setIsCartOpen}
-               cartItemLength={cart?.cartItems?.length}
-            />
-            <div className="hidden lg:flex w-96 bg-white md:max-h-[calc(100vh-5rem)] lg:max-h-[calc(100vh-2rem)] sticky top-4 right-0">
-               <Cart
-                  orderId={orders?.data?.length}
-                  cart={cart}
-                  cartItems={cart.cartItems}
-                  onRemove={handleRemove}
-                  onQuantityChange={handleQuantityChange}
-                  onNotesChange={handleNotesChange}
-                  onOrder={handleOrder}
-                  stockMessage={stockMessage}
-                  closeCart={closeCart}
-                  isSubmitting={isSubmitting}
+                  isSubmitting={isOrderSubmitting}
                />
             </div>
          </div>

@@ -17,7 +17,7 @@ export default function CartItem({
             <div className="flex flex-col gap-2">
                <span className="font-medium text-xs">{item.name}</span>
                <span className="text-sm text-gray-600">
-                  {priceFormat(item.price)}
+                  {priceFormat(item.subtotal)}
                </span>
             </div>
             <div className="flex flex-col gap-2">

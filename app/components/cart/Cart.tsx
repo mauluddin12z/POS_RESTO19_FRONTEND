@@ -1,9 +1,23 @@
-import { CartPropsInterface } from "@/app/types";
 import { priceFormat } from "@/app/utils/priceFormat";
 import { faCartShopping, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import CartItem from "./CartItem";
+import { CartInterface, CartItemInterface } from "@/app/types";
+
+export interface CartPropsInterface {
+   orderId: number | null;
+   cart: CartInterface;
+   cartItems: CartItemInterface[];
+   stockMessage: string;
+   onRemove: (id: number) => void;
+   onQuantityChange: (id: number, quantity: number) => void;
+   onNotesChange: (id: number, notes: string) => void;
+   onOrder: () => void;
+   isSubmitting: boolean;
+   closeCart: () => void;
+}
+
 const Cart: React.FC<CartPropsInterface> = ({
    orderId,
    cartItems,
@@ -21,21 +35,13 @@ const Cart: React.FC<CartPropsInterface> = ({
    );
 
    return (
-      <div className="w-full h-full overflow-y-auto flex flex-col border border-gray-200 rounded-lg px-4 bg-white">
-         <div className="flex justify-between  mb-2 pb-2 border-b border-gray-200 gap-x-2 items-center sticky top-0 bg-white pt-4">
+      <div className="w-full h-full overflow-y-auto flex flex-col border border-gray-200 lg:rounded-lg px-4 bg-white">
+         <div className="flex justify-between mb-2 pb-2 border-b border-gray-200 gap-x-2 items-center sticky top-0 bg-white pt-4">
             <h2 className="text-lg font-semibold">
                <FontAwesomeIcon icon={faCartShopping} />
                Order #
                {cartItems.length === 0 ? "" : orderId ? orderId + 1 : "1"}
             </h2>
-            <button
-               onClick={() => {
-                  onRemove(0), closeCart();
-               }}
-               className="h-full flex justify-center items-center p-2 text-xs text-white bg-red-400 rounded-lg border border-gray-200 hover:bg-red-600 cursor-pointer"
-            >
-               <FontAwesomeIcon icon={faTrashAlt} />
-            </button>
          </div>
 
          {cartItems.length === 0 ? (
@@ -79,6 +85,14 @@ const Cart: React.FC<CartPropsInterface> = ({
                      }`}
                   >
                      {isSubmitting ? "Loading..." : "Add a new order"}
+                  </button>
+                  <button
+                     onClick={() => {
+                        onRemove(0), closeCart();
+                     }}
+                     className={`w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-200 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer mt-2`}
+                  >
+                     Cancel Order
                   </button>
                </div>
             </>

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import MainLayout from "../components/layout/MainLayout";
 import { useMenus } from "../api/menuServices";
-import { MenuFilterInterface, MenuInterface } from "../types";
+import { MenuFilterInterface } from "../types";
 import MenuTable from "../components/menu/MenuTable";
 import Pagination from "../components/ui/Pagination";
 import Modal from "../components/ui/Modal";
@@ -23,6 +23,7 @@ export default function page() {
       pageSize: 5,
    });
    const { menus, isLoading: loadingMenus, mutate } = useMenus(filters);
+
    // Debounce search query update
    useEffect(() => {
       const timeout = setTimeout(() => {
@@ -30,6 +31,7 @@ export default function page() {
       }, 300);
       return () => clearTimeout(timeout);
    }, [searchQuery]);
+
    const handlePageChange = (page: number) => {
       setFilters((prev) => ({ ...prev, page }));
    };

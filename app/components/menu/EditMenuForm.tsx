@@ -22,6 +22,13 @@ const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
       imagePreview: "",
    });
 
+   const [formErrors, setFormErrors] = useState({
+      menuName: "",
+      categoryId: "",
+      stock: "",
+      price: "",
+   });
+
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
 
@@ -85,18 +92,28 @@ const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
    const handleEditMenu = async (e: React.FormEvent) => {
       e.preventDefault();
       setIsSubmitting(true);
+
       // Validate required fields
-      if (
-         !formData.menuName ||
-         !formData.categoryId ||
-         !formData.stock ||
-         !formData.price
-      ) {
+      const errors = {
+         menuName: "",
+         categoryId: "",
+         stock: "",
+         price: "",
+      };
+
+      if (!formData.menuName.trim()) errors.menuName = "Menu name is required.";
+      if (!formData.categoryId) errors.categoryId = "Category is required.";
+      if (!formData.stock || formData.stock <= 0)
+         errors.stock = "Stock must be greater than 0.";
+      if (!formData.price || formData.price <= 0)
+         errors.price = "Price must be greater than 0.";
+
+      setFormErrors(errors);
+
+      // Check if there are any errors
+      const hasErrors = Object.values(errors).some((err) => err !== "");
+      if (hasErrors) {
          setIsSubmitting(false);
-         setAlert({
-            type: "error",
-            message: "Please fill in all required fields.",
-         });
          return;
       }
 
@@ -163,6 +180,7 @@ const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
          handleSubmit={handleEditMenu}
          alert={alert}
          handleCloseAlert={handleCloseAlert}
+         formErrors={formErrors}
       />
    );
 };

@@ -5,11 +5,12 @@ import { updateOrder } from "../api/orderServices";
 
 interface PaymentPropsInterface {
    orderId: number;
+   mutate: () => void;
 }
 
 type AlertState = { type: AlertType; message: string } | null;
 
-const usePayment = ({ orderId }: PaymentPropsInterface) => {
+const usePayment = ({ orderId, mutate }: PaymentPropsInterface) => {
    const paymentOptions = ["CASH", "QRIS", "BANK"];
    const [paymentMethod, setPaymentMethod] = useState<string>("");
    const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
@@ -36,9 +37,9 @@ const usePayment = ({ orderId }: PaymentPropsInterface) => {
    };
 
    // Handle the payment logic
-   const handlePayment = async () => {
+   const handlePayment = async (onSuccess?: () => void) => {
       if (!isValidPaymentMethod()) {
-         showAlert("error", "Please select a valid payment method.");
+         showAlert("error", "Please select the payment method.");
          return;
       }
 
@@ -54,9 +55,11 @@ const usePayment = ({ orderId }: PaymentPropsInterface) => {
             throw new Error("Order update failed: Missing orderId");
          }
 
-         // Handle success and show alert
          setPaymentSuccess(true);
-         setTimeout(resetPaymentSuccess, 3000); // Reset after 3 seconds
+         setTimeout(resetPaymentSuccess, 3000);
+         mutate();
+         // Call onClose when payment is successful
+         if (onSuccess) onSuccess();
       } catch (error) {
          if (error instanceof AxiosError) {
             const errorMessage =

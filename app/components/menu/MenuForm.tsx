@@ -2,12 +2,18 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Alert from "../ui/Alert";
-import {
-   CategoryInterface,
-} from "../../types";
+import { CategoryInterface } from "../../types";
+
+interface formErrors {
+   menuName?: string;
+   categoryId?: string;
+   price?: string;
+   stock?: string;
+}
 
 interface MenuFormProps {
    formData: any;
+   formErrors: formErrors;
    categories: CategoryInterface[];
    isSubmitting: boolean;
    isAdding: boolean;
@@ -24,6 +30,7 @@ interface MenuFormProps {
 
 const MenuForm = ({
    formData,
+   formErrors,
    categories,
    isSubmitting,
    isAdding,
@@ -90,6 +97,11 @@ const MenuForm = ({
                >
                   Menu Name
                </label>
+               {formErrors.menuName && (
+                  <p className="text-xs text-red-500 mb-1">
+                     {formErrors.menuName}
+                  </p>
+               )}
                <input
                   type="text"
                   id="menuName"
@@ -109,25 +121,37 @@ const MenuForm = ({
                >
                   Category
                </label>
-               <select
-                  id="categoryId"
-                  name="categoryId"
-                  value={formData.categoryId || ""}
-                  onChange={handleChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-               >
-                  <option value="" disabled>
-                     Select a category
-                  </option>
-                  {categories?.map((category) => (
-                     <option
-                        key={category.categoryId}
-                        value={category.categoryId}
-                     >
-                        {category.categoryName}
+               {formErrors.categoryId && (
+                  <p className="text-xs text-red-500 mb-1">
+                     {formErrors.categoryId}
+                  </p>
+               )}
+               <div className="flex gap-2">
+                  <select
+                     id="categoryId"
+                     name="categoryId"
+                     value={formData.categoryId || ""}
+                     onChange={handleChange}
+                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                  >
+                     <option value="" disabled>
+                        Select a category
                      </option>
-                  ))}
-               </select>
+                     {categories?.map((category) => (
+                        <option
+                           key={category.categoryId}
+                           value={category.categoryId}
+                        >
+                           {category.categoryName}
+                        </option>
+                     ))}
+                  </select>
+                  <button
+                     className={`p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700`}
+                  >
+                     <FontAwesomeIcon icon={faPlus} />
+                  </button>
+               </div>
             </div>
 
             {/* Description */}
@@ -149,7 +173,7 @@ const MenuForm = ({
                ></textarea>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2">
                {/* Stock */}
                <div className="mb-4">
                   <label
@@ -158,11 +182,15 @@ const MenuForm = ({
                   >
                      Stock
                   </label>
+                  {formErrors.stock && (
+                     <p className="text-xs text-red-500 mb-1">
+                        {formErrors.stock}
+                     </p>
+                  )}
                   <input
                      type="number"
                      id="stock"
                      name="stock"
-                     min={1}
                      step="1"
                      value={formData.stock}
                      onChange={handleChange}
@@ -171,20 +199,24 @@ const MenuForm = ({
                </div>
 
                {/* Price */}
-               <div className="mb-6">
+               <div className="mb-4">
                   <label
                      htmlFor="price"
                      className="block text-sm font-medium text-gray-700"
                   >
                      Price
                   </label>
+                  {formErrors.price && (
+                     <p className="text-xs text-red-500 mb-1">
+                        {formErrors.price}
+                     </p>
+                  )}
                   <input
                      type="number"
                      id="price"
                      name="price"
                      value={formData.price}
                      onChange={handleChange}
-                     min={100}
                      step="100"
                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                   />

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { formatDateToIndonesian } from "../../utils/dateFormat";
 import Modal from "../ui/Modal";
 import { AlertType, OrderInterface } from "../../types";
@@ -7,25 +7,28 @@ import { deleteOrder } from "../../api/orderServices";
 import { AxiosError } from "axios";
 import Alert from "../ui/Alert";
 import PaymentStatus from "../payment/PaymentStatus";
-import PaymentMethod from "../payment/PaymentMethod";
 import usePayment from "../../hooks/usePayment";
 import PaymentSuccessful from "../payment/PaymentSuccessful";
-import OrderDetailsTable from "./OrderDetailsTable";
 import ActionButtons from "./ActionButtons";
+import PaymentModal from "./PaymentModal";
+import OrderDetailsTable from "./OrderDetailsTable";
+import EditOrderModal from "./EditOrderModal";
+// import EditOrderModal from "./EditOrderModal"; // <-- Modal edit baru
 
 interface OrderItemProps {
-   orders: OrderInterface;
+   order: OrderInterface;
    mutate: () => void;
    loading: boolean;
 }
 
-const OrderItem = ({ orders, loading, mutate }: OrderItemProps) => {
-   const { date, time } = formatDateToIndonesian(orders?.createdAt);
+const OrderItem = ({ order, mutate }: OrderItemProps) => {
+   console.log(order)
+   const { date, time } = formatDateToIndonesian(order?.createdAt);
    const [selectedOrder, setSelectedOrder] = useState<OrderInterface | null>(
       null
    );
    const [modalState, setModalState] = useState<{
-      type: "delete" | "payment";
+      type: "delete" | "payment" | "edit";
       isOpen: boolean;
    } | null>(null);
 
@@ -37,14 +40,14 @@ const OrderItem = ({ orders, loading, mutate }: OrderItemProps) => {
 
    const {
       handlePayment,
-      isSubmitting,
+      isSubmitting: isSubmittingPayment,
       paymentOptions,
       paymentMethod,
       paymentAlert,
       setPaymentMethod,
       paymentSuccess,
       onClosePaymentSuccessAlert,
-   } = usePayment({ orderId: orders.orderId });
+   } = usePayment({ orderId: order.orderId, mutate });
 
    useEffect(() => {
       setAlert(paymentAlert);
@@ -60,6 +63,11 @@ const OrderItem = ({ orders, loading, mutate }: OrderItemProps) => {
    const openDeleteModal = useCallback((order: OrderInterface) => {
       setSelectedOrder(order);
       setModalState({ type: "delete", isOpen: true });
+   }, []);
+
+   const openEditModal = useCallback((order: OrderInterface) => {
+      setSelectedOrder(order);
+      setModalState({ type: "edit", isOpen: true });
    }, []);
 
    const handleDelete = useCallback(async () => {
@@ -83,68 +91,60 @@ const OrderItem = ({ orders, loading, mutate }: OrderItemProps) => {
    }, [selectedOrder, mutate]);
 
    const handleCloseAlert = () => setAlert(null);
+
    return (
       <div className="flex flex-col justify-between border border-gray-200 rounded-lg p-2 hover:shadow-sm">
          {/* Order Overview */}
          <div className="flex items-center justify-between flex-wrap border-b border-gray-200 pb-2">
-            <div className="bg-blue-50 rounded-lg p-4 text-gray-600">{`#${orders.orderId}`}</div>
+            <div className="bg-blue-50 rounded-lg p-3.5 text-gray-600 font-medium">{`#${order.orderId}`}</div>
             <div className="flex flex-col items-end text-gray-600 gap-1">
-               <PaymentStatus status={orders.paymentStatus} />
+               <PaymentStatus status={order.paymentStatus} />
                <div className="text-xs font-semibold">{date}</div>
                <div className="text-xs font-light">{time}</div>
             </div>
          </div>
 
-         {/* Order Details */}
+         {/* Order Table */}
          <OrderDetailsTable
-            orderDetails={orders.orderDetails}
+            orderDetails={order.orderDetails}
             isExpanded={false}
          />
 
          {/* Action Buttons */}
          <ActionButtons
-            onEdit={() => console.log(orders)}
-            onDelete={() => openDeleteModal(orders)}
-            onInfo={() => openPaymentModal(orders)}
-            isPaid={orders.paymentStatus === "paid"}
+            onEdit={() => openEditModal(order)}
+            onDelete={() => openDeleteModal(order)}
+            onInfo={() => openPaymentModal(order)}
+            isPaid={order.paymentStatus === "paid"}
          />
 
-         {/* Modal for Order Details */}
-         {modalState?.type === "payment" && modalState.isOpen && (
-            <Modal isOpen={modalState.isOpen} onClose={closeModal}>
-               <div className="flex flex-col justify-between border border-gray-200 p-2">
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-2">
-                     <div className="bg-blue-200 rounded-lg p-4 text-gray-600">{`#${orders.orderId}`}</div>
-                     <div className="flex flex-col items-end text-gray-600">
-                        <div className="text-xs font-semibold">{date}</div>
-                        <div className="text-xs font-light">{time}</div>
-                     </div>
-                  </div>
+         {/* Modal for Payment */}
+         {modalState?.type === "payment" &&
+            modalState.isOpen &&
+            selectedOrder && (
+               <PaymentModal
+                  isOpen={modalState.isOpen}
+                  onClose={closeModal}
+                  order={selectedOrder}
+                  date={date}
+                  time={time}
+                  paymentOptions={paymentOptions}
+                  paymentMethod={paymentMethod}
+                  setPaymentMethod={setPaymentMethod}
+                  handlePayment={handlePayment}
+                  isSubmitting={isSubmittingPayment}
+               />
+            )}
 
-                  <OrderDetailsTable
-                     orderDetails={orders.orderDetails}
-                     isExpanded={true}
-                  />
-
-                  <div className="flex flex-col mt-2 gap-2 justify-between">
-                     <PaymentMethod
-                        paymentOptions={paymentOptions}
-                        paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
-                     />
-                     <button
-                        className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white p-2 rounded"
-                        onClick={() => {
-                           handlePayment();
-                           closeModal();
-                        }}
-                        disabled={isSubmitting}
-                     >
-                        {isSubmitting ? "Processing..." : "Proceed to Pay"}
-                     </button>
-                  </div>
-               </div>
-            </Modal>
+         {/* Edit Modal */}
+         {modalState?.type === "edit" && modalState.isOpen && selectedOrder && (
+            <EditOrderModal
+               isOpen={modalState.isOpen}
+               onClose={closeModal}
+               selectedOrder={selectedOrder}
+               mutate={mutate}
+               isSubmitting={isSubmittingPayment}
+            />
          )}
 
          {/* Delete Confirmation Modal */}

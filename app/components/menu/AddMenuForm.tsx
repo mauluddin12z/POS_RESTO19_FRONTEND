@@ -26,6 +26,13 @@ export default function AddMenuForm({
       imagePreview: "",
    });
 
+   const [formErrors, setFormErrors] = useState({
+      menuName: "",
+      categoryId: "",
+      stock: "",
+      price: "",
+   });
+
    // Handle input change
    const handleChange = (
       e: React.ChangeEvent<
@@ -56,30 +63,41 @@ export default function AddMenuForm({
       type: AlertType;
       message: string;
    } | null>(null);
+
    // Handle form submission
    const handleAddMenu = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setIsSubmitting(true);
+
       // Validate required fields
-      if (
-         !formData.menuName ||
-         !formData.categoryId ||
-         !formData.stock ||
-         !formData.price
-      ) {
+      const errors = {
+         menuName: "",
+         categoryId: "",
+         stock: "",
+         price: "",
+      };
+
+      if (!formData.menuName.trim()) errors.menuName = "Menu name is required.";
+      if (!formData.categoryId) errors.categoryId = "Category is required.";
+      if (!formData.stock || formData.stock <= 0)
+         errors.stock = "Stock must be greater than 0.";
+      if (!formData.price || formData.price <= 0)
+         errors.price = "Price must be greater than 0.";
+
+      setFormErrors(errors);
+
+      // Check if there are any errors
+      const hasErrors = Object.values(errors).some((err) => err !== "");
+      if (hasErrors) {
          setIsSubmitting(false);
-         setAlert({
-            type: "error",
-            message: "Please fill in all required fields.",
-         });
          return;
       }
 
       try {
          const formDataToSend = new FormData();
          formDataToSend.append("menuName", formData.menuName);
-         formDataToSend.append("categoryId", formData.categoryId);
-         formDataToSend.append("description", formData.description);
+         formDataToSend.append("categoryId", formData.categoryId ?? "");
+         formDataToSend.append("description", formData.description ?? "");
          formDataToSend.append("stock", formData.stock.toString());
          formDataToSend.append("price", formData.price.toString());
          // Append the image file properly
@@ -118,6 +136,7 @@ export default function AddMenuForm({
          handleSubmit={handleAddMenu}
          alert={alert}
          handleCloseAlert={handleCloseAlert}
+         formErrors={formErrors}
       />
    );
 }

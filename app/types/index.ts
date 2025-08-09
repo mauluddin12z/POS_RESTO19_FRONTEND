@@ -67,6 +67,20 @@ export interface MenuFilterInterface {
    page?: number | null;
    pageSize?: number | null;
 }
+export interface OrderFilterInterface {
+   minTotal: number | null;
+   maxTotal: number | null;
+   paymentMethod: string;
+   searchQuery: string;
+   page: number;
+   pageSize: number;
+   sortBy: string;
+   sortOrder: "asc" | "desc";
+   dateRange: string;
+   fromDate: string;
+   toDate: string;
+   paymentStatus: string;
+}
 
 // Product Interfaces
 export interface ProductInterface {
@@ -107,19 +121,6 @@ export interface CartItemInterface {
    notes: string;
    stock: number;
 }
-
-export interface CartPropsInterface {
-   orderId: number | null;
-   cart: CartInterface;
-   cartItems: CartItemInterface[];
-   stockMessage: string;
-   onRemove: (id: number) => void;
-   onQuantityChange: (id: number, quantity: number) => void;
-   onNotesChange: (id: number, notes: string) => void;
-   onOrder: () => void;
-   isSubmitting: boolean;
-   closeCart: () => void;
-}
 export interface CartItemPropsInterface {
    item: CartItemInterface;
    stockMessage: string;
@@ -154,10 +155,9 @@ export interface OrderInterface {
 }
 
 export interface OrderDetailInterface {
+   orderDetailId: number;
    quantity: number;
-   menu: {
-      menuName: string;
-   };
+   menu: MenuInterface;
    price: number;
    subtotal: number;
    notes: string;
@@ -172,12 +172,4 @@ export interface PaginationPropsInterface {
    hasNextPage: boolean;
    isLoading: boolean;
    onPageChange: (page: number) => void;
-}
-
-// Category Card Interface (for rendering categories in a sidebar or menu)
-export interface CategoryCardPropsInterface {
-   categoryId: number | null;
-   categoryName: string;
-   activeCategoryId: number | null | undefined;
-   onClick: (categoryId: number | null, categoryName: string) => void;
 }

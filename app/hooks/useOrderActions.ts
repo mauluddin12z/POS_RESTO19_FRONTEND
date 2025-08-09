@@ -1,20 +1,31 @@
-import { createOrderDetail } from "../api/orderDetailServices";
-import { createOrder } from "../api/orderServices";
-import { useEffect, useState } from "react";
-import { AlertType, CartInterface, UserInterface } from "../types";
+import {
+   createOrderDetail,
+   deleteOrderDetail,
+   deleteOrderDetailByOrderId,
+} from "../api/orderDetailServices";
+import { createOrder, updateOrder } from "../api/orderServices";
+import { useState } from "react";
+import {
+   AlertType,
+   CartInterface,
+   CartItemInterface,
+   UserInterface,
+} from "../types";
 import { AxiosError } from "axios";
+import useAuth from "./useAuth";
 
 export interface useOrderActionsPropsInterface {
    cart: CartInterface;
-   user: UserInterface | null;
    setCart: React.Dispatch<React.SetStateAction<CartInterface>>;
+   mutate: () => void;
 }
 
 const useOrderActions = ({
    cart,
-   user,
    setCart,
+   mutate,
 }: useOrderActionsPropsInterface) => {
+   const { user } = useAuth() as { user: UserInterface | null };
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [alert, setAlert] = useState<{
       type: AlertType;
@@ -58,23 +69,15 @@ const useOrderActions = ({
             await createOrderDetail(orderDetailFormData);
          }
 
-         // Reset cart after successful checkout
-         setCart({
-            total: "0",
-            cartItems: [],
-         });
+         setCart({ total: "0", cartItems: [] });
          localStorage.removeItem("cart");
 
-         // Show Order successfully created component
          setAlert({
             type: "success",
             message: orderResponse?.message || "Order successfully created.",
          });
-
-         setIsSubmitting(false);
+         mutate();
       } catch (error: any) {
-         setIsSubmitting(false);
-         // Cast the error to AxiosError type to access 'response'
          if (error instanceof AxiosError) {
             setAlert({
                type: "error",
@@ -91,11 +94,67 @@ const useOrderActions = ({
       }
    };
 
+   // Update existing order
+   const handleUpdateOrder = async (
+      orderId: number,
+      updatedItems: CartItemInterface[],
+      total: string,
+   ) => {
+      setIsSubmitting(true);
+
+      try {
+         // 1. Update the order total
+         const formData = new FormData();
+         formData.append("total", total);
+         await updateOrder(orderId, formData);
+
+         // 2. Delete existing order details
+         await deleteOrderDetailByOrderId(orderId);
+
+         // 3. Recreate order details
+         for (const item of updatedItems) {
+            const detailFormData = new FormData();
+            detailFormData.append("orderId", orderId.toString());
+            detailFormData.append("menuId", item.id.toString());
+            detailFormData.append("quantity", item.quantity.toString());
+            detailFormData.append("price", item.price.toString());
+            detailFormData.append(
+               "subtotal",
+               (item.price * item.quantity).toString()
+            );
+            detailFormData.append("notes", item.notes);
+
+            await createOrderDetail(detailFormData);
+         }
+         setAlert({
+            type: "success",
+            message: "Order successfully updated.",
+         });
+         mutate();
+      } catch (error: any) {
+         if (error instanceof AxiosError) {
+            setAlert({
+               type: "error",
+               message: error?.response?.data?.message ?? error.message,
+            });
+         } else {
+            setAlert({
+               type: "error",
+               message: "Failed to update the order.",
+            });
+         }
+      } finally {
+         setIsSubmitting(false);
+      }
+   };
+
    return {
       handleOrder,
+      handleUpdateOrder,
       isSubmitting,
       alert,
       handleCloseAlert,
    };
 };
+
 export default useOrderActions;

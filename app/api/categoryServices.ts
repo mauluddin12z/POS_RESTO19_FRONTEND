@@ -13,19 +13,19 @@ export const fetchCategories = async () => {
 
 // Create a new category
 export const createCategory = async (categoryData: any) => {
-   const response = await axiosInstance.post("/categories", categoryData);
+   const response = await axiosInstance.post("/category", categoryData);
    return response.data.data;
 };
 
 // Update a category by ID
 export const updateCategory = async (id: string | number, updatedData: any) => {
-   const response = await axiosInstance.patch(`/categories/${id}`, updatedData);
+   const response = await axiosInstance.patch(`/category/${id}`, updatedData);
    return response.data.data;
 };
 
 // Delete a category by ID
 export const deleteCategory = async (id: string | number) => {
-   const response = await axiosInstance.delete(`/categories/${id}`);
+   const response = await axiosInstance.delete(`/category/${id}`);
    return response.data;
 };
 
