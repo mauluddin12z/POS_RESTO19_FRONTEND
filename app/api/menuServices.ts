@@ -67,7 +67,7 @@ export const deleteMenu = async (id: string | number) => {
 // SWR Hook for Menus
 // ----------------------------
 
-export const useMenus = (filters: MenuFilterInterface) => {
+export const useMenus = (filters?: any) => {
    const key = filters ? ["menus", filters] : "menus";
 
    const {

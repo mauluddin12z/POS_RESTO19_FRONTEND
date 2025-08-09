@@ -1,14 +1,33 @@
 import useSWR from "swr";
 import axiosInstance from "./axiosInstance";
+import { buildQueryParams } from "./menuServices";
 
 // -----------------------------
 // API Utility Functions
 // -----------------------------
 
 // Fetch all categories
-export const fetchCategories = async () => {
-   const response = await axiosInstance.get("/categories");
-   return response.data.data;
+export const fetchCategories = async (filters: any) => {
+   const queryParams = buildQueryParams(filters);
+
+   try {
+      const response = await axiosInstance.get("/categories", {
+         params: queryParams,
+      });
+
+      // Return entire response (includes data and meta)
+      return response.data;
+   } catch (error: any) {
+      throw new Error(
+         error?.response?.data?.message || "Error fetching categories"
+      );
+   }
+};
+
+// Get category by id
+export const getCategoryById = async (categoryId: number) => {
+   const response = await axiosInstance.get(`/category/${categoryId}`);
+   return response.data;
 };
 
 // Create a new category
@@ -33,20 +52,22 @@ export const deleteCategory = async (id: string | number) => {
 // SWR Hook for Fetching Categories
 // -----------------------------
 
-export const useCategories = () => {
-   const { data, error, isValidating, mutate } = useSWR(
-      "categories",
-      fetchCategories,
-      {
-         revalidateOnFocus: false,
-         revalidateOnReconnect: false,
-      }
-   );
+export const useCategories = (filters?: any) => {
+   const key = filters ? ["categories", filters] : "categories";
+
+   const {
+      data: response,
+      error,
+      mutate,
+   } = useSWR(key, () => fetchCategories(filters), {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+   });
 
    return {
-      categories: data,
-      isLoading: !error && !data,
-      isError: error,
+      categories: response,
+      isLoading: !response && !error,
+      isError: !!error,
       mutate,
    };
 };

@@ -9,6 +9,7 @@ import {
    faUsers,
    faSignOut,
    faNoteSticky,
+   faBorderAll,
 } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/app/api/auth";
 
@@ -16,6 +17,7 @@ const links = [
    { href: "/home", label: "Home", menuIcon: faHouse },
    { href: "/orders", label: "Orders", menuIcon: faNoteSticky },
    { href: "/menus", label: "Menus", menuIcon: faList },
+   { href: "/categories", label: "categories", menuIcon: faBorderAll, adminOnly: true },
    { href: "/users", label: "Users", menuIcon: faUsers, adminOnly: true },
 ];
 

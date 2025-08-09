@@ -24,10 +24,10 @@ const Modal = ({ children, isOpen, onClose }: ModalProps) => {
 
    return (
       isOpen && (
-         <div className="fixed inset-0 z-[52] bg-black/50 backdrop:bg-transparent">
-            <div className="flex items-center justify-center text-center focus:outline-none sm:items-center px-10 pb-20 sm:pb-10 pt-10">
-               <div className="relative rounded-lg bg-white text-left shadow-xl sm:max-h-[calc(100vh-60px)] max-h-[calc(100vh-120px)] overflow-hidden p-2 max-w-full">
-                  <div className="flex w-full bg-white sticky top-0 z-[999] justify-end">
+         <div className="fixed inset-0 z-[52] bg-black/50 backdrop:bg-transparent flex justify-center items-center">
+            <div className="flex items-center justify-center text-center focus:outline-none">
+               <div className="relative rounded-lg bg-white text-left shadow-xl overflow-hidden p-2 max-w-full">
+                  <div className="flex w-full bg-white sticky top-0 z-[51] justify-end">
                      <button
                         type="button"
                         onClick={onClose}
@@ -36,7 +36,7 @@ const Modal = ({ children, isOpen, onClose }: ModalProps) => {
                         <FontAwesomeIcon icon={faX} />
                      </button>
                   </div>
-                  <div className="p-2 relative max-h-[calc(100vh-160px)] sm:max-h-[calc(100vh-140px)] overflow-auto">
+                  <div className="p-2 relative max-h-[calc(100vh-160px)] sm:max-h-[calc(100vh-140px)] max-w-[calc(100vw-80px)] sm:max-vw-[calc(100vw-140px)] overflow-auto">
                      {children}
                   </div>
                </div>

@@ -1,35 +1,25 @@
 "use client";
 import React, { useState, FormEvent, useEffect } from "react";
-import MenuForm from "./MenuForm";
-import { useCategories } from "@/app/api/categoryServices";
 import { AlertType } from "@/app/types";
-import { handleAddMenu } from "@/app/handlers/menuHandlers";
+import { handleAddCategory } from "@/app/handlers/categoryHandlers";
+import CategoryForm from "./CategoryForm";
 
-interface AddMenuFormProps {
+interface AddCategoryFormProps {
    closeAddModal: () => void;
    mutate: () => void;
 }
 
-export default function AddMenuForm({
+export default function AddCategoryForm({
    closeAddModal,
-   mutate,
-}: AddMenuFormProps) {
+   mutate
+}: AddCategoryFormProps) {
    // Form state
    const [formData, setFormData] = useState({
-      menuName: "",
-      categoryId: null,
-      menuDescription: "",
-      stock: 0,
-      price: 0,
-      menuImage: null as File | null,
-      imagePreview: "",
+      categoryName: "",
    });
 
    const [formErrors, setFormErrors] = useState({
-      menuName: "",
-      categoryId: "",
-      stock: "",
-      price: "",
+      categoryName: "",
    });
 
    // Handle input change
@@ -45,18 +35,6 @@ export default function AddMenuForm({
       }));
    };
 
-   // Handle file input (for image)
-   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files ? e.target.files[0] : null;
-      if (file) {
-         setFormData((prevData) => ({
-            ...prevData,
-            menuImage: file,
-            imagePreview: URL.createObjectURL(file),
-         }));
-      }
-   };
-
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [alert, setAlert] = useState<{
       type: AlertType;
@@ -64,10 +42,10 @@ export default function AddMenuForm({
    } | null>(null);
 
    // Handle form submission
-   const submitAddMenu = async (e: FormEvent<HTMLFormElement>) => {
+   const submitAddCategory = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      await handleAddMenu({
+      await handleAddCategory({
          formData,
          setIsSubmitting,
          setAlert,
@@ -80,13 +58,12 @@ export default function AddMenuForm({
       setAlert(null);
    };
    return (
-      <MenuForm
+      <CategoryForm
          formData={formData}
          isSubmitting={isSubmitting}
          isAdding={true}
          handleChange={handleChange}
-         handleFileChange={handleFileChange}
-         handleSubmit={submitAddMenu}
+         handleSubmit={submitAddCategory}
          alert={alert}
          handleCloseAlert={handleCloseAlert}
          formErrors={formErrors}

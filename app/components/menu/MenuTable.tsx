@@ -7,6 +7,7 @@ import EditMenuForm from "./EditMenuForm";
 import { deleteMenu } from "../../api/menuServices";
 import Alert from "../ui/Alert";
 import { AxiosError } from "axios";
+import { handleDeleteMenu } from "@/app/handlers/menuHandlers";
 
 export interface MenuPropsInterface {
    menus: MenuInterface[];
@@ -53,41 +54,22 @@ export default function MenuTable({
       message: string;
    } | null>(null);
 
-   const handleDelete = useCallback(async () => {
-      setIsDeleting(true);
-      if (selectedMenu?.menuId) {
-         try {
-            const res = await deleteMenu(selectedMenu.menuId);
-            setAlert({
-               type: "success",
-               message: res?.message,
-            });
-            setIsDeleting(false);
-            mutate();
-         } catch (error) {
-            setIsDeleting(false);
+   const confirmDeleteMenu = useCallback(async () => {
+      if (!selectedMenu?.menuId) return;
 
-            // Cast the error to AxiosError type to access 'response'
-            if (error instanceof AxiosError) {
-               setAlert({
-                  type: "error",
-                  message: error?.response?.data?.message ?? error.message,
-               });
-            } else {
-               setAlert({
-                  type: "error",
-                  message: "An unknown error occurred.",
-               });
-            }
-         }
-      }
-   }, [selectedMenu]);
+      await handleDeleteMenu({
+         menuId: selectedMenu.menuId,
+         setIsDeleting,
+         setAlert,
+         closeModal: closeDeleteModal,
+         mutate,
+      });
+   }, [selectedMenu, setIsDeleting, setAlert, closeDeleteModal, mutate]);
 
    // Automatically clear the alert after 3 seconds when `alertMessage` changes
    const handleCloseAlert = () => {
       setAlert(null);
    };
-
 
    const tableContent = useMemo(
       () =>
@@ -140,43 +122,49 @@ export default function MenuTable({
 
    return (
       <div className="relative overflow-x-auto sm:rounded-lg">
-         {loading ? (
-            <div className="flex justify-center items-center py-4">
-               Loading...
-            </div>
-         ) : (
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-               <thead className="text-xs text-gray-700 bg-gray-50">
+         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+            <thead className="text-xs text-gray-700 bg-gray-50">
+               <tr>
+                  <th scope="col" className="px-6 py-3">
+                     Image
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                     Menu Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                     Category
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                     Menu Description
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                     Stock
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                     Price
+                  </th>
+                  <th
+                     scope="col"
+                     className="px-6 py-3 bg-gray-50 sticky right-0"
+                  >
+                     Action
+                  </th>
+               </tr>
+            </thead>
+            <tbody>
+               {loading ? (
                   <tr>
-                     <th scope="col" className="px-6 py-3">
-                        Image
-                     </th>
-                     <th scope="col" className="px-6 py-3">
-                        Menu Name
-                     </th>
-                     <th scope="col" className="px-6 py-3">
-                        Category
-                     </th>
-                     <th scope="col" className="px-6 py-3">
-                        Menu Description
-                     </th>
-                     <th scope="col" className="px-6 py-3">
-                        Stock
-                     </th>
-                     <th scope="col" className="px-6 py-3">
-                        Price
-                     </th>
-                     <th
-                        scope="col"
-                        className="px-6 py-3 bg-gray-50 sticky right-0"
-                     >
-                        Action
-                     </th>
+                     <td colSpan={7} className="px-6 py-4 text-center">
+                        <div className="flex justify-center items-center">
+                           Loading...
+                        </div>
+                     </td>
                   </tr>
-               </thead>
-               <tbody>{tableContent}</tbody>
-            </table>
-         )}
+               ) : (
+                  tableContent
+               )}
+            </tbody>
+         </table>
 
          {selectedMenu && isEditModalOpen && (
             <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
@@ -197,7 +185,7 @@ export default function MenuTable({
                   Are you sure you want to delete this data?
                   <div className="mt-4 gap-4  flex justify-center">
                      <button
-                        onClick={handleDelete}
+                        onClick={confirmDeleteMenu}
                         className={`bg-red-600 hover:bg-red-700 cursor-pointer text-white px-4 py-2 rounded-md ${
                            isDeleting
                               ? "opacity-50 cursor-not-allowed"

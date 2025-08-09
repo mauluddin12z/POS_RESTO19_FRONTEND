@@ -33,6 +33,13 @@ export interface EditMenuFormInterface {
    menuImage?: File | null;
    imagePreview?: string;
 }
+export interface AddCategoryFormInterface {
+   categoryName: string;
+}
+export interface EditCategoryFormInterface {
+   categoryId: number;
+   categoryName: string;
+}
 export interface AddUserFormInterface {
    name: string;
    username: string;

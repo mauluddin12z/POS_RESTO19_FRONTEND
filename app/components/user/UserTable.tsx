@@ -17,7 +17,6 @@ export default function UserTable({
    loading,
    mutate,
 }: UserPropsInterface) {
-
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
    const [selectedUser, setSelectedUser] = useState<UserInterface | null>(null);
@@ -58,7 +57,7 @@ export default function UserTable({
                message: res?.message,
             });
             setIsDeleting(false);
-            closeDeleteModal()
+            closeDeleteModal();
             mutate();
          } catch (error) {
             setIsDeleting(false);
@@ -134,34 +133,40 @@ export default function UserTable({
 
    return (
       <div className="relative overflow-x-auto sm:rounded-lg">
-         {loading ? (
-            <div className="flex justify-center items-center py-4">
-               Loading...
-            </div>
-         ) : (
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-               <thead className="text-xs text-gray-700 bg-gray-50">
+         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+            <thead className="text-xs text-gray-700 bg-gray-50">
+               <tr>
+                  <th scope="col" className="px-6 py-3">
+                     Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                     Username
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                     Role
+                  </th>
+                  <th
+                     scope="col"
+                     className="px-6 py-3 bg-gray-50 sticky right-0"
+                  >
+                     Action
+                  </th>
+               </tr>
+            </thead>
+            <tbody>
+               {loading ? (
                   <tr>
-                     <th scope="col" className="px-6 py-3">
-                        Name
-                     </th>
-                     <th scope="col" className="px-6 py-3">
-                        Username
-                     </th>
-                     <th scope="col" className="px-6 py-3">
-                        Role
-                     </th>
-                     <th
-                        scope="col"
-                        className="px-6 py-3 bg-gray-50 sticky right-0"
-                     >
-                        Action
-                     </th>
+                     <td colSpan={4} className="px-6 py-4 text-center">
+                        <div className="flex justify-center items-center">
+                           Loading...
+                        </div>
+                     </td>
                   </tr>
-               </thead>
-               <tbody>{tableContent}</tbody>
-            </table>
-         )}
+               ) : (
+                  tableContent
+               )}
+            </tbody>
+         </table>
 
          {selectedUser && isEditModalOpen && (
             <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>

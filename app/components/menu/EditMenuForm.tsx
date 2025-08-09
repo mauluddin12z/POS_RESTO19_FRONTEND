@@ -3,6 +3,7 @@ import MenuForm from "./MenuForm";
 import { AlertType, EditMenuFormInterface } from "@/app/types";
 import { useCategories } from "@/app/api/categoryServices";
 import { getMenuById, updateMenu } from "@/app/api/menuServices";
+import { handleEditMenu } from "@/app/handlers/menuHandlers";
 
 interface EditMenuFormProps {
    menuId: number;
@@ -10,7 +11,6 @@ interface EditMenuFormProps {
 }
 
 const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
-   const { categories } = useCategories(); // Fetch categories from API
    const [formData, setFormData] = useState<EditMenuFormInterface>({
       menuId: menuId,
       menuName: "",
@@ -89,65 +89,17 @@ const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
    } | null>(null);
 
    // Handle form submission
-   const handleEditMenu = async (e: React.FormEvent) => {
+   const submitEditMenu = async (e: React.FormEvent) => {
       e.preventDefault();
-      setIsSubmitting(true);
 
-      // Validate required fields
-      const errors = {
-         menuName: "",
-         categoryId: "",
-         stock: "",
-         price: "",
-      };
-
-      if (!formData.menuName.trim()) errors.menuName = "Menu name is required.";
-      if (!formData.categoryId) errors.categoryId = "Category is required.";
-      if (!formData.stock || formData.stock <= 0)
-         errors.stock = "Stock must be greater than 0.";
-      if (!formData.price || formData.price <= 0)
-         errors.price = "Price must be greater than 0.";
-
-      setFormErrors(errors);
-
-      // Check if there are any errors
-      const hasErrors = Object.values(errors).some((err) => err !== "");
-      if (hasErrors) {
-         setIsSubmitting(false);
-         return;
-      }
-
-      try {
-         // Create FormData for file upload
-         const formDataToSend = new FormData();
-         formDataToSend.append("menuName", formData.menuName);
-         formDataToSend.append("menuDescription", formData.menuDescription);
-         formDataToSend.append(
-            "categoryId",
-            formData.categoryId?.toString() || ""
-         );
-         formDataToSend.append("price", formData.price.toString());
-         formDataToSend.append("stock", formData.stock.toString());
-
-         // If there's an image, append it
-         if (formData.menuImage) {
-            formDataToSend.append("menuImage", formData.menuImage);
-         }
-         // Call your updateMenu function with the object data and FormData separately
-         const res = await updateMenu(menuId, formDataToSend);
-         setIsSubmitting(false);
-         setAlert({
-            type: "success",
-            message: res?.message,
-         });
-         mutate();
-      } catch (error: any) {
-         setIsSubmitting(false);
-         setAlert({
-            type: "error",
-            message: error?.response?.data?.message ?? error.message,
-         });
-      }
+      await handleEditMenu({
+         menuId,
+         formData,
+         setIsSubmitting,
+         setAlert,
+         setFormErrors,
+         mutate,
+      });
    };
 
    // Automatically clear the alert after 3 seconds when `alertMessage` changes
@@ -172,12 +124,11 @@ const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
    return (
       <MenuForm
          formData={formData}
-         categories={categories}
          isSubmitting={isSubmitting}
          isAdding={false}
          handleChange={handleChange}
          handleFileChange={handleFileChange}
-         handleSubmit={handleEditMenu}
+         handleSubmit={submitEditMenu}
          alert={alert}
          handleCloseAlert={handleCloseAlert}
          formErrors={formErrors}

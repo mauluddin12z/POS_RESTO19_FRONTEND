@@ -1,8 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Modal from "../ui/Modal";
 import { OrderInterface, CartItemInterface } from "../../types";
-import Cart from "../cart/Cart";
 import useCart from "@/app/hooks/useCart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +9,8 @@ import CartItem from "../cart/CartItem";
 import { priceFormat } from "@/app/utils/priceFormat";
 import useOrderActions from "@/app/hooks/useOrderActions";
 import Alert from "../ui/Alert";
+import MenuGrid from "../menu/MenuGrid";
+import AddOrderItemModal from "./AddOrderItemModal";
 
 interface EditOrderModalProps {
    isOpen: boolean;
@@ -32,6 +33,7 @@ const EditOrderModal = ({
       handleRemove,
       handleQuantityChange,
       stockMessage,
+      handleAddToCart,
    } = useCart();
 
    const { handleUpdateOrder, isSubmitting, alert, handleCloseAlert } =
@@ -71,6 +73,16 @@ const EditOrderModal = ({
       onClose();
    };
 
+   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+
+   const openAddItemModal = useCallback(() => {
+      setIsAddItemModalOpen(true);
+   }, []);
+
+   const closeAddItemModal = useCallback(() => {
+      setIsAddItemModalOpen(false);
+   }, []);
+
    return (
       <Modal isOpen={isOpen} onClose={onClose}>
          <div className="w-full h-full overflow-y-auto flex flex-col border border-gray-200 lg:rounded-lg px-4 bg-white">
@@ -79,6 +91,12 @@ const EditOrderModal = ({
                   <FontAwesomeIcon icon={faCartShopping} />
                   Edit Order #{selectedOrder.orderId}
                </h2>
+               <button
+                  onClick={openAddItemModal}
+                  className={`px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-medium cursor-pointer`}
+               >
+                  Add Item
+               </button>
             </div>
 
             {cart.cartItems.length === 0 ? (
@@ -139,6 +157,13 @@ const EditOrderModal = ({
                <div className="w-full h-full overflow-y-auto flex flex-col border border-gray-200 lg:rounded-lg px-4 bg-white"></div>
             </div>
          </div>
+
+         {/* Add Item Modal */}
+         <AddOrderItemModal
+            isAddItemModalOpen={isAddItemModalOpen}
+            closeAddItemModal={closeAddItemModal}
+            onAddToCart={handleAddToCart}
+         />
          {alert && (
             <Alert
                type={alert.type}

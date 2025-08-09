@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Alert from "../ui/Alert";
 import { CategoryInterface } from "../../types";
+import AddCategoryModal from "./AddCategoryModal";
+import { useCategories } from "@/app/api/categoryServices";
 
 interface formErrors {
    menuName?: string;
@@ -14,7 +16,6 @@ interface formErrors {
 interface MenuFormProps {
    formData: any;
    formErrors: formErrors;
-   categories: CategoryInterface[];
    isSubmitting: boolean;
    isAdding: boolean;
    handleChange: (
@@ -31,7 +32,6 @@ interface MenuFormProps {
 const MenuForm = ({
    formData,
    formErrors,
-   categories,
    isSubmitting,
    isAdding,
    handleChange,
@@ -40,6 +40,17 @@ const MenuForm = ({
    alert,
    handleCloseAlert,
 }: MenuFormProps) => {
+   const filters = { page: 1, pageSize: 100 };
+   const { categories, mutate } = useCategories(filters);
+   const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+
+   const openAddCategoryModal = useCallback(() => {
+      setIsAddCategoryModalOpen(true);
+   }, []);
+
+   const closeAddCategoryModal = useCallback(() => {
+      setIsAddCategoryModalOpen(false);
+   }, []);
    return (
       <div className="max-w-sm mx-auto bg-white rounded-lg overflow-hidden p-5">
          <form onSubmit={handleSubmit}>
@@ -137,7 +148,7 @@ const MenuForm = ({
                      <option value="" disabled>
                         Select a category
                      </option>
-                     {categories?.map((category) => (
+                     {categories?.data?.map((category: CategoryInterface) => (
                         <option
                            key={category.categoryId}
                            value={category.categoryId}
@@ -146,11 +157,12 @@ const MenuForm = ({
                         </option>
                      ))}
                   </select>
-                  <button
-                     className={`p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700`}
+                  <div
+                     onClick={openAddCategoryModal}
+                     className={`p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 cursor-pointer`}
                   >
                      <FontAwesomeIcon icon={faPlus} />
-                  </button>
+                  </div>
                </div>
             </div>
 
@@ -242,6 +254,11 @@ const MenuForm = ({
                   : "Save Changes"}
             </button>
          </form>
+         <AddCategoryModal
+            isAddCategoryModalOpen={isAddCategoryModalOpen}
+            closeAddCategoryModal={closeAddCategoryModal}
+            categoryMutate={mutate}
+         />
       </div>
    );
 };

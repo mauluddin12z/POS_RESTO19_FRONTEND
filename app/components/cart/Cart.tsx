@@ -49,7 +49,7 @@ const Cart: React.FC<CartPropsInterface> = ({
                Your cart is empty.
             </div>
          ) : (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 flex-grow">
                {cartItems.map((item) => (
                   <CartItem
                      key={item.id}
@@ -65,8 +65,8 @@ const Cart: React.FC<CartPropsInterface> = ({
 
          {cartItems.length > 0 && (
             <>
-               {/* Summary + Order */}
-               <div className="sticky bottom-0 bg-white pt-2 pb-4 border-t border-gray-200 mt-auto">
+               {/* Sticky Summary + Order at the bottom */}
+               <div className="sticky bottom-0 bg-white pt-2 pb-4 border-t border-gray-200 mt-auto w-full">
                   <div className="flex justify-between mb-3">
                      <span className="text-sm font-medium">Total:</span>
                      <span className="text-sm font-semibold">

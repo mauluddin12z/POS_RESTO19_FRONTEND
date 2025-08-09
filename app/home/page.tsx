@@ -8,7 +8,6 @@ import useCart from "@/app/hooks/useCart";
 import { useMenus } from "@/app/api/menuServices";
 import useAuth from "@/app/hooks/useAuth";
 import { MenuFilterInterface, UserInterface } from "../types";
-import { useCategories } from "../api/categoryServices";
 import Modal from "../components/ui/Modal";
 import Search from "../components/ui/Search";
 import Alert from "../components/ui/Alert";
@@ -16,6 +15,7 @@ import { useOrders } from "../api/orderServices";
 import Cart from "../components/cart/Cart";
 import ShowCartModalButton from "../components/cart/ShowCartModalButton";
 import useOrderActions from "../hooks/useOrderActions";
+import { useCategories } from "../api/categoryServices";
 
 export default function Page() {
    const [searchQuery, setSearchQuery] = useState("");
@@ -32,7 +32,9 @@ export default function Page() {
    });
 
    // Load categories and menus
-   const { categories, isLoading: loadingCategories } = useCategories();
+   const categoryFilters = { page: 1, pageSize: 100 };
+   const { categories, isLoading: loadingCategories } =
+      useCategories(categoryFilters);
    const { menus, isLoading: loadingMenus } = useMenus(filters);
 
    const handleCategoryClick = useCallback((categoryId: number | null) => {
@@ -92,7 +94,7 @@ export default function Page() {
                   />
                   {/* Menu Filters */}
                   <MenuFilters
-                     categories={categories}
+                     categories={categories?.data}
                      activeCategoryId={filters.categoryId}
                      onCategoryClick={handleCategoryClick}
                      loadingCategories={loadingCategories}

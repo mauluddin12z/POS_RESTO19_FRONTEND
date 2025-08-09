@@ -22,7 +22,6 @@ interface OrderItemProps {
 }
 
 const OrderItem = ({ order, mutate }: OrderItemProps) => {
-   console.log(order)
    const { date, time } = formatDateToIndonesian(order?.createdAt);
    const [selectedOrder, setSelectedOrder] = useState<OrderInterface | null>(
       null
