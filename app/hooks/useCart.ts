@@ -58,7 +58,6 @@ const useCart = () => {
 
    // Add to cart
    const handleAddToCart = (product: ProductInterface) => {
-      console.log("Adding product to cart:", product);
       setCart((prev: CartInterface) => {
          const existingItem = prev.cartItems.find(
             (item) => item.id === product.id
