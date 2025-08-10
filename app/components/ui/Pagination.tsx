@@ -4,10 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function Pagination({
-   totalItems,
    totalPages,
    currentPage,
-   pageSize,
    hasNextPage,
    isLoading,
    onPageChange,
@@ -20,6 +18,41 @@ export default function Pagination({
       if (isLoading || page === currentPage) return;
       onPageChange(page);
    };
+   if (isLoading) {
+      return (
+         <ul className="inline-flex -space-x-px">
+            {/* Prev Page */}
+            <li>
+               <button
+                  className="px-3 py-2 leading-tight bg-white border border-gray-300 rounded-l-lg text-gray-400"
+                  disabled
+               >
+                  <FontAwesomeIcon icon={faArrowLeft} />
+               </button>
+            </li>
+
+            {/* Page Numbers */}
+            <li>
+               <button
+                  className="px-3 py-2 leading-tight text-gray-400 bg-white border border-gray-300"
+                  disabled
+               >
+                  1
+               </button>
+            </li>
+
+            {/* Next Page */}
+            <li>
+               <button
+                  className="px-3 py-2 leading-tight bg-white border border-gray-300 rounded-r-lg text-gray-400"
+                  disabled
+               >
+                  <FontAwesomeIcon icon={faArrowRight} />
+               </button>
+            </li>
+         </ul>
+      );
+   }
 
    return (
       <div className="flex justify-center items-center gap-x-2">
@@ -73,31 +106,6 @@ export default function Pagination({
                </button>
             </li>
          </ul>
-
-         {isLoading && (
-            <ul className="inline-flex -space-x-px">
-               {/* Prev Page */}
-               <li>
-                  <button className="px-3 py-2 leading-tight bg-white border border-gray-300 rounded-l-lg text-gray-400">
-                     <FontAwesomeIcon icon={faArrowLeft} />
-                  </button>
-               </li>
-
-               {/* Page Numbers */}
-               <li>
-                  <button className="px-3 py-2 leading-tight text-gray-400 bg-white  border border-gray-300 ">
-                     1
-                  </button>
-               </li>
-
-               {/* Next Page */}
-               <li>
-                  <button className="px-3 py-2 leading-tight bg-white border border-gray-300 rounded-r-lg text-gray-400">
-                     <FontAwesomeIcon icon={faArrowRight} />
-                  </button>
-               </li>
-            </ul>
-         )}
       </div>
    );
 }
