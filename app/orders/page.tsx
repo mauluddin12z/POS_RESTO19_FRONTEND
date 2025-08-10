@@ -8,7 +8,7 @@ import OrderItem from "../components/order/OrderItem";
 import Pagination from "../components/ui/Pagination";
 import SkeletonLoading from "../components/ui/SkeletonLoading";
 import DateRangeButtonGroup from "../components/order/DateRangeButton";
-import PaymentStatusSelection from "../components/order/PaymentStatusSelection";
+import PaymentStatusSelection from "../components/payment/PaymentStatusSelection";
 import OrderItemLoading from "../components/order/OrderItemLoading";
 
 export default function Page() {

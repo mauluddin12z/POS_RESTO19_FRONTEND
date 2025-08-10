@@ -4,6 +4,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Alert from "../ui/Alert";
 import { CategoryInterface } from "../../types";
 import { useCategories } from "@/app/api/categoryServices";
+import LoadingButton from "../ui/LoadingButton";
 
 interface formErrors {
    categoryName?: string;
@@ -84,13 +85,21 @@ const CategoryForm = ({
                }`}
                disabled={isSubmitting}
             >
-               {isSubmitting
-                  ? isAdding
-                     ? "Adding..."
-                     : "Updating..."
-                  : isAdding
-                  ? "Add Category"
-                  : "Save Changes"}
+               {isSubmitting ? (
+                  isAdding ? (
+                     <div className="flex gap-2">
+                        <LoadingButton /> Adding...
+                     </div>
+                  ) : (
+                     <div className="flex gap-2">
+                        <LoadingButton /> Updating...
+                     </div>
+                  )
+               ) : isAdding ? (
+                  "Add Category"
+               ) : (
+                  "Save Changes"
+               )}
             </button>
          </form>
       </div>

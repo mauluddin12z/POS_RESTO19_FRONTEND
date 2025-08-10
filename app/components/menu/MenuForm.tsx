@@ -5,6 +5,7 @@ import Alert from "../ui/Alert";
 import { CategoryInterface } from "../../types";
 import AddCategoryModal from "./AddCategoryModal";
 import { useCategories } from "@/app/api/categoryServices";
+import LoadingButton from "../ui/LoadingButton";
 
 interface formErrors {
    menuName?: string;
@@ -245,13 +246,21 @@ const MenuForm = ({
                }`}
                disabled={isSubmitting}
             >
-               {isSubmitting
-                  ? isAdding
-                     ? "Adding..."
-                     : "Updating..."
-                  : isAdding
-                  ? "Add Menu Item"
-                  : "Save Changes"}
+               {isSubmitting ? (
+                  isAdding ? (
+                     <div className="flex gap-2">
+                        <LoadingButton /> Adding...
+                     </div>
+                  ) : (
+                     <div className="flex gap-2">
+                        <LoadingButton /> Updating...
+                     </div>
+                  )
+               ) : isAdding ? (
+                  "Add Menu Item"
+               ) : (
+                  "Save Changes"
+               )}
             </button>
          </form>
          <AddCategoryModal

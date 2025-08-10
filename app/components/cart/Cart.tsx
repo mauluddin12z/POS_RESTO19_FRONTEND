@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import CartItem from "./CartItem";
 import { CartInterface, CartItemInterface } from "@/app/types";
+import LoadingButton from "../ui/LoadingButton";
 
 export interface CartPropsInterface {
    orderId: number | null;
@@ -84,7 +85,13 @@ const Cart: React.FC<CartPropsInterface> = ({
                            : "cursor-pointer"
                      }`}
                   >
-                     {isSubmitting ? "Loading..." : "Add a new order"}
+                     {isSubmitting ? (
+                        <div className="flex gap-2">
+                           <LoadingButton /> Loading...
+                        </div>
+                     ) : (
+                        "Add a new order"
+                     )}
                   </button>
                   <button
                      onClick={() => {

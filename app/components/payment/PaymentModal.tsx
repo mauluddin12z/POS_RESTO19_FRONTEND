@@ -2,8 +2,9 @@
 import React from "react";
 import Modal from "../ui/Modal";
 import { OrderInterface } from "../../types";
-import PaymentMethod from "../payment/PaymentMethod";
-import OrderDetailsTable from "./OrderDetailsTable";
+import PaymentMethod from "./PaymentMethod";
+import OrderDetailsTable from "../order/OrderDetailsTable";
+import LoadingButton from "../ui/LoadingButton";
 
 interface PaymentModalProps {
    isOpen: boolean;
@@ -57,7 +58,13 @@ const PaymentModal = ({
                   onClick={() => handlePayment(onClose)}
                   disabled={isSubmitting}
                >
-                  {isSubmitting ? "Processing..." : "Proceed to Pay"}
+                  {isSubmitting ? (
+                     <div className="flex gap-2">
+                        <LoadingButton /> Processing...
+                     </div>
+                  ) : (
+                     "Proceed to Pay"
+                  )}
                </button>
             </div>
          </div>

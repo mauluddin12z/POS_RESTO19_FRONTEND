@@ -10,7 +10,7 @@ import PaymentStatus from "../payment/PaymentStatus";
 import usePayment from "../../hooks/usePayment";
 import PaymentSuccessful from "../payment/PaymentSuccessful";
 import ActionButtons from "./ActionButtons";
-import PaymentModal from "./PaymentModal";
+import PaymentModal from "../payment/PaymentModal";
 import OrderDetailsTable from "./OrderDetailsTable";
 import EditOrderModal from "./EditOrderModal";
 // import EditOrderModal from "./EditOrderModal"; // <-- Modal edit baru

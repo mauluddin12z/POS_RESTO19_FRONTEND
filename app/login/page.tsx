@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState, FormEvent } from "react";
 import { login } from "@/app/api/auth";
+import LoadingButton from "../components/ui/LoadingButton";
 
 export default function Page() {
    const [username, setUsername] = useState<string>("");
@@ -100,7 +101,13 @@ export default function Page() {
                               : "cursor-pointer"
                         }`}
                      >
-                        {isSubmitting ? "Loading..." : "Sign In"}
+                        {isSubmitting ? (
+                           <div className="flex gap-2">
+                              <LoadingButton /> Loading...
+                           </div>
+                        ) : (
+                           "Sign In"
+                        )}
                      </button>
                   </div>
                </form>

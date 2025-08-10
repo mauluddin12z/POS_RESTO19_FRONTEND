@@ -11,6 +11,7 @@ import useOrderActions from "@/app/hooks/useOrderActions";
 import Alert from "../ui/Alert";
 import MenuGrid from "../menu/MenuGrid";
 import AddOrderItemModal from "./AddOrderItemModal";
+import LoadingButton from "../ui/LoadingButton";
 
 interface EditOrderModalProps {
    isOpen: boolean;
@@ -138,7 +139,13 @@ const EditOrderModal = ({
                               : "cursor-pointer"
                         }`}
                      >
-                        {isSubmitting ? "Saving..." : "Save Changes"}
+                        {isSubmitting ? (
+                           <div className="flex gap-2">
+                              <LoadingButton /> Saving...
+                           </div>
+                        ) : (
+                           "Save Changes"
+                        )}
                      </button>
                      <button
                         onClick={() => {

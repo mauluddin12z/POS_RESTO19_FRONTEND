@@ -23,7 +23,7 @@ const MenuFilters: React.FC<Props> = ({
       >
          {loadingCategories ? (
             <>
-               {[...Array(8)].map((_, index) => (
+               {[...Array(4)].map((_, index) => (
                   <div key={index} className="min-w-20 min-h-6">
                      <SkeletonLoading />
                   </div>
