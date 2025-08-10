@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+module.exports = {
+   async rewrites() {
+      return [
+         {
+            source: "/api",
+            destination: "https://pos-resto-19-frontend.vercel.app",
+         },
+      ];
+   },
 };
-
-export default nextConfig;
