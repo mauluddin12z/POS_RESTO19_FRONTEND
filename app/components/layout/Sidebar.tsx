@@ -12,13 +12,19 @@ import {
    faBorderAll,
 } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/app/api/auth";
+import Image from "next/image";
 
 const links = [
-   { href: "/home", label: "Home", menuIcon: faHouse },
-   { href: "/orders", label: "Orders", menuIcon: faNoteSticky },
-   { href: "/menus", label: "Menus", menuIcon: faList },
-   { href: "/categories", label: "categories", menuIcon: faBorderAll, adminOnly: true },
-   { href: "/users", label: "Users", menuIcon: faUsers, adminOnly: true },
+   { href: "/home", label: "Home", icon: "home.svg" },
+   { href: "/orders", label: "Orders", icon: "orders.svg" },
+   { href: "/menus", label: "Menus", icon: "menus.svg" },
+   {
+      href: "/categories",
+      label: "categories",
+      icon: "categories.svg",
+      adminOnly: true,
+   },
+   { href: "/users", label: "Users", icon: "users.svg", adminOnly: true },
 ];
 
 export default function Sidebar() {
@@ -52,7 +58,14 @@ export default function Sidebar() {
                            pathname === link.href && "bg-gray-200"
                         }`}
                      >
-                        <FontAwesomeIcon icon={link.menuIcon} />
+                        <Image
+                           className="w-5 aspect-square"
+                           width={50}
+                           height={50}
+                           src={`sidebarIcon/${link.icon}`}
+                           alt={link.label}
+                           priority
+                        />
                         <div className="hidden lg:block">{link.label}</div>
                      </Link>
                   </li>
@@ -62,7 +75,14 @@ export default function Sidebar() {
                   onClick={handleLogout}
                   className="flex flex-col justify-center items-center w-full gap-y-2 p-2 text-gray-900 rounded-lg hover:bg-gray-100 cursor-pointer"
                >
-                  <FontAwesomeIcon icon={faSignOut} />
+                  <Image
+                     className="w-5 aspect-square"
+                     width={50}
+                     height={50}
+                     src="sidebarIcon/logout.svg"
+                     alt="logout"
+                     priority
+                  />
                   <div className="hidden lg:block">Logout</div>
                </button>
             </li>
