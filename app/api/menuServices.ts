@@ -1,8 +1,6 @@
 import useSWR from "swr";
 import axiosInstance from "./axiosInstance";
 import {
-   AddMenuFormInterface,
-   EditMenuFormInterface,
    MenuFilterInterface,
 } from "@/app/types";
 

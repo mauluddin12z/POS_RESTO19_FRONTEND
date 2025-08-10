@@ -1,4 +1,3 @@
-
 // -----------------------------
 // API Utility Functions
 // -----------------------------
@@ -18,6 +17,12 @@ export const getUserById = async (userId: number) => {
    return response.data;
 };
 
+// Get Session
+export const getSession = async () => {
+   const response = await axiosInstance.get(`/auth/session`);
+   return response;
+};
+
 // Create a new user
 export const createUser = async (userData: any) => {
    const response = await axiosInstance.post("/user", userData);
@@ -26,7 +31,7 @@ export const createUser = async (userData: any) => {
 
 // Update a user by ID
 export const updateUser = async (id: string | number, updatedData: any) => {
-   console.log("test")
+   console.log("test");
    const response = await axiosInstance.patch(`/user/${id}`, updatedData);
    return response.data;
 };
