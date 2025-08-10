@@ -31,7 +31,6 @@ export const createUser = async (userData: any) => {
 
 // Update a user by ID
 export const updateUser = async (id: string | number, updatedData: any) => {
-   console.log("test");
    const response = await axiosInstance.patch(`/user/${id}`, updatedData);
    return response.data;
 };

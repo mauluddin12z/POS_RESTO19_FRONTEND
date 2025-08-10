@@ -25,8 +25,8 @@ const Modal = ({ children, isOpen, onClose }: ModalProps) => {
    return (
       isOpen && (
          <div className="fixed inset-0 z-[52] bg-black/50 backdrop:bg-transparent flex justify-center items-center">
-            <div className="flex items-center justify-center text-center focus:outline-none">
-               <div className="relative rounded-lg bg-white text-left shadow-xl overflow-hidden p-2 max-w-full">
+            <div className="h-[calc(100vh-160px)] sm:h-[calc(100vh-140px)] focus:outline-none relative">
+               <div className="relative rounded-lg bg-white text-left shadow-xl overflow-hidden p-2 max-w-full top-0">
                   <div className="flex w-full bg-white sticky top-0 z-[51] justify-end">
                      <button
                         type="button"

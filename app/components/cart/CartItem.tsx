@@ -2,6 +2,7 @@ import { CartItemPropsInterface } from "@/app/types";
 import { priceFormat } from "@/app/utils/priceFormat";
 import { faMinus, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image, { ImageLoader } from "next/image";
 import React from "react";
 
 export default function CartItem({
@@ -11,9 +12,24 @@ export default function CartItem({
    onNotesChange,
    onRemove,
 }: CartItemPropsInterface) {
+   const myLoader: ImageLoader = ({ src }) => {
+      return src;
+   };
    return (
       <div className="flex flex-col border-b border-gray-200 pb-3 gap-2">
          <div className="flex gap-2 items-center justify-between">
+            <div className="w-18 rounded-lg overflow-hidden">
+               <Image
+                  className="w-full aspect-5/4 object-cover"
+                  loader={myLoader}
+                  src={item.imageUrl ?? "no-image.png"}
+                  width={500}
+                  height={500}
+                  priority
+                  unoptimized
+                  alt={item.name}
+               />
+            </div>
             <div className="flex flex-col gap-2">
                <span className="font-medium text-xs">{item.name}</span>
                <span className="text-sm text-gray-600">

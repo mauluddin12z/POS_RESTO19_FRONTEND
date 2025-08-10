@@ -6,7 +6,6 @@ import MenuGrid from "../components/menu/MenuGrid";
 import Pagination from "../components/ui/Pagination";
 import useCart from "@/app/hooks/useCart";
 import { useMenus } from "@/app/api/menuServices";
-import useAuth from "@/app/hooks/useAuth";
 import { MenuFilterInterface, UserInterface } from "../types";
 import Modal from "../components/ui/Modal";
 import Search from "../components/ui/Search";

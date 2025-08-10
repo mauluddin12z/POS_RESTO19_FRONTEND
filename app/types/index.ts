@@ -92,8 +92,8 @@ export interface OrderFilterInterface {
 // Product Interfaces
 export interface ProductInterface {
    id: number;
+   imageUrl: string;
    name: string;
-   image: string;
    price: number;
    stock: number;
 }
@@ -121,6 +121,7 @@ export interface CartInterface {
 
 export interface CartItemInterface {
    id: number;
+   imageUrl: string;
    name: string;
    price: number;
    quantity: number;

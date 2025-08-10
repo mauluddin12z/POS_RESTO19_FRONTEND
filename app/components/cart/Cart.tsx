@@ -14,7 +14,7 @@ export interface CartPropsInterface {
    onRemove: (id: number) => void;
    onQuantityChange: (id: number, quantity: number) => void;
    onNotesChange: (id: number, notes: string) => void;
-   onOrder: () => void;
+   onOrder: (onClose: () => void) => void;
    isSubmitting: boolean;
    closeCart: () => void;
 }
@@ -76,8 +76,7 @@ const Cart: React.FC<CartPropsInterface> = ({
                   </div>
                   <button
                      onClick={() => {
-                        onOrder();
-                        closeCart();
+                        onOrder(closeCart);
                      }}
                      className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm font-medium ${
                         isSubmitting

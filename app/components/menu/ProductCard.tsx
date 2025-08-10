@@ -27,7 +27,7 @@ export default function ProductCard({
             </div>
          )}
          <Image
-            className="w-full aspect-5/4 hover:object-contain object-cover"
+            className="w-full aspect-5/4 object-cover"
             loader={myLoader}
             src={productImageUrl ?? "no-image.png"}
             width={500}
@@ -53,7 +53,7 @@ export default function ProductCard({
                      onAddToCart({
                         id,
                         name: productName,
-                        image: productImageUrl,
+                        imageUrl: productImageUrl,
                         price: productPrice,
                         stock: stock,
                      })

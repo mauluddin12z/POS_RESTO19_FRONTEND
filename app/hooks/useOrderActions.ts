@@ -36,7 +36,7 @@ const useOrderActions = ({
       setAlert(null);
    };
 
-   const handleOrder = async () => {
+   const handleOrder = async (onSuccess?: () => void) => {
       const orderFormData = new FormData();
       orderFormData.append("userId", user?.userId?.toString() || "");
       orderFormData.append("total", cart.total);
@@ -77,6 +77,8 @@ const useOrderActions = ({
             message: orderResponse?.message || "Order successfully created.",
          });
          mutate();
+         // Call onClose when order created successful
+         if (onSuccess) onSuccess();
       } catch (error: any) {
          if (error instanceof AxiosError) {
             setAlert({
@@ -99,19 +101,16 @@ const useOrderActions = ({
       orderId: number,
       updatedItems: CartItemInterface[],
       total: string,
-   ) => {
+      onSuccess?: () => void
+   ): Promise<void> => {
       setIsSubmitting(true);
-
       try {
-         // 1. Update the order total
          const formData = new FormData();
          formData.append("total", total);
          await updateOrder(orderId, formData);
 
-         // 2. Delete existing order details
          await deleteOrderDetailByOrderId(orderId);
 
-         // 3. Recreate order details
          for (const item of updatedItems) {
             const detailFormData = new FormData();
             detailFormData.append("orderId", orderId.toString());
@@ -123,13 +122,16 @@ const useOrderActions = ({
                (item.price * item.quantity).toString()
             );
             detailFormData.append("notes", item.notes);
-
             await createOrderDetail(detailFormData);
          }
+
          setAlert({
             type: "success",
             message: "Order successfully updated.",
          });
+
+         // Call onClose when order update is successful
+         if (onSuccess) onSuccess();
          mutate();
       } catch (error: any) {
          if (error instanceof AxiosError) {
