@@ -1,8 +1,18 @@
-import { ProductCardPropsInterface } from "@/app/types";
-import { priceFormat } from "@/app/utils/priceFormat";
-import Image, { ImageLoader } from "next/image";
-import React from "react";
 import QuantityControl from "../cart/QuantityControl";
+import Image, { ImageLoader } from "next/image";
+import { priceFormat } from "@/app/utils/priceFormat";
+import { CartInterface, ProductInterface } from "@/app/types";
+
+export interface ProductCardPropsInterface {
+   id: number;
+   productName: string;
+   productImageUrl: string;
+   productPrice: number;
+   stock: number;
+   onAddToCart: (product: ProductInterface) => void;
+   cart: CartInterface;
+   onQuantityChange: (id: number, quantity: number) => void;
+}
 
 export default function ProductCard({
    id,
@@ -15,42 +25,46 @@ export default function ProductCard({
    onQuantityChange,
 }: ProductCardPropsInterface) {
    const myLoader: ImageLoader = ({ src }) => src;
-
    const cartItem = cart.cartItems.find((item) => item.id === id);
 
    return (
       <div
-         className={`w-full h-fit duration-200 bg-white border border-gray-200 overflow-hidden rounded-lg shadow-sm relative ${
+         className={`flex flex-col h-full w-full duration-200 bg-white border border-gray-200 overflow-hidden rounded-lg shadow-sm relative ${
             stock > 0 && "hover:scale-[101%]"
          }`}
       >
+         {/* Overlay if out of stock */}
          {stock === 0 && (
             <div className="absolute inset-0 bg-gray-900/80 z-10 flex items-center justify-center text-white text-lg font-semibold rounded-lg">
                Out of Stock
             </div>
          )}
 
-         <Image
-            className="w-full aspect-5/4 object-cover"
-            loader={myLoader}
-            src={productImageUrl ?? "no-image.png"}
-            width={500}
-            height={500}
-            priority
-            unoptimized
-            alt={productName}
-         />
+         {/* Product Image */}
+         <div className="w-full aspect-[5/4] relative">
+            <Image
+               className="object-cover rounded-t-lg"
+               loader={myLoader}
+               src={productImageUrl ?? "no-image.png"}
+               fill
+               priority
+               unoptimized
+               alt={productName}
+            />
+         </div>
 
-         <div className="p-4">
-            <h5 className="text-xs lg:text-md font-semibold tracking-tight text-gray-900 mb-2">
-               {productName}
-            </h5>
-
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-2">
-               <span className="w-full text-xs lg:text-md font-bold text-gray-900">
+         {/* Item Content */}
+         <div className="flex flex-col flex-grow justify-between h-full p-4 gap-3">
+            <div>
+               <h5 className="text-xs sm:text-sm font-semibold tracking-tight text-gray-900 line-clamp-2">
+                  {productName}
+               </h5>
+               <span className="text-sm sm:text-base font-bold text-gray-900">
                   {priceFormat(productPrice)}
                </span>
+            </div>
 
+            <div className="flex justify-end items-end mt-auto">
                {cartItem ? (
                   <QuantityControl
                      item={cartItem}
@@ -58,9 +72,9 @@ export default function ProductCard({
                   />
                ) : (
                   <button
-                     className={`w-full bg-white text-green-600 border border-green-600 font-medium rounded-full text-sm px-2 py-1 text-center ${
+                     className={`w-36 h-fit bg-white text-green-700 border sm:border-2 border-green-700 font-medium rounded-full text-sm px-2 py-1 text-center ${
                         stock > 0 &&
-                        "cursor-pointer hover:text-white hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300"
+                        "cursor-pointer hover:text-white hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300"
                      }`}
                      onClick={() =>
                         onAddToCart({

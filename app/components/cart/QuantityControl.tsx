@@ -77,7 +77,7 @@ export default function QuantityControl({
             className={`h-8 w-8 flex items-center justify-center border bg-white rounded-full ${
                item.quantity <= 0
                   ? "border-green-200 text-green-200 cursor-not-allowed"
-                  : "border-green-600 text-green-600 hover:bg-green-600 hover:text-white cursor-pointer"
+                  : "border-green-700 text-green-700 hover:bg-green-700 hover:text-white cursor-pointer"
             }`}
          >
             <FontAwesomeIcon icon={faMinus} />
@@ -97,7 +97,7 @@ export default function QuantityControl({
             className={`h-8 w-8 flex items-center justify-center border bg-white rounded-full ${
                item.quantity >= item.stock
                   ? "border-green-200 text-green-200 cursor-not-allowed"
-                  : "border-green-600 text-green-600 hover:bg-green-600 hover:text-white cursor-pointer"
+                  : "border-green-700 text-green-700 hover:bg-green-700 hover:text-white cursor-pointer"
             }`}
          >
             <FontAwesomeIcon icon={faPlus} />

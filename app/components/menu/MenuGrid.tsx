@@ -1,8 +1,15 @@
 import Image from "next/image";
-import { MenuGridPropsInterface } from "../../types";
 import SkeletonLoading from "../ui/SkeletonLoading";
 import ProductCard from "./ProductCard";
+import { CartInterface, MenuInterface, ProductInterface } from "@/app/types";
 
+export interface MenuGridPropsInterface {
+   menus: MenuInterface[];
+   loading: boolean;
+   onAddToCart: (product: ProductInterface) => void;
+   cart: CartInterface;
+   onQuantityChange: (id: number, quantity: number) => void;
+}
 const MenuGrid: React.FC<MenuGridPropsInterface> = ({
    menus,
    loading,

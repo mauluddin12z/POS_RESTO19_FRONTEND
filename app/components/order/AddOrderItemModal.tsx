@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import Modal from "../ui/Modal";
 import MenuGrid from "../menu/MenuGrid";
 import { useMenus } from "@/app/api/menuServices";
-import { MenuFilterInterface, ProductInterface } from "@/app/types";
+import {
+   CartInterface,
+   MenuFilterInterface,
+   ProductInterface,
+} from "@/app/types";
 import Pagination from "../ui/Pagination";
 import Search from "../ui/Search";
 
@@ -10,12 +14,16 @@ interface AddOrderItemModalProps {
    isAddItemModalOpen: boolean;
    closeAddItemModal: () => void;
    onAddToCart: (product: ProductInterface) => void;
+   cart: CartInterface;
+   onQuantityChange: (id: number, quantity: number) => void;
 }
 
 export default function AddOrderItemModal({
    isAddItemModalOpen,
    closeAddItemModal,
    onAddToCart,
+   cart,
+   onQuantityChange,
 }: AddOrderItemModalProps) {
    const [searchQuery, setSearchQuery] = useState("");
    const [filters, setFilters] = useState<MenuFilterInterface>({
@@ -53,6 +61,8 @@ export default function AddOrderItemModal({
                menus={menus?.data}
                loading={isLoading}
                onAddToCart={onAddToCart}
+               cart={cart}
+               onQuantityChange={onQuantityChange}
             />
             <div className="flex justify-center items-center">
                <Pagination

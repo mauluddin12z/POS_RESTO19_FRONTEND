@@ -166,6 +166,8 @@ const EditOrderModal = ({
                isAddItemModalOpen={isAddItemModalOpen}
                closeAddItemModal={closeAddItemModal}
                onAddToCart={handleAddToCart}
+               cart={cart}
+               onQuantityChange={handleQuantityChange}
             />
          </Modal>
          {alert && (
