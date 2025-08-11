@@ -203,7 +203,9 @@ export default function page() {
                         onClose={handleCloseAlert}
                      />
                   )}
-                  Are you sure you want to delete this data?
+                  <p className="text-center">
+                     Are you sure you want to delete this data?
+                  </p>
                   <div className="mt-4 gap-4  flex justify-center">
                      <button
                         onClick={confirmDeleteCategory}

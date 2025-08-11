@@ -52,6 +52,7 @@ export default function CartItem({
                      <FontAwesomeIcon icon={faMinus} />
                   </button>
                   <input
+                     readOnly
                      type="number"
                      className="no-arrows w-8 shrink-0 border-0 bg-transparent text-center text-xs font-medium text-gray-900 focus:outline-none focus:ring-0"
                      placeholder="99"
