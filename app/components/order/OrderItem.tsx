@@ -13,6 +13,7 @@ import ActionButtons from "./ActionButtons";
 import PaymentModal from "../payment/PaymentModal";
 import OrderDetailsTable from "./OrderDetailsTable";
 import EditOrderModal from "./EditOrderModal";
+import LoadingButton from "../ui/LoadingButton";
 // import EditOrderModal from "./EditOrderModal"; // <-- Modal edit baru
 
 interface OrderItemProps {
@@ -159,7 +160,13 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
                         }`}
                         disabled={isDeleting}
                      >
-                        {isDeleting ? "Deleting..." : "Yes, delete"}
+                        {isDeleting ? (
+                           <div className="flex gap-2 justify-center items-center">
+                              <LoadingButton /> Deleting...
+                           </div>
+                        ) : (
+                           "Yes, delete"
+                        )}
                      </button>
                      <button
                         onClick={closeModal}
