@@ -29,7 +29,7 @@ const Alert: React.FC<AlertPropsInterface> = ({ type, message, onClose }) => {
       <div
          role="alert"
          aria-live="assertive"
-         className={`fixed top-5 left-1/2 transform -translate-x-1/2 z-[999] transition-all duration-500 flex gap-x-10 justify-between p-4 mb-4 text-sm rounded-lg shadow ${
+         className={`fixed top-5 left-1/2 transform -translate-x-1/2 z-[999] transition-all duration-500 flex justify-between p-4 mb-4 text-sm rounded-lg shadow w-64 sm:min-w-96 ${
             alertStyles[type] || alertStyles.default
          } ${
             !isVisible

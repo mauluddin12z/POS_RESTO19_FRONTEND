@@ -1,5 +1,6 @@
 import React from "react";
 import Alert from "../ui/Alert";
+import LoadingButton from "../ui/LoadingButton";
 
 interface UserFormProps {
    formData: any;
@@ -133,13 +134,21 @@ const UserForm = ({
                }`}
                disabled={isSubmitting}
             >
-               {isSubmitting
-                  ? isAdding
-                     ? "Adding..."
-                     : "Updating..."
-                  : isAdding
-                  ? "Add User"
-                  : "Save Changes"}
+               {isSubmitting ? (
+                  isAdding ? (
+                     <div className="flex gap-2 justify-center items-center">
+                        <LoadingButton /> Adding...
+                     </div>
+                  ) : (
+                     <div className="flex gap-2 justify-center items-center">
+                        <LoadingButton /> Updating...
+                     </div>
+                  )
+               ) : isAdding ? (
+                  "Add User"
+               ) : (
+                  "Save Changes"
+               )}
             </button>
          </form>
       </div>

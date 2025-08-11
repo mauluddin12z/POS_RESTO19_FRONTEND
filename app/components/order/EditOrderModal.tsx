@@ -9,7 +9,6 @@ import CartItem from "../cart/CartItem";
 import { priceFormat } from "@/app/utils/priceFormat";
 import useOrderActions from "@/app/hooks/useOrderActions";
 import Alert from "../ui/Alert";
-import MenuGrid from "../menu/MenuGrid";
 import AddOrderItemModal from "./AddOrderItemModal";
 import LoadingButton from "../ui/LoadingButton";
 
@@ -143,8 +142,8 @@ const EditOrderModal = ({
                            }`}
                         >
                            {isSubmitting ? (
-                              <div className="flex gap-2">
-                                 <LoadingButton /> Saving...
+                              <div className="flex gap-2 justify-center items-center">
+                                 <LoadingButton /> Loading...
                               </div>
                            ) : (
                               "Save Changes"

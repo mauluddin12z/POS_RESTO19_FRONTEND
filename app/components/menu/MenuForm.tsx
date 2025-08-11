@@ -248,11 +248,11 @@ const MenuForm = ({
             >
                {isSubmitting ? (
                   isAdding ? (
-                     <div className="flex gap-2">
+                     <div className="flex gap-2 justify-center items-center">
                         <LoadingButton /> Adding...
                      </div>
                   ) : (
-                     <div className="flex gap-2">
+                     <div className="flex gap-2 justify-center items-center">
                         <LoadingButton /> Updating...
                      </div>
                   )

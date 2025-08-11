@@ -59,7 +59,7 @@ const PaymentModal = ({
                   disabled={isSubmitting}
                >
                   {isSubmitting ? (
-                     <div className="flex gap-2">
+                     <div className="flex gap-2 justify-center items-center">
                         <LoadingButton /> Processing...
                      </div>
                   ) : (
