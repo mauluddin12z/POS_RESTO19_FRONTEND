@@ -26,8 +26,6 @@ interface MenuFormProps {
    ) => void;
    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-   alert: any;
-   handleCloseAlert: () => void;
 }
 
 const MenuForm = ({
@@ -38,8 +36,6 @@ const MenuForm = ({
    handleChange,
    handleFileChange,
    handleSubmit,
-   alert,
-   handleCloseAlert,
 }: MenuFormProps) => {
    const filters = { page: 1, pageSize: 100 };
    const { categories, mutate } = useCategories(filters);
@@ -59,15 +55,6 @@ const MenuForm = ({
             <h2 className="text-2xl font-semibold text-gray-800">
                {isAdding ? "Add Menu Item" : "Edit Menu Item"}
             </h2>
-
-            {alert && (
-               <Alert
-                  type={alert.type}
-                  message={alert.message}
-                  onClose={handleCloseAlert}
-               />
-            )}
-
             {/* Menu Image */}
             <div className="mb-4 mt-4 flex justify-center">
                <div className="rounded-md border border-indigo-500 bg-gray-50 p-4 shadow-md w-36">

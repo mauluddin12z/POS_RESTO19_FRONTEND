@@ -5,9 +5,10 @@ import { createUser } from "../../api/userServices";
 import UserForm from "./UserForm";
 interface AddUserFormProps {
    mutate: () => void;
+   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
-export default function AddUserForm({ mutate }: AddUserFormProps) {
+export default function AddUserForm({ mutate, setAlert }: AddUserFormProps) {
    // Form state
    const [formData, setFormData] = useState<AddUserFormInterface>({
       name: "",
@@ -30,10 +31,6 @@ export default function AddUserForm({ mutate }: AddUserFormProps) {
    };
 
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
 
    // Handle form submission
    const handleAddUser = async (e: FormEvent<HTMLFormElement>) => {
@@ -77,20 +74,6 @@ export default function AddUserForm({ mutate }: AddUserFormProps) {
       }
    };
 
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
-
-   // Auto-dismiss alert after 5 seconds
-   useEffect(() => {
-      if (alert) {
-         const timer = setTimeout(() => {
-            setAlert(null);
-         }, 5000);
-         return () => clearTimeout(timer);
-      }
-   }, [alert]);
-
    return (
       <UserForm
          formData={formData}
@@ -98,8 +81,6 @@ export default function AddUserForm({ mutate }: AddUserFormProps) {
          isAdding={true}
          handleChange={handleChange}
          handleSubmit={handleAddUser}
-         alert={alert}
-         handleCloseAlert={handleCloseAlert}
       />
    );
 }

@@ -4,9 +4,7 @@ import Image, { ImageLoader } from "next/image";
 import { priceFormat } from "../../utils/priceFormat";
 import Modal from "../ui/Modal";
 import EditMenuForm from "./EditMenuForm";
-import { deleteMenu } from "../../api/menuServices";
 import Alert from "../ui/Alert";
-import { AxiosError } from "axios";
 import { handleDeleteMenu } from "@/app/handlers/menuHandlers";
 
 export interface MenuPropsInterface {
@@ -168,20 +166,18 @@ export default function MenuTable({
 
          {selectedMenu && isEditModalOpen && (
             <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
-               <EditMenuForm menuId={selectedMenu.menuId} mutate={mutate} />
+               <EditMenuForm
+                  menuId={selectedMenu.menuId}
+                  closeEditModal={closeEditModal}
+                  mutate={mutate}
+                  setAlert={setAlert}
+               />
             </Modal>
          )}
 
          {selectedMenu && isDeleteModalOpen && (
             <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
                <div>
-                  {alert && (
-                     <Alert
-                        type={alert.type}
-                        message={alert.message}
-                        onClose={handleCloseAlert}
-                     />
-                  )}
                   <p className="text-center">
                      Are you sure you want to delete this data?
                   </p>
@@ -205,6 +201,13 @@ export default function MenuTable({
                   </div>
                </div>
             </Modal>
+         )}
+         {alert && (
+            <Alert
+               type={alert.type}
+               message={alert.message}
+               onClose={handleCloseAlert}
+            />
          )}
       </div>
    );

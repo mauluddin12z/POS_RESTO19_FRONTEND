@@ -12,8 +12,6 @@ interface UserFormProps {
       >
    ) => void;
    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-   alert: any;
-   handleCloseAlert: () => void;
 }
 
 const UserForm = ({
@@ -22,8 +20,6 @@ const UserForm = ({
    isAdding,
    handleChange,
    handleSubmit,
-   alert,
-   handleCloseAlert,
 }: UserFormProps) => {
    const userRole = ["admin", "superadmin"];
    return (
@@ -33,14 +29,6 @@ const UserForm = ({
             <h2 className="text-2xl font-semibold text-gray-800">
                {isAdding ? "Add User" : "Edit User"}
             </h2>
-
-            {alert && (
-               <Alert
-                  type={alert.type}
-                  message={alert.message}
-                  onClose={handleCloseAlert}
-               />
-            )}
 
             {/* name */}
             <div className="mb-4 mt-4">
@@ -60,6 +48,7 @@ const UserForm = ({
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                />
             </div>
+
             {/* username */}
             <div className="mb-4 mt-4">
                <label

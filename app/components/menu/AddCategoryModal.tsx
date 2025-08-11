@@ -60,39 +60,41 @@ export default function AddCategoryModal({
       setAlert(null);
    };
    return (
-      <Modal isOpen={isAddCategoryModalOpen} onClose={closeAddCategoryModal}>
-         <form onSubmit={submitAddCategory}>
-            <div className="flex gap-2">
-               <input
-                  type="text"
-                  id="categoryName"
-                  name="categoryName"
-                  placeholder="Enter category name"
-                  value={formData.categoryName}
-                  onChange={handleChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-               />
-               {/* Submit Button */}
-               <button
-                  type="submit"
-                  className={`flex justify-center items-center p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 ${
-                     isSubmitting
-                        ? "opacity-50 cursor-not-allowed"
-                        : "cursor-pointer"
-                  }`}
-                  disabled={isSubmitting}
-               >
-                  {isSubmitting ? (
-                     <LoadingButton />
-                  ) : (
-                     <FontAwesomeIcon
-                        className="h-10 w-10 text-white"
-                        icon={faPlus}
-                     />
-                  )}
-               </button>
-            </div>
-         </form>
+      <>
+         <Modal isOpen={isAddCategoryModalOpen} onClose={closeAddCategoryModal}>
+            <form onSubmit={submitAddCategory}>
+               <div className="flex gap-2">
+                  <input
+                     type="text"
+                     id="categoryName"
+                     name="categoryName"
+                     placeholder="Enter category name"
+                     value={formData.categoryName}
+                     onChange={handleChange}
+                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                  />
+                  {/* Submit Button */}
+                  <button
+                     type="submit"
+                     className={`flex justify-center items-center p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 ${
+                        isSubmitting
+                           ? "opacity-50 cursor-not-allowed"
+                           : "cursor-pointer"
+                     }`}
+                     disabled={isSubmitting}
+                  >
+                     {isSubmitting ? (
+                        <LoadingButton />
+                     ) : (
+                        <FontAwesomeIcon
+                           className="h-10 w-10 text-white"
+                           icon={faPlus}
+                        />
+                     )}
+                  </button>
+               </div>
+            </form>
+         </Modal>
          {alert && (
             <Alert
                type={alert.type}
@@ -100,6 +102,6 @@ export default function AddCategoryModal({
                onClose={handleCloseAlert}
             />
          )}
-      </Modal>
+      </>
    );
 }

@@ -21,8 +21,6 @@ interface CategoryFormProps {
       >
    ) => void;
    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-   alert: any;
-   handleCloseAlert: () => void;
 }
 
 const CategoryForm = ({
@@ -32,8 +30,6 @@ const CategoryForm = ({
    isAdding,
    handleChange,
    handleSubmit,
-   alert,
-   handleCloseAlert,
 }: CategoryFormProps) => {
    return (
       <div className="max-w-sm mx-auto bg-white rounded-lg overflow-hidden p-2">
@@ -42,14 +38,6 @@ const CategoryForm = ({
             <h2 className="text-2xl font-semibold text-gray-800">
                {isAdding ? "Add Category" : "Edit Category"}
             </h2>
-
-            {alert && (
-               <Alert
-                  type={alert.type}
-                  message={alert.message}
-                  onClose={handleCloseAlert}
-               />
-            )}
 
             {/* Category Name */}
             <div className="mb-4 mt-4">

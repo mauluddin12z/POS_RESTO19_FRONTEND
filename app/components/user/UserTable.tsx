@@ -10,12 +10,14 @@ export interface UserPropsInterface {
    users: UserInterface[];
    loading: boolean;
    mutate: () => void;
+   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
 export default function UserTable({
    users,
    loading,
    mutate,
+   setAlert,
 }: UserPropsInterface) {
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -42,10 +44,6 @@ export default function UserTable({
    }, []);
 
    const [isDeleting, setIsDeleting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
 
    const handleDelete = useCallback(async () => {
       setIsDeleting(true);
@@ -77,21 +75,6 @@ export default function UserTable({
          }
       }
    }, [selectedUser]);
-
-   // Automatically clear the alert after 3 seconds when `alertMessage` changes
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
-
-   // Auto-dismiss alert after 5 seconds
-   useEffect(() => {
-      if (alert) {
-         const timer = setTimeout(() => {
-            setAlert(null);
-         }, 5000);
-         return () => clearTimeout(timer);
-      }
-   }, [alert]);
 
    const tableContent = useMemo(
       () =>
@@ -170,20 +153,17 @@ export default function UserTable({
 
          {selectedUser && isEditModalOpen && (
             <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
-               <EditUserForm userId={selectedUser.userId} mutate={mutate} />
+               <EditUserForm
+                  userId={selectedUser.userId}
+                  mutate={mutate}
+                  setAlert={setAlert}
+               />
             </Modal>
          )}
 
          {selectedUser && isDeleteModalOpen && (
             <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
                <div>
-                  {alert && (
-                     <Alert
-                        type={alert.type}
-                        message={alert.message}
-                        onClose={handleCloseAlert}
-                     />
-                  )}
                   <p className="text-center">
                      Are you sure you want to delete this data?
                   </p>

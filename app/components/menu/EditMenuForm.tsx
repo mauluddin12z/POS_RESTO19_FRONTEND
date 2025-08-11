@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import MenuForm from "./MenuForm";
 import { AlertType, EditMenuFormInterface } from "@/app/types";
-import { useCategories } from "@/app/api/categoryServices";
 import { getMenuById, updateMenu } from "@/app/api/menuServices";
 import { handleEditMenu } from "@/app/handlers/menuHandlers";
-
 interface EditMenuFormProps {
    menuId: number;
+   closeEditModal: () => void;
    mutate: () => void;
+   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
-const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
+const EditMenuForm = ({
+   menuId,
+   closeEditModal,
+   mutate,
+   setAlert,
+}: EditMenuFormProps) => {
    const [formData, setFormData] = useState<EditMenuFormInterface>({
       menuId: menuId,
       menuName: "",
@@ -83,10 +88,6 @@ const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
    };
 
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
 
    // Handle form submission
    const submitEditMenu = async (e: React.FormEvent) => {
@@ -100,39 +101,22 @@ const EditMenuForm = ({ menuId, mutate }: EditMenuFormProps) => {
          setFormErrors,
          mutate,
       });
+      closeEditModal();
    };
-
-   // Automatically clear the alert after 3 seconds when `alertMessage` changes
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
-
-   // Auto-dismiss alert after 5 seconds
-   useEffect(() => {
-      if (alert) {
-         const timer = setTimeout(() => {
-            setAlert(null);
-         }, 5000);
-         return () => clearTimeout(timer);
-      }
-   }, [alert]);
-
    // Conditional rendering for loading or error
    if (loading) return <div>Loading...</div>;
    if (error) return <div className="text-red-500">{error}</div>;
 
    return (
-      <MenuForm
-         formData={formData}
-         isSubmitting={isSubmitting}
-         isAdding={false}
-         handleChange={handleChange}
-         handleFileChange={handleFileChange}
-         handleSubmit={submitEditMenu}
-         alert={alert}
-         handleCloseAlert={handleCloseAlert}
-         formErrors={formErrors}
-      />
+         <MenuForm
+            formData={formData}
+            isSubmitting={isSubmitting}
+            isAdding={false}
+            handleChange={handleChange}
+            handleFileChange={handleFileChange}
+            handleSubmit={submitEditMenu}
+            formErrors={formErrors}
+         />
    );
 };
 

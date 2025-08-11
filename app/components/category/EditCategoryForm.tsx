@@ -7,9 +7,14 @@ import { handleEditCategory } from "@/app/handlers/categoryHandlers";
 interface EditCategoryFormProps {
    categoryId: number;
    mutate: () => void;
+   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
-const EditCategoryForm = ({ categoryId, mutate }: EditCategoryFormProps) => {
+const EditCategoryForm = ({
+   categoryId,
+   mutate,
+   setAlert,
+}: EditCategoryFormProps) => {
    const [formData, setFormData] = useState<EditCategoryFormInterface>({
       categoryId: categoryId,
       categoryName: "",
@@ -55,10 +60,6 @@ const EditCategoryForm = ({ categoryId, mutate }: EditCategoryFormProps) => {
    };
 
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
 
    // Handle form submission
    const submitEditCategory = async (e: React.FormEvent) => {
@@ -74,21 +75,6 @@ const EditCategoryForm = ({ categoryId, mutate }: EditCategoryFormProps) => {
       });
    };
 
-   // Automatically clear the alert after 3 seconds when `alertMessage` changes
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
-
-   // Auto-dismiss alert after 5 seconds
-   useEffect(() => {
-      if (alert) {
-         const timer = setTimeout(() => {
-            setAlert(null);
-         }, 5000);
-         return () => clearTimeout(timer);
-      }
-   }, [alert]);
-
    // Conditional rendering for loading or error
    if (loading) return <div>Loading...</div>;
    if (error) return <div className="text-red-500">{error}</div>;
@@ -100,8 +86,6 @@ const EditCategoryForm = ({ categoryId, mutate }: EditCategoryFormProps) => {
          isAdding={false}
          handleChange={handleChange}
          handleSubmit={submitEditCategory}
-         alert={alert}
-         handleCloseAlert={handleCloseAlert}
          formErrors={formErrors}
       />
    );

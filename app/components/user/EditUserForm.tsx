@@ -6,9 +6,10 @@ import UserForm from "./UserForm";
 interface EditUserFormProps {
    userId: number;
    mutate: () => void;
+   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
-const EditUserForm = ({ userId, mutate }: EditUserFormProps) => {
+const EditUserForm = ({ userId, mutate, setAlert }: EditUserFormProps) => {
    const [formData, setFormData] = useState<EditUserFormInterface>({
       userId: userId,
       name: "",
@@ -56,10 +57,6 @@ const EditUserForm = ({ userId, mutate }: EditUserFormProps) => {
    };
 
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
 
    // Handle form submission
    const handleEditUser = async (e: React.FormEvent) => {
@@ -100,21 +97,6 @@ const EditUserForm = ({ userId, mutate }: EditUserFormProps) => {
       }
    };
 
-   // Automatically clear the alert after 3 seconds when `alertMessage` changes
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
-
-   // Auto-dismiss alert after 5 seconds
-   useEffect(() => {
-      if (alert) {
-         const timer = setTimeout(() => {
-            setAlert(null);
-         }, 5000);
-         return () => clearTimeout(timer);
-      }
-   }, [alert]);
-
    // Conditional rendering for loading or error
    if (loading) return <div>Loading...</div>;
    if (error) return <div className="text-red-500">{error}</div>;
@@ -126,8 +108,6 @@ const EditUserForm = ({ userId, mutate }: EditUserFormProps) => {
          isAdding={false}
          handleChange={handleChange}
          handleSubmit={handleEditUser}
-         alert={alert}
-         handleCloseAlert={handleCloseAlert}
       />
    );
 };

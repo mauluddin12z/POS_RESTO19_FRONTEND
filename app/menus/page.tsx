@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import MainLayout from "../components/layout/MainLayout";
 import { useMenus } from "../api/menuServices";
-import { MenuFilterInterface } from "../types";
+import { AlertType, MenuFilterInterface } from "../types";
 import MenuTable from "../components/menu/MenuTable";
 import Pagination from "../components/ui/Pagination";
 import Modal from "../components/ui/Modal";
 import Search from "../components/ui/Search";
 import AddMenuForm from "../components/menu/AddMenuForm";
+import Alert from "../components/ui/Alert";
 
 export default function page() {
    const [searchQuery, setSearchQuery] = useState("");
@@ -39,6 +40,15 @@ export default function page() {
    const [IsAddModalOpen, setIsAddModalOpen] = useState(false);
    const openAddModal = () => setIsAddModalOpen(true);
    const closeAddModal = () => setIsAddModalOpen(false);
+
+   const [alert, setAlert] = useState<{
+      type: AlertType;
+      message: string;
+   } | null>(null);
+
+   const handleCloseAlert = () => {
+      setAlert(null);
+   };
    return (
       <MainLayout>
          <div className="flex flex-col w-full gap-2 p-2 border border-gray-200 rounded-lg">
@@ -71,10 +81,21 @@ export default function page() {
                />
             </div>
          </div>
-
          <Modal isOpen={IsAddModalOpen} onClose={closeAddModal}>
-            <AddMenuForm closeAddModal={closeAddModal} mutate={mutate} />
+            <AddMenuForm
+               closeAddModal={closeAddModal}
+               mutate={mutate}
+               setAlert={setAlert}
+            />
          </Modal>
+
+         {alert && (
+            <Alert
+               type={alert.type}
+               message={alert.message}
+               onClose={handleCloseAlert}
+            />
+         )}
       </MainLayout>
    );
 }

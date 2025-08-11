@@ -181,7 +181,11 @@ export default function page() {
          </div>
          {isAddModalOpen && (
             <Modal isOpen={isAddModalOpen} onClose={closeAddModal}>
-               <AddCategoryForm closeAddModal={closeAddModal} mutate={mutate} />
+               <AddCategoryForm
+                  closeAddModal={closeAddModal}
+                  mutate={mutate}
+                  setAlert={setAlert}
+               />
             </Modal>
          )}
          {selectedCategory && isEditModalOpen && (
@@ -189,6 +193,7 @@ export default function page() {
                <EditCategoryForm
                   categoryId={selectedCategory.categoryId}
                   mutate={mutate}
+                  setAlert={setAlert}
                />
             </Modal>
          )}

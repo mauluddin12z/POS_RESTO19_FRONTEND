@@ -7,11 +7,13 @@ import CategoryForm from "./CategoryForm";
 interface AddCategoryFormProps {
    closeAddModal: () => void;
    mutate: () => void;
+   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
 export default function AddCategoryForm({
    closeAddModal,
-   mutate
+   mutate,
+   setAlert,
 }: AddCategoryFormProps) {
    // Form state
    const [formData, setFormData] = useState({
@@ -36,10 +38,6 @@ export default function AddCategoryForm({
    };
 
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
 
    // Handle form submission
    const submitAddCategory = async (e: FormEvent<HTMLFormElement>) => {
@@ -54,9 +52,7 @@ export default function AddCategoryForm({
          mutate,
       });
    };
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
+
    return (
       <CategoryForm
          formData={formData}
@@ -64,8 +60,6 @@ export default function AddCategoryForm({
          isAdding={true}
          handleChange={handleChange}
          handleSubmit={submitAddCategory}
-         alert={alert}
-         handleCloseAlert={handleCloseAlert}
          formErrors={formErrors}
       />
    );
