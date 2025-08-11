@@ -6,6 +6,7 @@ import { logout } from "@/app/api/auth";
 import Image from "next/image";
 import { useState } from "react";
 import Modal from "../ui/Modal";
+import LoadingButton from "../ui/LoadingButton";
 
 const links = [
    { href: "/home", label: "Home", icon: "home.svg" },
@@ -92,7 +93,9 @@ export default function Sidebar() {
          {isLogoutModalOpen && (
             <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}>
                <div>
-                  Are you sure you want to log out of your account?
+                  <p className="text-center">
+                     Are you sure you want to log out of your account?
+                  </p>
                   <div className="mt-4 gap-4  flex justify-center">
                      <button
                         onClick={handleLogout}
@@ -102,7 +105,13 @@ export default function Sidebar() {
                               : "cursor-pointer"
                         }`}
                      >
-                        {isLoggingOut ? "Logging out..." : "Logout"}
+                        {isLoggingOut ? (
+                           <div className="flex gap-2 justify-center items-center">
+                              <LoadingButton /> Logging out...
+                           </div>
+                        ) : (
+                           "Logout"
+                        )}
                      </button>
                      <button
                         onClick={closeLogoutModal}
