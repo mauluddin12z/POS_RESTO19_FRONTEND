@@ -54,9 +54,9 @@ export default function ProductCard({
          </div>
 
          {/* Item Content */}
-         <div className="flex flex-col flex-grow justify-between h-full p-4 gap-3">
+         <div className="flex flex-col flex-grow h-full p-4 gap-3">
             <div>
-               <h5 className="text-xs sm:text-sm font-semibold tracking-tight text-gray-900 line-clamp-2">
+               <h5 className="text-xs sm:text-sm font-semibold tracking-tight text-gray-900">
                   {productName}
                </h5>
                <span className="text-sm sm:text-base font-bold text-gray-900">
@@ -64,7 +64,7 @@ export default function ProductCard({
                </span>
             </div>
 
-            <div className="flex justify-end items-end mt-auto">
+            <div className="flex mt-auto w-full justify-center">
                {cartItem ? (
                   <QuantityControl
                      item={cartItem}
@@ -72,7 +72,7 @@ export default function ProductCard({
                   />
                ) : (
                   <button
-                     className={`w-36 h-fit bg-white text-green-700 border sm:border-2 border-green-700 font-medium rounded-full text-sm px-2 py-1 text-center ${
+                     className={`w-full h-8 bg-white text-green-700 border border-green-700 font-medium rounded-full text-sm text-center ${
                         stock > 0 &&
                         "cursor-pointer hover:text-white hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300"
                      }`}

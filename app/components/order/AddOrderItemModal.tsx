@@ -35,7 +35,7 @@ export default function AddOrderItemModal({
       sortBy: "categoryId",
       sortOrder: "asc",
       page: 1,
-      pageSize: 8,
+      pageSize: 12,
    });
    const { menus, isLoading } = useMenus(filters);
 

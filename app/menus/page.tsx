@@ -20,7 +20,7 @@ export default function page() {
       sortBy: "price",
       sortOrder: "asc",
       page: 1,
-      pageSize: 5,
+      pageSize: 10,
    });
    const { menus, isLoading: loadingMenus, mutate } = useMenus(filters);
 

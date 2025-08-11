@@ -12,67 +12,10 @@ export default function QuantityControl({
    item,
    onQuantityChange,
 }: QuantityControlProps) {
-   const incrementInterval = useRef<NodeJS.Timeout | null>(null);
-   const decrementInterval = useRef<NodeJS.Timeout | null>(null);
-   const quantityRef = useRef(item.quantity);
-
-   // Keep quantityRef updated with the latest quantity
-   useEffect(() => {
-      quantityRef.current = item.quantity;
-   }, [item.quantity]);
-
-   const handleIncrement = () => {
-      if (quantityRef.current < item.stock) {
-         const newQuantity = quantityRef.current + 1;
-         quantityRef.current = newQuantity;
-         onQuantityChange(item.id, newQuantity);
-      }
-   };
-
-   const handleDecrement = () => {
-      if (quantityRef.current > 0) {
-         const newQuantity = quantityRef.current - 1;
-         quantityRef.current = newQuantity;
-         onQuantityChange(item.id, newQuantity);
-      }
-   };
-
-   const startIncrementing = () => {
-      handleIncrement();
-      incrementInterval.current = setInterval(() => {
-         handleIncrement();
-      }, 100);
-   };
-
-   const stopIncrementing = () => {
-      if (incrementInterval.current) {
-         clearInterval(incrementInterval.current);
-         incrementInterval.current = null;
-      }
-   };
-
-   const startDecrementing = () => {
-      handleDecrement();
-      decrementInterval.current = setInterval(() => {
-         handleDecrement();
-      }, 100);
-   };
-
-   const stopDecrementing = () => {
-      if (decrementInterval.current) {
-         clearInterval(decrementInterval.current);
-         decrementInterval.current = null;
-      }
-   };
-
    return (
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-1 w-auto">
          <button
-            onMouseDown={startDecrementing}
-            onMouseUp={stopDecrementing}
-            onMouseLeave={stopDecrementing}
-            onTouchStart={startDecrementing}
-            onTouchEnd={stopDecrementing}
+            onClick={() => onQuantityChange(item.id, item.quantity - 1)}
             disabled={item.quantity <= 0}
             className={`h-8 w-8 flex items-center justify-center border bg-white rounded-full ${
                item.quantity <= 0
@@ -88,11 +31,7 @@ export default function QuantityControl({
          </span>
 
          <button
-            onMouseDown={startIncrementing}
-            onMouseUp={stopIncrementing}
-            onMouseLeave={stopIncrementing}
-            onTouchStart={startIncrementing}
-            onTouchEnd={stopIncrementing}
+            onClick={() => onQuantityChange(item.id, item.quantity + 1)}
             disabled={item.quantity >= item.stock}
             className={`h-8 w-8 flex items-center justify-center border bg-white rounded-full ${
                item.quantity >= item.stock

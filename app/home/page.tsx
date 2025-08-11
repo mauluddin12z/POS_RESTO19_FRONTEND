@@ -27,7 +27,7 @@ export default function Page() {
       sortBy: "categoryId",
       sortOrder: "asc",
       page: 1,
-      pageSize: 8,
+      pageSize: 12,
    });
 
    // Load categories and menus

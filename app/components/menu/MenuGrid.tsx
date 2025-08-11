@@ -19,8 +19,8 @@ const MenuGrid: React.FC<MenuGridPropsInterface> = ({
 }) => {
    if (loading) {
       return (
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {[...Array(8)].map((_, index) => (
+         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
+            {[...Array(12)].map((_, index) => (
                <div
                   key={index}
                   className="w-full h-fit flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm"
@@ -56,7 +56,7 @@ const MenuGrid: React.FC<MenuGridPropsInterface> = ({
          </div>
       );
    return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
          {menus?.map((menu, index) => (
             <ProductCard
                key={index}

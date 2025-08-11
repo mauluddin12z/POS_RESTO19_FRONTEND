@@ -18,7 +18,7 @@ export default function Page() {
       paymentMethod: "",
       searchQuery: "",
       page: 1,
-      pageSize: 10,
+      pageSize: 12,
       sortBy: "createdAt",
       sortOrder: "desc",
       dateRange: "",
