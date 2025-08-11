@@ -43,14 +43,16 @@ const Cart: React.FC<CartPropsInterface> = ({
                Order #
                {cartItems.length === 0 ? "" : orderId ? orderId + 1 : "1"}
             </h2>
-            <button
-               onClick={() => {
-                  onRemove(0), closeCart();
-               }}
-               className={`border border-red-300 rounded-lg text-red-500 text-xs p-3 hover:bg-red-600 hover:text-white cursor-pointer`}
-            >
-               <FontAwesomeIcon icon={faTrash} />
-            </button>
+            {cartItems.length !== 0 && (
+               <button
+                  onClick={() => {
+                     onRemove(0), closeCart();
+                  }}
+                  className={`border border-red-300 rounded-lg text-red-500 text-xs p-3 hover:bg-red-600 hover:text-white cursor-pointer`}
+               >
+                  <FontAwesomeIcon icon={faTrash} />
+               </button>
+            )}
          </div>
 
          {cartItems.length === 0 ? (
