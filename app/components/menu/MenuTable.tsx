@@ -75,7 +75,7 @@ export default function MenuTable({
       () =>
          menus?.map((menu: MenuInterface, index: number) => (
             <tr key={index} className="bg-white border-gray-200 border-b">
-               <td className="px-6 py-4 w-40">
+               <td className="px-4 py-2 w-40">
                   <Image
                      className="w-full aspect-5/4 object-cover"
                      loader={myLoader}

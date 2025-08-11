@@ -94,7 +94,7 @@ export default function Pagination({
             <li>
                <button
                   aria-label="nextPage"
-                  disabled={!hasNextPage && currentPage <= 1}
+                  disabled={!hasNextPage}
                   className={`px-3 py-2 leading-tight bg-white border border-gray-300 rounded-r-lg ${
                      !hasNextPage
                         ? "text-gray-400"
