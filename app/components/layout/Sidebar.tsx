@@ -89,29 +89,31 @@ export default function Sidebar() {
                </button>
             </li>
          </ul>
-         <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}>
-            <div>
-               Are you sure you want to log out of your account?
-               <div className="mt-4 gap-4  flex justify-center">
-                  <button
-                     onClick={handleLogout}
-                     className={`bg-red-600 hover:bg-red-700 cursor-pointer text-white px-4 py-2 rounded-md ${
-                        isLoggingOut
-                           ? "opacity-50 cursor-not-allowed"
-                           : "cursor-pointer"
-                     }`}
-                  >
-                     {isLoggingOut ? "Logging out..." : "Logout"}
-                  </button>
-                  <button
-                     onClick={closeLogoutModal}
-                     className="bg-gray-300 hover:bg-gray-400  cursor-pointer px-4 py-2 rounded-md"
-                  >
-                     Cancel
-                  </button>
+         {isLogoutModalOpen && (
+            <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}>
+               <div>
+                  Are you sure you want to log out of your account?
+                  <div className="mt-4 gap-4  flex justify-center">
+                     <button
+                        onClick={handleLogout}
+                        className={`bg-red-600 hover:bg-red-700 cursor-pointer text-white px-4 py-2 rounded-md ${
+                           isLoggingOut
+                              ? "opacity-50 cursor-not-allowed"
+                              : "cursor-pointer"
+                        }`}
+                     >
+                        {isLoggingOut ? "Logging out..." : "Logout"}
+                     </button>
+                     <button
+                        onClick={closeLogoutModal}
+                        className="bg-gray-200 hover:bg-gray-300   cursor-pointer px-4 py-2 rounded-md"
+                     >
+                        Cancel
+                     </button>
+                  </div>
                </div>
-            </div>
-         </Modal>
+            </Modal>
+         )}
       </aside>
    );
 }

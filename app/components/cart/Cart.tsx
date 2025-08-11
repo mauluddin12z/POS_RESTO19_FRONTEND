@@ -1,5 +1,5 @@
 import { priceFormat } from "@/app/utils/priceFormat";
-import { faCartShopping, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import CartItem from "./CartItem";
@@ -43,6 +43,14 @@ const Cart: React.FC<CartPropsInterface> = ({
                Order #
                {cartItems.length === 0 ? "" : orderId ? orderId + 1 : "1"}
             </h2>
+            <button
+               onClick={() => {
+                  onRemove(0), closeCart();
+               }}
+               className={`border border-red-300 rounded-lg text-red-500 text-xs p-3 hover:bg-red-600 hover:text-white cursor-pointer`}
+            >
+               <FontAwesomeIcon icon={faTrash} />
+            </button>
          </div>
 
          {cartItems.length === 0 ? (
