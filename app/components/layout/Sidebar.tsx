@@ -2,17 +2,10 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-   faHouse,
-   faList,
-   faUsers,
-   faSignOut,
-   faNoteSticky,
-   faBorderAll,
-} from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/app/api/auth";
 import Image from "next/image";
+import { useState } from "react";
+import Modal from "../ui/Modal";
 
 const links = [
    { href: "/home", label: "Home", icon: "home.svg" },
@@ -31,16 +24,25 @@ export default function Sidebar() {
    const router = useRouter();
    const isAdmin = true;
    const pathname = usePathname();
+   const [isLoggingOut, setIsLoggingLogout] = useState(false);
 
    const handleLogout = async () => {
       try {
+         setIsLoggingLogout(true);
          await logout();
          window.history.replaceState(null, "", "/login");
          router.push("/login");
+         setIsLoggingLogout(false);
       } catch (error: any) {
+         setIsLoggingLogout(false);
          console.error(error.message || "An error occurred.");
       }
    };
+
+   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+   const openLogoutModal = () => setIsLogoutModalOpen(true);
+   const closeLogoutModal = () => setIsLogoutModalOpen(false);
 
    return (
       <aside
@@ -59,7 +61,7 @@ export default function Sidebar() {
                         }`}
                      >
                         <Image
-                           className="w-5 aspect-square"
+                           className="w-4 aspect-square "
                            width={50}
                            height={50}
                            src={`sidebarIcon/${link.icon}`}
@@ -72,11 +74,11 @@ export default function Sidebar() {
                ))}
             <li>
                <button
-                  onClick={handleLogout}
+                  onClick={openLogoutModal}
                   className="flex flex-col justify-center items-center w-full gap-y-2 p-2 text-gray-900 rounded-lg hover:bg-gray-100 cursor-pointer"
                >
                   <Image
-                     className="w-5 aspect-square"
+                     className="w-4 aspect-square"
                      width={50}
                      height={50}
                      src="sidebarIcon/logout.svg"
@@ -87,6 +89,29 @@ export default function Sidebar() {
                </button>
             </li>
          </ul>
+         <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}>
+            <div>
+               Are you sure you want to log out of your account?
+               <div className="mt-4 gap-4  flex justify-center">
+                  <button
+                     onClick={handleLogout}
+                     className={`bg-red-600 hover:bg-red-700 cursor-pointer text-white px-4 py-2 rounded-md ${
+                        isLoggingOut
+                           ? "opacity-50 cursor-not-allowed"
+                           : "cursor-pointer"
+                     }`}
+                  >
+                     {isLoggingOut ? "Logging out..." : "Logout"}
+                  </button>
+                  <button
+                     onClick={closeLogoutModal}
+                     className="bg-gray-300 hover:bg-gray-400  cursor-pointer px-4 py-2 rounded-md"
+                  >
+                     Cancel
+                  </button>
+               </div>
+            </div>
+         </Modal>
       </aside>
    );
 }
