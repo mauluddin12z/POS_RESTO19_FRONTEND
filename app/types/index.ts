@@ -105,12 +105,16 @@ export interface ProductCardPropsInterface {
    productPrice: number;
    stock: number;
    onAddToCart: (product: ProductInterface) => void;
+   cart: CartInterface;
+   onQuantityChange: (id: number, quantity: number) => void;
 }
 
 export interface MenuGridPropsInterface {
    menus: MenuInterface[];
    loading: boolean;
    onAddToCart: (product: ProductInterface) => void;
+   cart: CartInterface;
+   onQuantityChange: (id: number, quantity: number) => void;
 }
 
 // Cart Interfaces

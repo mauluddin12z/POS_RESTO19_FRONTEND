@@ -1,7 +1,5 @@
 import Image from "next/image";
-import {
-   MenuGridPropsInterface,
-} from "../../types";
+import { MenuGridPropsInterface } from "../../types";
 import SkeletonLoading from "../ui/SkeletonLoading";
 import ProductCard from "./ProductCard";
 
@@ -9,6 +7,8 @@ const MenuGrid: React.FC<MenuGridPropsInterface> = ({
    menus,
    loading,
    onAddToCart,
+   cart,
+   onQuantityChange,
 }) => {
    if (loading) {
       return (
@@ -59,6 +59,8 @@ const MenuGrid: React.FC<MenuGridPropsInterface> = ({
                productPrice={menu.price}
                stock={menu.stock}
                onAddToCart={onAddToCart}
+               cart={cart}
+               onQuantityChange={onQuantityChange}
             />
          ))}
       </div>

@@ -78,7 +78,6 @@ export default function Page() {
       setCart,
       mutate,
    });
-
    const [IsCartOpen, setIsCartOpen] = useState(false);
    const closeCart = () => setIsCartOpen(false);
    return (
@@ -103,6 +102,8 @@ export default function Page() {
                   menus={menus?.data}
                   loading={loadingMenus}
                   onAddToCart={handleAddToCart}
+                  cart={cart}
+                  onQuantityChange={handleQuantityChange}
                />
                <div className="flex justify-center items-center">
                   <Pagination
