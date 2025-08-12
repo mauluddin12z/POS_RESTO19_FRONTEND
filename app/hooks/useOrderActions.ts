@@ -37,6 +37,7 @@ const useOrderActions = ({
    };
 
    const handleOrder = async (onSuccess?: () => void) => {
+      setIsSubmitting(true);
       const orderFormData = new FormData();
       orderFormData.append("userId", user?.userId?.toString() || "");
       orderFormData.append("total", cart.total);
@@ -77,6 +78,8 @@ const useOrderActions = ({
             message: orderResponse?.message || "Order successfully created.",
          });
          mutate();
+         setIsSubmitting;
+
          // Call onClose when order created successful
          if (onSuccess) onSuccess();
       } catch (error: any) {
@@ -91,6 +94,7 @@ const useOrderActions = ({
                message: "An unknown error occurred.",
             });
          }
+         setIsSubmitting(false);
       } finally {
          setIsSubmitting(false);
       }
