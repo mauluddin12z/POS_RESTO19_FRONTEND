@@ -1,11 +1,9 @@
 import React, { FormEvent, useState } from "react";
 import Modal from "../ui/Modal";
-import { AlertType } from "@/app/types";
-import { handleAddCategory } from "@/app/handlers/categoryHandlers";
-import Alert from "../ui/Alert";
 import LoadingButton from "../ui/LoadingButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import useCategoryActions from "@/app/hooks/useCategoryActions";
 interface AddCategoryModalProps {
    isAddCategoryModalOpen: boolean;
    closeAddCategoryModal: () => void;
@@ -39,31 +37,30 @@ export default function AddCategoryModal({
    };
 
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
+
    // Handle form submission
+   const { handleAddCategory } = useCategoryActions();
    const submitAddCategory = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       await handleAddCategory({
          formData,
          setIsSubmitting,
-         setAlert,
          closeAddModal: closeAddCategoryModal,
          setFormErrors,
          mutate: categoryMutate,
       });
-   };
-   const handleCloseAlert = () => {
-      setAlert(null);
    };
    return (
       <>
          <Modal isOpen={isAddCategoryModalOpen} onClose={closeAddCategoryModal}>
             <form onSubmit={submitAddCategory}>
                <div className="flex gap-2">
+                  {formErrors.categoryName && (
+                     <p className="text-xs text-red-500 mb-1">
+                        {formErrors.categoryName}
+                     </p>
+                  )}
                   <input
                      type="text"
                      id="categoryName"
@@ -95,13 +92,6 @@ export default function AddCategoryModal({
                </div>
             </form>
          </Modal>
-         {alert && (
-            <Alert
-               type={alert.type}
-               message={alert.message}
-               onClose={handleCloseAlert}
-            />
-         )}
       </>
    );
 }

@@ -1,23 +1,19 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { AlertType, UserInterface } from "../../types";
+import { UserInterface } from "../../types";
 import Modal from "../ui/Modal";
-import Alert from "../ui/Alert";
-import { AxiosError } from "axios";
-import { deleteUser } from "../../api/userServices";
 import EditUserForm from "./EditUserForm";
+import useUserActions from "@/app/hooks/useUserActions";
 
 export interface UserPropsInterface {
    users: UserInterface[];
    loading: boolean;
    mutate: () => void;
-   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
 export default function UserTable({
    users,
    loading,
    mutate,
-   setAlert,
 }: UserPropsInterface) {
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -45,36 +41,17 @@ export default function UserTable({
 
    const [isDeleting, setIsDeleting] = useState(false);
 
-   const handleDelete = useCallback(async () => {
-      setIsDeleting(true);
-      if (selectedUser?.userId) {
-         try {
-            const res = await deleteUser(selectedUser.userId);
-            setAlert({
-               type: "success",
-               message: res?.message,
-            });
-            setIsDeleting(false);
-            closeDeleteModal();
-            mutate();
-         } catch (error) {
-            setIsDeleting(false);
+   const { handleDeleteUser } = useUserActions();
+   const confirmDeleteUser = useCallback(async () => {
+      if (!selectedUser?.userId) return;
 
-            // Cast the error to AxiosError type to access 'response'
-            if (error instanceof AxiosError) {
-               setAlert({
-                  type: "error",
-                  message: error?.response?.data?.message ?? error.message,
-               });
-            } else {
-               setAlert({
-                  type: "error",
-                  message: "An unknown error occurred.",
-               });
-            }
-         }
-      }
-   }, [selectedUser]);
+      await handleDeleteUser({
+         userId: selectedUser.userId,
+         setIsDeleting,
+         closeDeleteModal,
+         mutate,
+      });
+   }, [selectedUser, setIsDeleting, closeDeleteModal, mutate]);
 
    const tableContent = useMemo(
       () =>
@@ -156,7 +133,7 @@ export default function UserTable({
                <EditUserForm
                   userId={selectedUser.userId}
                   mutate={mutate}
-                  setAlert={setAlert}
+                  closeEditModal={closeEditModal}
                />
             </Modal>
          )}
@@ -169,7 +146,7 @@ export default function UserTable({
                   </p>
                   <div className="mt-4 gap-4  flex justify-center">
                      <button
-                        onClick={handleDelete}
+                        onClick={confirmDeleteUser}
                         className={`bg-red-600 hover:bg-red-700 cursor-pointer text-white px-4 py-2 rounded-md ${
                            isDeleting
                               ? "opacity-50 cursor-not-allowed"

@@ -1,42 +1,25 @@
 import {
    createOrderDetail,
-   deleteOrderDetail,
    deleteOrderDetailByOrderId,
 } from "../api/orderDetailServices";
-import { createOrder, updateOrder } from "../api/orderServices";
+import { createOrder, deleteOrder, updateOrder } from "../api/orderServices";
 import { useState } from "react";
-import {
-   AlertType,
-   CartInterface,
-   CartItemInterface,
-   UserInterface,
-} from "../types";
+import { CartInterface, CartItemInterface, UserInterface } from "../types";
 import { AxiosError } from "axios";
 import useAuth from "./useAuth";
+import { useGlobalAlert } from "../context/AlertProvider";
 
-export interface useOrderActionsPropsInterface {
-   cart: CartInterface;
-   setCart: React.Dispatch<React.SetStateAction<CartInterface>>;
-   mutate: () => void;
-}
-
-const useOrderActions = ({
-   cart,
-   setCart,
-   mutate,
-}: useOrderActionsPropsInterface) => {
+const useOrderActions = () => {
+   const { showAlert } = useGlobalAlert();
    const { user } = useAuth() as { user: UserInterface | null };
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
-
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
-
-   const handleOrder = async (onSuccess?: () => void) => {
+   // Create new order
+   const handleOrder = async (
+      cart: CartInterface,
+      setCart: React.Dispatch<React.SetStateAction<CartInterface>>,
+      mutate: () => void,
+      onCloseModal?: () => void
+   ) => {
       setIsSubmitting(true);
       const orderFormData = new FormData();
       orderFormData.append("userId", user?.userId?.toString() || "");
@@ -45,7 +28,7 @@ const useOrderActions = ({
       try {
          const orderResponse = await createOrder(orderFormData);
          if (!orderResponse?.data?.orderId) {
-            setAlert({
+            showAlert({
                type: "error",
                message: "Order creation failed.",
             });
@@ -73,29 +56,25 @@ const useOrderActions = ({
          setCart({ total: "0", cartItems: [] });
          localStorage.removeItem("cart");
 
-         setAlert({
+         showAlert({
             type: "success",
             message: orderResponse?.message || "Order successfully created.",
          });
-         mutate();
-         setIsSubmitting;
-
-         // Call onClose when order created successful
-         if (onSuccess) onSuccess();
       } catch (error: any) {
          if (error instanceof AxiosError) {
-            setAlert({
+            showAlert({
                type: "error",
                message: error?.response?.data?.message ?? error.message,
             });
          } else {
-            setAlert({
+            showAlert({
                type: "error",
                message: "An unknown error occurred.",
             });
          }
-         setIsSubmitting(false);
       } finally {
+         if (onCloseModal) onCloseModal();
+         mutate();
          setIsSubmitting(false);
       }
    };
@@ -105,7 +84,8 @@ const useOrderActions = ({
       orderId: number,
       updatedItems: CartItemInterface[],
       total: string,
-      onSuccess?: () => void
+      mutate: () => void,
+      onCloseModal?: () => void
    ): Promise<void> => {
       setIsSubmitting(true);
       try {
@@ -129,27 +109,58 @@ const useOrderActions = ({
             await createOrderDetail(detailFormData);
          }
 
-         setAlert({
+         showAlert({
             type: "success",
             message: "Order successfully updated.",
          });
-
-         // Call onClose when order update is successful
-         if (onSuccess) onSuccess();
-         mutate();
       } catch (error: any) {
          if (error instanceof AxiosError) {
-            setAlert({
+            showAlert({
                type: "error",
                message: error?.response?.data?.message ?? error.message,
             });
          } else {
-            setAlert({
+            showAlert({
                type: "error",
                message: "Failed to update the order.",
             });
          }
       } finally {
+         if (onCloseModal) onCloseModal();
+         mutate();
+         setIsSubmitting(false);
+      }
+   };
+
+   // Delete order
+   const handleDeleteOrder = async (
+      orderId: number,
+      mutate: () => void,
+      onCloseModal?: () => void
+   ): Promise<void> => {
+      setIsSubmitting(true);
+      try {
+         await deleteOrder(orderId);
+
+         showAlert({
+            type: "success",
+            message: "Order successfully deleted.",
+         });
+      } catch (error: any) {
+         if (error instanceof AxiosError) {
+            showAlert({
+               type: "error",
+               message: error?.response?.data?.message ?? error.message,
+            });
+         } else {
+            showAlert({
+               type: "error",
+               message: "Failed to delete the order.",
+            });
+         }
+      } finally {
+         if (onCloseModal) onCloseModal();
+         mutate();
          setIsSubmitting(false);
       }
    };
@@ -157,9 +168,8 @@ const useOrderActions = ({
    return {
       handleOrder,
       handleUpdateOrder,
+      handleDeleteOrder,
       isSubmitting,
-      alert,
-      handleCloseAlert,
    };
 };
 

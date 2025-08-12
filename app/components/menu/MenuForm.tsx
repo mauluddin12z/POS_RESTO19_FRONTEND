@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import Alert from "../ui/Alert";
 import { CategoryInterface } from "../../types";
 import AddCategoryModal from "./AddCategoryModal";
 import { useCategories } from "@/app/api/categoryServices";

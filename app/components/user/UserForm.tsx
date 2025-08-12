@@ -1,7 +1,12 @@
 import React from "react";
-import Alert from "../ui/Alert";
 import LoadingButton from "../ui/LoadingButton";
 
+interface formErrors {
+   name?: string;
+   username?: string;
+   password?: string;
+   role?: string;
+}
 interface UserFormProps {
    formData: any;
    isSubmitting: boolean;
@@ -12,6 +17,7 @@ interface UserFormProps {
       >
    ) => void;
    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+   formErrors: formErrors;
 }
 
 const UserForm = ({
@@ -20,6 +26,7 @@ const UserForm = ({
    isAdding,
    handleChange,
    handleSubmit,
+   formErrors,
 }: UserFormProps) => {
    const userRole = ["admin", "superadmin"];
    return (
@@ -38,6 +45,9 @@ const UserForm = ({
                >
                   Name
                </label>
+               {formErrors.name && (
+                  <p className="text-xs text-red-500 mb-1">{formErrors.name}</p>
+               )}
                <input
                   type="text"
                   id="name"
@@ -57,6 +67,11 @@ const UserForm = ({
                >
                   Username
                </label>
+               {formErrors.username && (
+                  <p className="text-xs text-red-500 mb-1">
+                     {formErrors.username}
+                  </p>
+               )}
                <input
                   type="text"
                   id="username"
@@ -76,6 +91,9 @@ const UserForm = ({
                >
                   Role
                </label>
+               {formErrors.role && (
+                  <p className="text-xs text-red-500 mb-1">{formErrors.role}</p>
+               )}
                <select
                   id="role"
                   name="role"
@@ -102,6 +120,11 @@ const UserForm = ({
                >
                   password
                </label>
+               {formErrors.password && (
+                  <p className="text-xs text-red-500 mb-1">
+                     {formErrors.password}
+                  </p>
+               )}
                <input
                   type="password"
                   id="password"

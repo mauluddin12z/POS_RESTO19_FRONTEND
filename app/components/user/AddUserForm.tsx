@@ -1,16 +1,25 @@
 "use client";
 import React, { useState, FormEvent, useEffect } from "react";
-import { AddUserFormInterface, AlertType } from "../../types";
-import { createUser } from "../../api/userServices";
+import { AddUserFormInterface } from "../../types";
 import UserForm from "./UserForm";
+import useUserActions from "@/app/hooks/useUserActions";
 interface AddUserFormProps {
    mutate: () => void;
-   setAlert: (alert: { type: AlertType; message: string } | null) => void;
+   closeAddModal: () => void;
 }
 
-export default function AddUserForm({ mutate, setAlert }: AddUserFormProps) {
+export default function AddUserForm({
+   mutate,
+   closeAddModal,
+}: AddUserFormProps) {
    // Form state
    const [formData, setFormData] = useState<AddUserFormInterface>({
+      name: "",
+      username: "",
+      password: "",
+      role: "",
+   });
+   const [formErrors, setFormErrors] = useState({
       name: "",
       username: "",
       password: "",
@@ -33,45 +42,18 @@ export default function AddUserForm({ mutate, setAlert }: AddUserFormProps) {
    const [isSubmitting, setIsSubmitting] = useState(false);
 
    // Handle form submission
-   const handleAddUser = async (e: FormEvent<HTMLFormElement>) => {
+
+   const { handleAddUser } = useUserActions();
+   const submitAddUser = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setIsSubmitting(true);
-      // Validate required fields
-      if (
-         !formData.name ||
-         !formData.username ||
-         !formData.password ||
-         !formData.role
-      ) {
-         setIsSubmitting(false);
-         setAlert({
-            type: "error",
-            message: "Please fill in all required fields.",
-         });
-         return;
-      }
 
-      try {
-         const formDataToSend = new FormData();
-         formDataToSend.append("name", formData.name);
-         formDataToSend.append("username", formData.username);
-         formDataToSend.append("password", formData.password);
-         formDataToSend.append("role", formData.role);
-
-         const res = await createUser(formDataToSend);
-         setIsSubmitting(false);
-         setAlert({
-            type: "success",
-            message: res?.message,
-         });
-         mutate();
-      } catch (error: any) {
-         setIsSubmitting(false);
-         setAlert({
-            type: "error",
-            message: error?.response?.data?.message ?? error.message,
-         });
-      }
+      await handleAddUser({
+         formData,
+         setIsSubmitting,
+         setFormErrors,
+         closeAddModal,
+         mutate,
+      });
    };
 
    return (
@@ -80,7 +62,8 @@ export default function AddUserForm({ mutate, setAlert }: AddUserFormProps) {
          isSubmitting={isSubmitting}
          isAdding={true}
          handleChange={handleChange}
-         handleSubmit={handleAddUser}
+         handleSubmit={submitAddUser}
+         formErrors={formErrors}
       />
    );
 }

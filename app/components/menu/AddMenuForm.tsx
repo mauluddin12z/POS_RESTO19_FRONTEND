@@ -1,20 +1,16 @@
 "use client";
-import React, { useState, FormEvent, useEffect } from "react";
+import React, { useState, FormEvent } from "react";
 import MenuForm from "./MenuForm";
-import { AlertType } from "@/app/types";
-import { handleAddMenu } from "@/app/handlers/menuHandlers";
+import useMenuActions from "@/app/hooks/useMenuActions";
 interface AddMenuFormProps {
    closeAddModal: () => void;
    mutate: () => void;
-   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
 export default function AddMenuForm({
    closeAddModal,
    mutate,
-   setAlert,
 }: AddMenuFormProps) {
-   // Form state
    const [formData, setFormData] = useState({
       menuName: "",
       categoryId: null,
@@ -60,13 +56,14 @@ export default function AddMenuForm({
    const [isSubmitting, setIsSubmitting] = useState(false);
 
    // Handle form submission
+
+   const { handleAddMenu } = useMenuActions();
    const submitAddMenu = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       await handleAddMenu({
          formData,
          setIsSubmitting,
-         setAlert,
          setFormErrors,
          closeAddModal,
          mutate,

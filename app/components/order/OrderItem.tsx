@@ -2,10 +2,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { formatDateToIndonesian } from "../../utils/dateFormat";
 import Modal from "../ui/Modal";
-import { AlertType, OrderInterface } from "../../types";
-import { deleteOrder } from "../../api/orderServices";
-import { AxiosError } from "axios";
-import Alert from "../ui/Alert";
+import { OrderInterface } from "../../types";
 import PaymentStatus from "../payment/PaymentStatus";
 import usePayment from "../../hooks/usePayment";
 import PaymentSuccessful from "../payment/PaymentSuccessful";
@@ -14,6 +11,7 @@ import PaymentModal from "../payment/PaymentModal";
 import OrderDetailsTable from "./OrderDetailsTable";
 import EditOrderModal from "./EditOrderModal";
 import LoadingButton from "../ui/LoadingButton";
+import useOrderActions from "@/app/hooks/useOrderActions";
 
 interface OrderItemProps {
    order: OrderInterface;
@@ -31,26 +29,18 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
       isOpen: boolean;
    } | null>(null);
 
-   const [isDeleting, setIsDeleting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
-
    const {
       handlePayment,
       isSubmitting: isSubmittingPayment,
       paymentOptions,
       paymentMethod,
-      paymentAlert,
       setPaymentMethod,
       paymentSuccess,
       onClosePaymentSuccessAlert,
    } = usePayment({ orderId: order.orderId, mutate });
 
-   useEffect(() => {
-      setAlert(paymentAlert);
-   }, [paymentAlert]);
+   const { handleDeleteOrder, isSubmitting: isSubmittingOrder } =
+      useOrderActions();
 
    const closeModal = useCallback(() => setModalState(null), []);
 
@@ -69,27 +59,10 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
       setModalState({ type: "edit", isOpen: true });
    }, []);
 
-   const handleDelete = useCallback(async () => {
+   const confirmDeleteOrder = useCallback(async () => {
       if (!selectedOrder?.orderId) return;
-      setIsDeleting(true);
-
-      try {
-         const res = await deleteOrder(selectedOrder.orderId);
-         setAlert({ type: "success", message: res?.message });
-         mutate();
-      } catch (error) {
-         const errorMessage =
-            error instanceof AxiosError
-               ? error?.response?.data?.message ?? error.message
-               : "An unknown error occurred.";
-         setAlert({ type: "error", message: errorMessage });
-      } finally {
-         setIsDeleting(false);
-         closeModal();
-      }
+      await handleDeleteOrder(selectedOrder.orderId, mutate);
    }, [selectedOrder, mutate]);
-
-   const handleCloseAlert = () => setAlert(null);
 
    return (
       <>
@@ -133,7 +106,7 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
                   paymentOptions={paymentOptions}
                   paymentMethod={paymentMethod}
                   setPaymentMethod={setPaymentMethod}
-                  handlePayment={handlePayment}
+                  handlePayment={() => handlePayment(closeModal)}
                   isSubmitting={isSubmittingPayment}
                />
             )}
@@ -145,7 +118,6 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
                onClose={closeModal}
                selectedOrder={selectedOrder}
                mutate={mutate}
-               isSubmitting={isSubmittingPayment}
             />
          )}
 
@@ -158,13 +130,15 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
                   </p>
                   <div className="mt-4 gap-4 flex justify-center">
                      <button
-                        onClick={handleDelete}
+                        onClick={confirmDeleteOrder}
                         className={`bg-red-600 hover:bg-red-700 cursor-pointer text-white px-4 py-2 rounded-md ${
-                           isDeleting ? "opacity-50 cursor-not-allowed" : ""
+                           isSubmittingOrder
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
                         }`}
-                        disabled={isDeleting}
+                        disabled={isSubmittingOrder}
                      >
-                        {isDeleting ? (
+                        {isSubmittingOrder ? (
                            <div className="flex gap-2 justify-center items-center">
                               <LoadingButton /> Deleting...
                            </div>
@@ -188,15 +162,6 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
             <PaymentSuccessful
                paymentSuccess={paymentSuccess}
                onClose={onClosePaymentSuccessAlert}
-            />
-         )}
-
-         {/* Alert Component */}
-         {alert && (
-            <Alert
-               type={alert.type}
-               message={alert.message}
-               onClose={handleCloseAlert}
             />
          )}
       </>

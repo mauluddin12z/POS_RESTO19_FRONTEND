@@ -6,8 +6,6 @@ import Search from "../components/ui/Search";
 import { useUsers } from "../api/userServices";
 import UserTable from "../components/user/UserTable";
 import AddUserForm from "../components/user/AddUserForm";
-import { AlertType } from "../types";
-import Alert from "../components/ui/Alert";
 
 export default function page() {
    const [searchQuery, setSearchQuery] = useState("");
@@ -17,15 +15,6 @@ export default function page() {
    const [IsAddModalOpen, setIsAddModalOpen] = useState(false);
    const openAddModal = () => setIsAddModalOpen(true);
    const closeAddModal = () => setIsAddModalOpen(false);
-
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
-
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
 
    return (
       <MainLayout>
@@ -42,24 +31,12 @@ export default function page() {
                   Add user
                </button>
             </div>
-            <UserTable
-               users={users}
-               loading={loadingUsers}
-               mutate={mutate}
-               setAlert={setAlert}
-            />
+            <UserTable users={users} loading={loadingUsers} mutate={mutate} />
          </div>
 
          <Modal isOpen={IsAddModalOpen} onClose={closeAddModal}>
-            <AddUserForm mutate={mutate} setAlert={setAlert} />
+            <AddUserForm mutate={mutate} closeAddModal={closeAddModal} />
          </Modal>
-         {alert && (
-            <Alert
-               type={alert.type}
-               message={alert.message}
-               onClose={handleCloseAlert}
-            />
-         )}
       </MainLayout>
    );
 }

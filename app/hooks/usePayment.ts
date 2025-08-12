@@ -1,33 +1,24 @@
 import { useState } from "react";
-import { AlertType } from "../types";
 import { AxiosError } from "axios";
 import { updateOrder } from "../api/orderServices";
+import { useGlobalAlert } from "../context/AlertProvider";
 
 interface PaymentPropsInterface {
    orderId: number;
    mutate: () => void;
 }
 
-type AlertState = { type: AlertType; message: string } | null;
-
 const usePayment = ({ orderId, mutate }: PaymentPropsInterface) => {
+   const { showAlert } = useGlobalAlert();
    const paymentOptions = ["CASH", "QRIS", "BANK"];
    const [paymentMethod, setPaymentMethod] = useState<string>("");
    const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-   const [alert, setAlert] = useState<AlertState>(null);
 
    // Helper function for resetting payment success state
    const resetPaymentSuccess = () => {
       setPaymentSuccess(false);
    };
-
-   // Generic alert setter
-   const showAlert = (type: AlertType, message: string) => {
-      setAlert({ type, message });
-   };
-
-   const handleCloseAlert = () => setAlert(null);
 
    const onClosePaymentSuccessAlert = () => setPaymentSuccess(true);
 
@@ -37,9 +28,12 @@ const usePayment = ({ orderId, mutate }: PaymentPropsInterface) => {
    };
 
    // Handle the payment logic
-   const handlePayment = async (onSuccess?: () => void) => {
+   const handlePayment = async (onCloseModal?: () => void) => {
       if (!isValidPaymentMethod()) {
-         showAlert("error", "Please select the payment method.");
+         showAlert({
+            type: "error",
+            message: "Please select the payment method.",
+         });
          return;
       }
 
@@ -59,16 +53,16 @@ const usePayment = ({ orderId, mutate }: PaymentPropsInterface) => {
          setTimeout(resetPaymentSuccess, 3000);
          mutate();
          // Call onClose when payment is successful
-         if (onSuccess) onSuccess();
+         if (onCloseModal) onCloseModal();
       } catch (error) {
          if (error instanceof AxiosError) {
             const errorMessage =
                error.response?.data?.message ??
                error.message ??
                "An unknown error occurred.";
-            showAlert("error", errorMessage);
+            showAlert({ type: "error", message: errorMessage });
          } else {
-            showAlert("error", "An unknown error occurred.");
+            showAlert({ type: "error", message: "An unknown error occurred." });
          }
       } finally {
          setIsSubmitting(false);
@@ -81,8 +75,6 @@ const usePayment = ({ orderId, mutate }: PaymentPropsInterface) => {
       setPaymentMethod,
       handlePayment,
       isSubmitting,
-      paymentAlert: alert,
-      onClosePaymentAlert: handleCloseAlert,
       paymentSuccess,
       onClosePaymentSuccessAlert,
    };

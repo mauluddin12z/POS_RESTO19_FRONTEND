@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { AlertType, EditCategoryFormInterface } from "@/app/types";
+import { EditCategoryFormInterface } from "@/app/types";
 import CategoryForm from "./CategoryForm";
 import { getCategoryById } from "@/app/api/categoryServices";
-import { handleEditCategory } from "@/app/handlers/categoryHandlers";
+import useCategoryActions from "@/app/hooks/useCategoryActions";
 
 interface EditCategoryFormProps {
    categoryId: number;
    mutate: () => void;
-   setAlert: (alert: { type: AlertType; message: string } | null) => void;
+   closeEditModal: () => void;
 }
 
 const EditCategoryForm = ({
    categoryId,
    mutate,
-   setAlert,
+   closeEditModal,
 }: EditCategoryFormProps) => {
    const [formData, setFormData] = useState<EditCategoryFormInterface>({
       categoryId: categoryId,
@@ -62,14 +62,17 @@ const EditCategoryForm = ({
    const [isSubmitting, setIsSubmitting] = useState(false);
 
    // Handle form submission
+
+   const { handleEditCategory } = useCategoryActions();
+
    const submitEditCategory = async (e: React.FormEvent) => {
       e.preventDefault();
 
       await handleEditCategory({
          categoryId,
          formData,
+         closeEditModal,
          setIsSubmitting,
-         setAlert,
          setFormErrors,
          mutate,
       });

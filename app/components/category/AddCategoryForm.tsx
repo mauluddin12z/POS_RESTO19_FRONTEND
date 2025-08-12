@@ -1,19 +1,16 @@
 "use client";
 import React, { useState, FormEvent, useEffect } from "react";
-import { AlertType } from "@/app/types";
-import { handleAddCategory } from "@/app/handlers/categoryHandlers";
 import CategoryForm from "./CategoryForm";
+import useCategoryActions from "@/app/hooks/useCategoryActions";
 
 interface AddCategoryFormProps {
    closeAddModal: () => void;
    mutate: () => void;
-   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
 export default function AddCategoryForm({
    closeAddModal,
    mutate,
-   setAlert,
 }: AddCategoryFormProps) {
    // Form state
    const [formData, setFormData] = useState({
@@ -38,6 +35,7 @@ export default function AddCategoryForm({
    };
 
    const [isSubmitting, setIsSubmitting] = useState(false);
+   const { handleAddCategory } = useCategoryActions();
 
    // Handle form submission
    const submitAddCategory = async (e: FormEvent<HTMLFormElement>) => {
@@ -46,7 +44,6 @@ export default function AddCategoryForm({
       await handleAddCategory({
          formData,
          setIsSubmitting,
-         setAlert,
          setFormErrors,
          closeAddModal,
          mutate,

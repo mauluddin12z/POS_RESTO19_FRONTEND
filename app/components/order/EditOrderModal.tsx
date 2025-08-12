@@ -8,7 +8,6 @@ import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import CartItem from "../cart/CartItem";
 import { priceFormat } from "@/app/utils/priceFormat";
 import useOrderActions from "@/app/hooks/useOrderActions";
-import Alert from "../ui/Alert";
 import AddOrderItemModal from "./AddOrderItemModal";
 import LoadingButton from "../ui/LoadingButton";
 
@@ -17,7 +16,6 @@ interface EditOrderModalProps {
    onClose: () => void;
    selectedOrder: OrderInterface;
    mutate: () => void;
-   isSubmitting: boolean;
 }
 
 const EditOrderModal = ({
@@ -36,12 +34,7 @@ const EditOrderModal = ({
       handleAddToCart,
    } = useCart();
 
-   const { handleUpdateOrder, isSubmitting, alert, handleCloseAlert } =
-      useOrderActions({
-         cart,
-         setCart,
-         mutate,
-      });
+   const { handleUpdateOrder, isSubmitting } = useOrderActions();
 
    // Load order into cart on modal open
    useEffect(() => {
@@ -57,7 +50,6 @@ const EditOrderModal = ({
                notes: item.notes || "",
                stock: item.menu.stock,
             }));
-         console.log(selectedOrder.orderDetails);
 
          const total = mappedItems
             .reduce((acc, item) => acc + item.subtotal, 0)
@@ -132,6 +124,7 @@ const EditOrderModal = ({
                                  selectedOrder.orderId,
                                  cart.cartItems,
                                  cart.total,
+                                 mutate,
                                  onClose
                               );
                            }}
@@ -170,13 +163,6 @@ const EditOrderModal = ({
                onQuantityChange={handleQuantityChange}
             />
          </Modal>
-         {alert && (
-            <Alert
-               type={alert?.type}
-               message={alert?.message}
-               onClose={handleCloseAlert}
-            />
-         )}
       </>
    );
 };

@@ -1,11 +1,10 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { AlertType, MenuInterface } from "../../types";
+import { MenuInterface } from "../../types";
 import Image, { ImageLoader } from "next/image";
 import { priceFormat } from "../../utils/priceFormat";
 import Modal from "../ui/Modal";
 import EditMenuForm from "./EditMenuForm";
-import Alert from "../ui/Alert";
-import { handleDeleteMenu } from "@/app/handlers/menuHandlers";
+import useMenuActions from "@/app/hooks/useMenuActions";
 
 export interface MenuPropsInterface {
    menus: MenuInterface[];
@@ -47,27 +46,18 @@ export default function MenuTable({
    }, []);
 
    const [isDeleting, setIsDeleting] = useState(false);
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
 
+   const { handleDeleteMenu } = useMenuActions();
    const confirmDeleteMenu = useCallback(async () => {
       if (!selectedMenu?.menuId) return;
 
       await handleDeleteMenu({
          menuId: selectedMenu.menuId,
          setIsDeleting,
-         setAlert,
-         closeModal: closeDeleteModal,
+         closeDeleteModal,
          mutate,
       });
-   }, [selectedMenu, setIsDeleting, setAlert, closeDeleteModal, mutate]);
-
-   // Automatically clear the alert after 3 seconds when `alertMessage` changes
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
+   }, [selectedMenu, setIsDeleting, closeDeleteModal, mutate]);
 
    const tableContent = useMemo(
       () =>
@@ -170,7 +160,6 @@ export default function MenuTable({
                   menuId={selectedMenu.menuId}
                   closeEditModal={closeEditModal}
                   mutate={mutate}
-                  setAlert={setAlert}
                />
             </Modal>
          )}
@@ -201,13 +190,6 @@ export default function MenuTable({
                   </div>
                </div>
             </Modal>
-         )}
-         {alert && (
-            <Alert
-               type={alert.type}
-               message={alert.message}
-               onClose={handleCloseAlert}
-            />
          )}
       </div>
    );

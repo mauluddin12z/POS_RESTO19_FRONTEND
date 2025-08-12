@@ -2,14 +2,24 @@
 import React, { ReactNode, useEffect } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import { useGlobalAlert } from "@/app/context/AlertProvider";
+import Alert from "../ui/Alert";
 
 interface MainLayoutProps {
    children: ReactNode;
 }
 
 export default function MainLayout({ children }: MainLayoutProps) {
+   const { alert, closeAlert } = useGlobalAlert();
    return (
       <div className="bg-white text-gray-900">
+         {alert && (
+            <Alert
+               type={alert.type}
+               message={alert.message}
+               onClose={closeAlert}
+            />
+         )}
          <div className="flex">
             {/* Fixed Sidebar */}
             <Sidebar />

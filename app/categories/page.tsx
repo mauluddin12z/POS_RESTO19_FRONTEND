@@ -1,15 +1,14 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import MainLayout from "../components/layout/MainLayout";
-import { AlertType, CategoryInterface } from "../types";
+import { CategoryInterface } from "../types";
 import Pagination from "../components/ui/Pagination";
 import Modal from "../components/ui/Modal";
 import Search from "../components/ui/Search";
 import { useCategories } from "../api/categoryServices";
 import AddCategoryForm from "../components/category/AddCategoryForm";
-import Alert from "../components/ui/Alert";
 import EditCategoryForm from "../components/category/EditCategoryForm";
-import { handleDeleteCategory } from "../handlers/categoryHandlers";
+import useCategoryActions from "../hooks/useCategoryActions";
 
 export default function page() {
    const [searchQuery, setSearchQuery] = useState("");
@@ -72,27 +71,19 @@ export default function page() {
       setIsDeleteModalOpen(false);
    }, []);
 
-   const [alert, setAlert] = useState<{
-      type: AlertType;
-      message: string;
-   } | null>(null);
-   // Automatically clear the alert after 3 seconds when `alertMessage` changes
-   const handleCloseAlert = () => {
-      setAlert(null);
-   };
-
    const [isDeleting, setIsDeleting] = useState(false);
+
+   const { handleDeleteCategory } = useCategoryActions();
    const confirmDeleteCategory = useCallback(async () => {
       if (!selectedCategory?.categoryId) return;
 
       await handleDeleteCategory({
          categoryId: selectedCategory.categoryId,
          setIsDeleting,
-         setAlert,
-         closeModal: closeDeleteModal,
+         closeDeleteModal,
          mutate,
       });
-   }, [selectedCategory, setIsDeleting, setAlert, closeDeleteModal, mutate]);
+   }, [selectedCategory, setIsDeleting, closeDeleteModal, mutate]);
 
    return (
       <MainLayout>
@@ -181,11 +172,7 @@ export default function page() {
          </div>
          {isAddModalOpen && (
             <Modal isOpen={isAddModalOpen} onClose={closeAddModal}>
-               <AddCategoryForm
-                  closeAddModal={closeAddModal}
-                  mutate={mutate}
-                  setAlert={setAlert}
-               />
+               <AddCategoryForm closeAddModal={closeAddModal} mutate={mutate} />
             </Modal>
          )}
          {selectedCategory && isEditModalOpen && (
@@ -193,7 +180,7 @@ export default function page() {
                <EditCategoryForm
                   categoryId={selectedCategory.categoryId}
                   mutate={mutate}
-                  setAlert={setAlert}
+                  closeEditModal={closeEditModal}
                />
             </Modal>
          )}
@@ -201,13 +188,6 @@ export default function page() {
          {selectedCategory && isDeleteModalOpen && (
             <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
                <div>
-                  {alert && (
-                     <Alert
-                        type={alert.type}
-                        message={alert.message}
-                        onClose={handleCloseAlert}
-                     />
-                  )}
                   <p className="text-center">
                      Are you sure you want to delete this data?
                   </p>
@@ -231,13 +211,6 @@ export default function page() {
                   </div>
                </div>
             </Modal>
-         )}
-         {alert && (
-            <Alert
-               type={alert.type}
-               message={alert.message}
-               onClose={handleCloseAlert}
-            />
          )}
       </MainLayout>
    );

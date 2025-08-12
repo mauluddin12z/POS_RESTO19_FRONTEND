@@ -6,10 +6,9 @@ import MenuGrid from "../components/menu/MenuGrid";
 import Pagination from "../components/ui/Pagination";
 import useCart from "@/app/hooks/useCart";
 import { useMenus } from "@/app/api/menuServices";
-import { MenuFilterInterface, UserInterface } from "../types";
+import { MenuFilterInterface } from "../types";
 import Modal from "../components/ui/Modal";
 import Search from "../components/ui/Search";
-import Alert from "../components/ui/Alert";
 import { useOrders } from "../api/orderServices";
 import Cart from "../components/cart/Cart";
 import ShowCartModalButton from "../components/cart/ShowCartModalButton";
@@ -68,18 +67,10 @@ export default function Page() {
 
    const { orders, mutate } = useOrders();
    // Handle Checkout
-   const {
-      handleOrder,
-      alert,
-      handleCloseAlert,
-      isSubmitting: isOrderSubmitting,
-   } = useOrderActions({
-      cart,
-      setCart,
-      mutate,
-   });
+   const { handleOrder, isSubmitting: isOrderSubmitting } = useOrderActions();
    const [IsCartOpen, setIsCartOpen] = useState(false);
    const closeCart = () => setIsCartOpen(false);
+
    return (
       <MainLayout>
          <div className="w-full flex gap-2 relative">
@@ -126,7 +117,9 @@ export default function Page() {
                      onRemove={handleRemove}
                      onQuantityChange={handleQuantityChange}
                      onNotesChange={handleNotesChange}
-                     onOrder={handleOrder}
+                     onOrder={() =>
+                        handleOrder(cart, setCart, mutate, closeCart)
+                     }
                      stockMessage={stockMessage}
                      closeCart={closeCart}
                      isSubmitting={isOrderSubmitting}
@@ -146,20 +139,13 @@ export default function Page() {
                   onRemove={handleRemove}
                   onQuantityChange={handleQuantityChange}
                   onNotesChange={handleNotesChange}
-                  onOrder={handleOrder}
+                  onOrder={() => handleOrder(cart, setCart, mutate, closeCart)}
                   stockMessage={stockMessage}
                   closeCart={closeCart}
                   isSubmitting={isOrderSubmitting}
                />
             </div>
          </div>
-         {alert && (
-            <Alert
-               type={alert.type}
-               message={alert.message}
-               onClose={handleCloseAlert}
-            />
-         )}
       </MainLayout>
    );
 }

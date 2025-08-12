@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { AlertType, EditUserFormInterface } from "../../types";
-import { getUserById, updateUser } from "../../api/userServices";
+import { getUserById } from "../../api/userServices";
 import UserForm from "./UserForm";
+import useUserActions from "@/app/hooks/useUserActions";
 
 interface EditUserFormProps {
    userId: number;
    mutate: () => void;
-   setAlert: (alert: { type: AlertType; message: string } | null) => void;
+   closeEditModal: () => void;
 }
 
-const EditUserForm = ({ userId, mutate, setAlert }: EditUserFormProps) => {
+const EditUserForm = ({
+   userId,
+   mutate,
+   closeEditModal,
+}: EditUserFormProps) => {
    const [formData, setFormData] = useState<EditUserFormInterface>({
       userId: userId,
+      name: "",
+      username: "",
+      password: "",
+      role: "",
+   });
+
+   const [formErrors, setFormErrors] = useState({
       name: "",
       username: "",
       password: "",
@@ -59,42 +71,18 @@ const EditUserForm = ({ userId, mutate, setAlert }: EditUserFormProps) => {
    const [isSubmitting, setIsSubmitting] = useState(false);
 
    // Handle form submission
-   const handleEditUser = async (e: React.FormEvent) => {
+   const { handleEditUser } = useUserActions();
+   const submitEditUser = async (e: React.FormEvent) => {
       e.preventDefault();
-      setIsSubmitting(true);
-      // Validate required fields
-      if (!formData.username || !formData.password || !formData.role) {
-         setIsSubmitting(false);
-         setAlert({
-            type: "error",
-            message: "Please fill in all required fields.",
-         });
-         return;
-      }
 
-      try {
-         // Create FormData for file upload
-         const formDataToSend = new FormData();
-         formDataToSend.append("name", formData.name);
-         formDataToSend.append("username", formData.username);
-         formDataToSend.append("password", formData.password);
-         formDataToSend.append("role", formData.role);
-
-         // Call your updateUser function with the object data and FormData separately
-         const res = await updateUser(userId, formDataToSend);
-         setIsSubmitting(false);
-         setAlert({
-            type: "success",
-            message: res?.message,
-         });
-         mutate();
-      } catch (error: any) {
-         setIsSubmitting(false);
-         setAlert({
-            type: "error",
-            message: error?.response?.data?.message ?? error.message,
-         });
-      }
+      await handleEditUser({
+         userId,
+         formData,
+         closeEditModal,
+         setIsSubmitting,
+         setFormErrors,
+         mutate,
+      });
    };
 
    // Conditional rendering for loading or error
@@ -107,7 +95,8 @@ const EditUserForm = ({ userId, mutate, setAlert }: EditUserFormProps) => {
          isSubmitting={isSubmitting}
          isAdding={false}
          handleChange={handleChange}
-         handleSubmit={handleEditUser}
+         handleSubmit={submitEditUser}
+         formErrors={formErrors}
       />
    );
 };

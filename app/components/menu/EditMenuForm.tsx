@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import MenuForm from "./MenuForm";
-import { AlertType, EditMenuFormInterface } from "@/app/types";
-import { getMenuById, updateMenu } from "@/app/api/menuServices";
-import { handleEditMenu } from "@/app/handlers/menuHandlers";
+import { EditMenuFormInterface } from "@/app/types";
+import { getMenuById } from "@/app/api/menuServices";
+import useMenuActions from "@/app/hooks/useMenuActions";
 interface EditMenuFormProps {
    menuId: number;
    closeEditModal: () => void;
    mutate: () => void;
-   setAlert: (alert: { type: AlertType; message: string } | null) => void;
 }
 
 const EditMenuForm = ({
    menuId,
    closeEditModal,
    mutate,
-   setAlert,
 }: EditMenuFormProps) => {
    const [formData, setFormData] = useState<EditMenuFormInterface>({
       menuId: menuId,
@@ -90,6 +88,7 @@ const EditMenuForm = ({
    const [isSubmitting, setIsSubmitting] = useState(false);
 
    // Handle form submission
+   const { handleEditMenu } = useMenuActions();
    const submitEditMenu = async (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -97,26 +96,25 @@ const EditMenuForm = ({
          menuId,
          formData,
          setIsSubmitting,
-         setAlert,
          setFormErrors,
+         closeEditModal,
          mutate,
       });
-      closeEditModal();
    };
    // Conditional rendering for loading or error
    if (loading) return <div>Loading...</div>;
    if (error) return <div className="text-red-500">{error}</div>;
 
    return (
-         <MenuForm
-            formData={formData}
-            isSubmitting={isSubmitting}
-            isAdding={false}
-            handleChange={handleChange}
-            handleFileChange={handleFileChange}
-            handleSubmit={submitEditMenu}
-            formErrors={formErrors}
-         />
+      <MenuForm
+         formData={formData}
+         isSubmitting={isSubmitting}
+         isAdding={false}
+         handleChange={handleChange}
+         handleFileChange={handleFileChange}
+         handleSubmit={submitEditMenu}
+         formErrors={formErrors}
+      />
    );
 };
 
