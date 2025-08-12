@@ -1,0 +1,41 @@
+{
+   "name": "Pempek & Resto 19",
+   "short_name": "Pempek & Resto 19",
+   "theme_color": "#0891B2",
+   "background_color": "#ffffff",
+   "display": "standalone",
+   "orientation": "any",
+   "scope": "/",
+   "start_url": "/",
+   "icons": [
+      { "src": "icons/icons-192.png", "type": "image/png", "sizes": "192x192" },
+      { "src": "icons/icons-256.png", "type": "image/png", "sizes": "256x256" },
+      { "src": "icons/icons-512.png", "type": "image/png", "sizes": "512x512" }
+   ],
+   "screenshots": [
+      {
+         "src": "screenshots/screenshot_1.png",
+         "type": "image/png",
+         "sizes": "1920x919",
+         "form_factor": "wide"
+      },
+      {
+         "src": "screenshots/screenshot_2.png",
+         "type": "image/png",
+         "sizes": "1920x919",
+         "form_factor": "wide"
+      },
+      {
+         "src": "screenshots/screenshot_3.png",
+         "type": "image/png",
+         "sizes": "540x720",
+         "form_factor": "narrow"
+      },
+      {
+         "src": "screenshots/screenshot_4.png",
+         "type": "image/png",
+         "sizes": "540x720",
+         "form_factor": "narrow"
+      }
+   ]
+}
