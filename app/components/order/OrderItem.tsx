@@ -14,7 +14,6 @@ import PaymentModal from "../payment/PaymentModal";
 import OrderDetailsTable from "./OrderDetailsTable";
 import EditOrderModal from "./EditOrderModal";
 import LoadingButton from "../ui/LoadingButton";
-// import EditOrderModal from "./EditOrderModal"; // <-- Modal edit baru
 
 interface OrderItemProps {
    order: OrderInterface;
@@ -93,31 +92,34 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
    const handleCloseAlert = () => setAlert(null);
 
    return (
-      <div className="flex flex-col justify-between border border-gray-200 rounded-lg p-2 hover:shadow-sm">
-         {/* Order Overview */}
-         <div className="flex items-center justify-between flex-wrap border-b border-gray-200 pb-2">
-            <div className="bg-blue-50 rounded-lg p-3.5 text-gray-600 font-medium">{`#${order.orderId}`}</div>
-            <div className="flex flex-col items-end text-gray-600 gap-1">
-               <PaymentStatus status={order.paymentStatus} />
-               <div className="text-xs font-semibold">{date}</div>
-               <div className="text-xs font-light">{time}</div>
+      <>
+         <div className="flex flex-col justify-between border border-gray-200 rounded-lg p-2 hover:shadow-sm">
+            <div className="flex flex-col">
+               {/* Order Overview */}
+               <div className="flex items-center justify-between flex-wrap border-b border-gray-200 pb-2">
+                  <div className="bg-blue-50 rounded-lg p-3.5 text-gray-600 font-medium">{`#${order.orderId}`}</div>
+                  <div className="flex flex-col items-end text-gray-600 gap-1">
+                     <PaymentStatus status={order.paymentStatus} />
+                     <div className="text-xs font-semibold">{date}</div>
+                     <div className="text-xs font-light">{time}</div>
+                  </div>
+               </div>
+
+               {/* Order Table */}
+               <OrderDetailsTable
+                  orderDetails={order.orderDetails}
+                  isExpanded={false}
+               />
             </div>
+
+            {/* Action Buttons */}
+            <ActionButtons
+               onEdit={() => openEditModal(order)}
+               onDelete={() => openDeleteModal(order)}
+               onInfo={() => openPaymentModal(order)}
+               isPaid={order.paymentStatus === "paid"}
+            />
          </div>
-
-         {/* Order Table */}
-         <OrderDetailsTable
-            orderDetails={order.orderDetails}
-            isExpanded={false}
-         />
-
-         {/* Action Buttons */}
-         <ActionButtons
-            onEdit={() => openEditModal(order)}
-            onDelete={() => openDeleteModal(order)}
-            onInfo={() => openPaymentModal(order)}
-            isPaid={order.paymentStatus === "paid"}
-         />
-
          {/* Modal for Payment */}
          {modalState?.type === "payment" &&
             modalState.isOpen &&
@@ -197,7 +199,7 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
                onClose={handleCloseAlert}
             />
          )}
-      </div>
+      </>
    );
 };
 

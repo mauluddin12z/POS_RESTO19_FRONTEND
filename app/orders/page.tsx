@@ -67,14 +67,14 @@ export default function Page() {
             </div>
 
             {/* Order List */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2">
                {orders?.data?.length === 0 && !loadingOrders && (
                   <div className="col-span-full text-center text-gray-500">
                      No orders found.
                   </div>
                )}
                {loadingOrders
-                  ? [...Array(4)].map((_, index) => (
+                  ? [...Array(6)].map((_, index) => (
                        <OrderItemLoading key={index} />
                     ))
                   : orders?.data?.map((order: OrderInterface) => (
