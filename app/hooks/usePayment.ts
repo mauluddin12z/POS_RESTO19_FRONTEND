@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AxiosError } from "axios";
 import { updateOrder } from "../api/orderServices";
-import { useGlobalAlert } from "../context/AlertProvider";
+import { useGlobalAlert } from "../context/AlertContext";
 
 interface PaymentPropsInterface {
    orderId: number;

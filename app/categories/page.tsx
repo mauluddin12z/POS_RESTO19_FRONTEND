@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import MainLayout from "../components/layout/MainLayout";
-import { CategoryInterface, UserInterface } from "../types";
+import { CategoryInterface } from "../types";
 import Pagination from "../components/ui/Pagination";
 import Modal from "../components/ui/Modal";
 import Search from "../components/ui/Search";

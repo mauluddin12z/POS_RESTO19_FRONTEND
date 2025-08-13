@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./utils/fontawesome";
-import { AlertProvider } from "./context/AlertProvider";
+import { AlertProvider } from "./context/AlertContext";
+import { AuthProvider } from "./context/AuthContext";
 
 const geistSans = Geist({
    variable: "--font-geist-sans",
@@ -29,7 +30,7 @@ export const viewport = {
    content:
       "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
    themeColor: [
-      { media: "(prefers-color-scheme: dark)", color: "#fff" },
+      { media: "(prefers-color-scheme: dark)", color: "#000" },
       { media: "(prefers-color-scheme: light)", color: "#000" },
    ],
 };
@@ -44,7 +45,9 @@ export default function RootLayout({
          <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
          >
-            <AlertProvider>{children}</AlertProvider>
+            <AuthProvider>
+               <AlertProvider>{children}</AlertProvider>
+            </AuthProvider>
          </body>
       </html>
    );

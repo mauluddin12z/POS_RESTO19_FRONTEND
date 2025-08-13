@@ -1,5 +1,5 @@
 import { createUser, deleteUser, updateUser } from "../api/userServices";
-import { useGlobalAlert } from "../context/AlertProvider";
+import { useGlobalAlert } from "../context/AlertContext";
 import { AddUserFormInterface, EditUserFormInterface } from "../types";
 
 /**

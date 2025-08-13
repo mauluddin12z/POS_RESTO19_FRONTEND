@@ -1,29 +1,34 @@
-"use client";
-import axiosInstance from "@/app/api/axiosInstance";
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import axiosInstance from "../api/axiosInstance";
 
 function useAuth() {
-   const [user, setUser] = useState(null);
+   const [user, setUser] = useState<any | null>(null);
    const [loading, setLoading] = useState(true);
-   const [error, setError] = useState(null);
+   const [error, setError] = useState<any>(null);
 
    useEffect(() => {
-      const checkLogin = async () => {
-         try {
-            const res = await axiosInstance.get("/auth/session");
-            setUser(res.data.user);
-         } catch (err: any) {
-            console.error("Failed to check session:", err);
-            setUser(null)
-            setError(err);
-         } finally {
-            setLoading(false);
-         }
-      };
-      checkLogin();
-   }, []);
+      // If no user is set, no need to fetch session
+      if (!user) {
+         setLoading(true);
+         const checkLogin = async () => {
+            try {
+               const res = await axiosInstance.get("/auth/session");
+               setUser(res.data?.user || null); // Set user data if available
+            } catch (err) {
+               console.error("Failed to check session:", err);
+               setUser(null);
+               setError(err);
+            } finally {
+               setLoading(false);
+            }
+         };
+         checkLogin();
+      } else {
+         setLoading(false);
+      }
+   }, [user]);
 
-   return { user, isLoggedIn: !!user, loading, error };
+   return { user, loading, error };
 }
 
 export default useAuth;

@@ -3,7 +3,7 @@ import {
    deleteCategory,
    updateCategory,
 } from "../api/categoryServices";
-import { useGlobalAlert } from "../context/AlertProvider";
+import { useGlobalAlert } from "../context/AlertContext";
 import { AddCategoryFormInterface, EditCategoryFormInterface } from "../types";
 
 export default function useCategoryActions() {

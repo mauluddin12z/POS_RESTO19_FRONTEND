@@ -32,16 +32,15 @@ export function middleware(req: NextRequest) {
          console.error("Token decoding failed:", error);
       }
 
-      // Role-based authorization: Only allow access to superadmin users for certain routes
-      if (userRole && pathname === "/users" && userRole !== "superadmin") {
+      if (
+         (pathname === "/users" || pathname === "/categories") &&
+         userRole !== "superadmin"
+      ) {
          return NextResponse.redirect(new URL("/unauthorized", req.url));
       }
+      return NextResponse.next();
    }
-
-   // Otherwise, allow the request to continue
-   return NextResponse.next();
 }
-
 export const config = {
    matcher: ["/home", "/orders", "/menus", "/categories", "/users", "/login"],
 };

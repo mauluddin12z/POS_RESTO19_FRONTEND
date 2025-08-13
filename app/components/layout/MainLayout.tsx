@@ -2,8 +2,9 @@
 import React, { ReactNode, useEffect } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import { useGlobalAlert } from "@/app/context/AlertProvider";
+import { useGlobalAlert } from "@/app/context/AlertContext";
 import Alert from "../ui/Alert";
+import { AuthProvider } from "@/app/context/AuthContext";
 
 interface MainLayoutProps {
    children: ReactNode;

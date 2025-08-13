@@ -1,6 +1,6 @@
 import { createMenu, updateMenu, deleteMenu } from "@/app/api/menuServices";
 import { AddMenuFormInterface, EditMenuFormInterface } from "@/app/types";
-import { useGlobalAlert } from "../context/AlertProvider";
+import { useGlobalAlert } from "../context/AlertContext";
 
 /**
  * Custom hook to manage Menu-related actions

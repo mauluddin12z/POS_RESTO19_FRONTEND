@@ -7,7 +7,7 @@ import { useState } from "react";
 import { CartInterface, CartItemInterface, UserInterface } from "../types";
 import { AxiosError } from "axios";
 import useAuth from "./useAuth";
-import { useGlobalAlert } from "../context/AlertProvider";
+import { useGlobalAlert } from "../context/AlertContext";
 
 const useOrderActions = () => {
    const { showAlert } = useGlobalAlert();
