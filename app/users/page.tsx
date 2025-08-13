@@ -6,8 +6,16 @@ import Search from "../components/ui/Search";
 import { useUsers } from "../api/userServices";
 import UserTable from "../components/user/UserTable";
 import AddUserForm from "../components/user/AddUserForm";
+import { redirect } from "next/navigation";
+import useAuth from "../hooks/useAuth";
+import { UserInterface } from "../types";
 
 export default function page() {
+   const { user } = useAuth() as { user: UserInterface | null };
+
+   if (user?.role !== "superadmin") {
+      redirect("/unauthorized");
+   }
    const [searchQuery, setSearchQuery] = useState("");
 
    const { users, isLoading: loadingUsers, mutate } = useUsers();

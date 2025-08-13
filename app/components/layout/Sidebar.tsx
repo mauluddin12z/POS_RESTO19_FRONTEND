@@ -4,38 +4,47 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { logout } from "@/app/api/auth";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../ui/Modal";
 import LoadingButton from "../ui/LoadingButton";
-
-const links = [
-   { href: "/home", label: "Home", icon: "home.svg" },
-   { href: "/orders", label: "Orders", icon: "orders.svg" },
-   { href: "/menus", label: "Menus", icon: "menus.svg" },
-   {
-      href: "/categories",
-      label: "categories",
-      icon: "categories.svg",
-      adminOnly: true,
-   },
-   { href: "/users", label: "Users", icon: "users.svg", adminOnly: true },
-];
+import useAuth from "@/app/hooks/useAuth";
+import { UserInterface } from "@/app/types";
 
 export default function Sidebar() {
    const router = useRouter();
-   const isAdmin = true;
+
+   const { user } = useAuth() as { user: UserInterface | null };
+   const isSuperadmin = user?.role === "superadmin";
+
    const pathname = usePathname();
-   const [isLoggingOut, setIsLoggingLogout] = useState(false);
+   const [isLoggingOut, setIsLoggingOut] = useState(false);
+   const links = [
+      { href: "/home", label: "Home", icon: "home.svg" },
+      { href: "/orders", label: "Orders", icon: "orders.svg" },
+      { href: "/menus", label: "Menus", icon: "menus.svg" },
+      {
+         href: "/categories",
+         label: "Categories",
+         icon: "categories.svg",
+         requiresSuperadmin: true,
+      },
+      {
+         href: "/users",
+         label: "Users",
+         icon: "users.svg",
+         requiresSuperadmin: true,
+      },
+   ];
 
    const handleLogout = async () => {
       try {
-         setIsLoggingLogout(true);
+         setIsLoggingOut(true);
          await logout();
          window.history.replaceState(null, "", "/login");
          router.push("/login");
-         setIsLoggingLogout(false);
+         setIsLoggingOut(false);
       } catch (error: any) {
-         setIsLoggingLogout(false);
+         setIsLoggingOut(false);
          console.error(error.message || "An error occurred.");
       }
    };
@@ -52,7 +61,7 @@ export default function Sidebar() {
       >
          <ul className="space-y-4 font-medium text-sm">
             {links
-               .filter((link) => !(link.adminOnly && !isAdmin))
+               .filter((link) => !link.requiresSuperadmin || isSuperadmin)
                .map((link) => (
                   <li key={link.href}>
                      <Link
@@ -62,7 +71,7 @@ export default function Sidebar() {
                         }`}
                      >
                         <Image
-                           className="w-4 aspect-square "
+                           className="w-4 aspect-square"
                            width={50}
                            height={50}
                            src={`sidebarIcon/${link.icon}`}
@@ -73,6 +82,7 @@ export default function Sidebar() {
                      </Link>
                   </li>
                ))}
+
             <li>
                <button
                   onClick={openLogoutModal}

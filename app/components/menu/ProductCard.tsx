@@ -29,8 +29,7 @@ export default function ProductCard({
 
    return (
       <div
-         className={`flex flex-col h-full w-full duration-200 bg-white border border-gray-200 overflow-hidden rounded-lg shadow-sm relative ${
-            stock > 0 && "hover:scale-[101%]"
+         className={`flex flex-col h-full w-full duration-200 bg-white border border-gray-200 overflow-hidden rounded-lg shadow-sm relative
          }`}
       >
          {/* Overlay if out of stock */}
