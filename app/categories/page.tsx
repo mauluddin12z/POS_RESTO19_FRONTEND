@@ -9,15 +9,8 @@ import { useCategories } from "../api/categoryServices";
 import AddCategoryForm from "../components/category/AddCategoryForm";
 import EditCategoryForm from "../components/category/EditCategoryForm";
 import useCategoryActions from "../hooks/useCategoryActions";
-import useAuth from "../hooks/useAuth";
-import { redirect } from "next/navigation";
 
 export default function page() {
-   const { user } = useAuth() as { user: UserInterface | null };
-
-   if (user?.role !== "superadmin") {
-      redirect("/unauthorized");
-   }
    const [searchQuery, setSearchQuery] = useState("");
    const [filters, setFilters] = useState({
       searchQuery: "",

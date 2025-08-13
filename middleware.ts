@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import jwt from "jsonwebtoken";
 
-// This is a simple example of checking auth via cookies
 export function middleware(req: NextRequest) {
    const token = req.cookies.get("accessToken")?.value;
    const isLoggedIn = !!token;
    const { pathname } = req.nextUrl;
 
-   // If user is not logged in and tries to access a protected route
+   // If no token and accessing protected routes, redirect to login
    if (
       !isLoggedIn &&
       ["/home", "/orders", "/menus", "/categories", "/users"].includes(pathname)
@@ -15,12 +15,30 @@ export function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/login", req.url));
    }
 
-   // If user is logged in and tries to access login page
+   // If user is logged in but trying to access the login page, redirect to home
    if (isLoggedIn && pathname === "/login") {
       return NextResponse.redirect(new URL("/home", req.url));
    }
 
-   // Otherwise, allow request to continue
+   // Check the user's role if they are logged in
+   if (isLoggedIn) {
+      let userRole = null;
+
+      // Decode the token and extract the user's role
+      try {
+         const decodedToken = jwt.decode(token) as { role: string };
+         userRole = decodedToken?.role;
+      } catch (error) {
+         console.error("Token decoding failed:", error);
+      }
+
+      // Role-based authorization: Only allow access to superadmin users for certain routes
+      if (userRole && pathname === "/users" && userRole !== "superadmin") {
+         return NextResponse.redirect(new URL("/unauthorized", req.url));
+      }
+   }
+
+   // Otherwise, allow the request to continue
    return NextResponse.next();
 }
 

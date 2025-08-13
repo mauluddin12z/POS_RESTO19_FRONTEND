@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "../components/layout/MainLayout";
 import Modal from "../components/ui/Modal";
 import Search from "../components/ui/Search";
@@ -11,15 +11,8 @@ import useAuth from "../hooks/useAuth";
 import { UserInterface } from "../types";
 
 export default function page() {
-   const { user } = useAuth() as { user: UserInterface | null };
-
-   if (user?.role !== "superadmin") {
-      redirect("/unauthorized");
-   }
    const [searchQuery, setSearchQuery] = useState("");
-
    const { users, isLoading: loadingUsers, mutate } = useUsers();
-
    const [IsAddModalOpen, setIsAddModalOpen] = useState(false);
    const openAddModal = () => setIsAddModalOpen(true);
    const closeAddModal = () => setIsAddModalOpen(false);
