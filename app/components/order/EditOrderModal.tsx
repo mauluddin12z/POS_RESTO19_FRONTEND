@@ -144,9 +144,9 @@ const EditOrderModal = ({
                         </button>
                         <button
                            onClick={() => {
-                              handleRemove(0);
+                              onClose();
                            }}
-                           className={`w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-200 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer mt-2`}
+                           className={`w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer mt-2`}
                         >
                            Cancel Edit
                         </button>

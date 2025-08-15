@@ -15,12 +15,7 @@ const usePayment = ({ orderId, mutate }: PaymentPropsInterface) => {
    const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-   // Helper function for resetting payment success state
-   const resetPaymentSuccess = () => {
-      setPaymentSuccess(false);
-   };
-
-   const onClosePaymentSuccessAlert = () => setPaymentSuccess(true);
+   const onClosePaymentSuccessAlert = () => setPaymentSuccess(false);
 
    // Validate the payment method
    const isValidPaymentMethod = () => {
@@ -50,7 +45,6 @@ const usePayment = ({ orderId, mutate }: PaymentPropsInterface) => {
          }
 
          setPaymentSuccess(true);
-         setTimeout(resetPaymentSuccess, 3000);
          mutate();
          // Call onClose when payment is successful
          if (onCloseModal) onCloseModal();

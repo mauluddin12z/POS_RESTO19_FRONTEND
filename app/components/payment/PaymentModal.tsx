@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import Modal from "../ui/Modal";
 import { OrderInterface } from "../../types";
 import PaymentMethod from "./PaymentMethod";
@@ -54,7 +54,7 @@ const PaymentModal = ({
                   setPaymentMethod={setPaymentMethod}
                />
                <button
-                  className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white p-2 rounded"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded cursor-pointer"
                   onClick={() => handlePayment(onClose)}
                   disabled={isSubmitting}
                >

@@ -8,12 +8,14 @@ export function formatDateToIndonesian(date: any) {
       year: "numeric", // e.g., "2025"
    }).format(new Date(date));
 
-   const formattedTime = new Intl.DateTimeFormat("id-ID", {
-      hour: "numeric", // e.g., "14"
-      minute: "numeric", // e.g., "30"
-      second: "numeric", // e.g., "00"
-      hour12: false, // Use 24-hour format
-   }).format(new Date(date));
+   // Get the time parts individually
+   const dateObj = new Date(date);
+   const hours = dateObj.getHours().toString().padStart(2, "0");
+   const minutes = dateObj.getMinutes().toString().padStart(2, "0");
+   const seconds = dateObj.getSeconds().toString().padStart(2, "0");
+
+   // Split the time with ":"
+   const formattedTime = `${hours}:${minutes}:${seconds}`;
 
    return { date: formattedDate, time: formattedTime };
 }

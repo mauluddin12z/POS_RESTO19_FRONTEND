@@ -1,16 +1,18 @@
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Reusable component for Action Buttons
 const ActionButtons = ({
    onEdit,
    onDelete,
-   onInfo,
+   onPayBill,
+   onPrintInvoice,
    isPaid,
 }: {
    onEdit: () => void;
    onDelete: () => void;
-   onInfo: () => void;
+   onPayBill: () => void;
+   onPrintInvoice: () => void;
    isPaid: boolean;
 }) => (
    <div className="flex gap-2 mt-2 justify-between">
@@ -30,14 +32,25 @@ const ActionButtons = ({
             <FontAwesomeIcon icon={faTrash} />
          </button>
       </div>
-      {!isPaid && (
-         <button
-            onClick={onInfo}
-            className="border bg-blue-600 rounded-lg text-xs text-white p-2.5 hover:bg-blue-700 hover:text-white cursor-pointer"
-         >
-            Pay Bill
-         </button>
-      )}
+      <div className="flex gap-2">
+         {!isPaid ? (
+            <button
+               onClick={onPayBill}
+               className="border bg-blue-600 rounded-lg text-xs text-white p-2.5 hover:bg-blue-700 hover:text-white cursor-pointer"
+            >
+               Pay Bill
+            </button>
+         ) : (
+            <button
+               className="w-full bg-gray-600 hover:bg-gray-700 text-white p-2 rounded cursor-pointer"
+               onClick={onPrintInvoice}
+            >
+               <div>
+                  <FontAwesomeIcon icon={faPrint} />
+               </div>
+            </button>
+         )}
+      </div>
    </div>
 );
 export default ActionButtons;

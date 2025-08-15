@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
    useEffect(() => {
       // Check if we are on the login page
       if (pathname === "/login") {
-         setLoading(false); // Skip fetching session if on login page
+         setLoading(false);
          return;
       }
 
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       };
 
       fetchUser();
-   }, [pathname]); // Make effect run only when the page path changes
+   }, [pathname]);
 
    const handleLogout = async () => {
       try {

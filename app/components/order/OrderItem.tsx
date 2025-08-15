@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { formatDateToIndonesian } from "../../utils/dateFormat";
 import Modal from "../ui/Modal";
 import { OrderInterface } from "../../types";
@@ -12,6 +12,8 @@ import OrderDetailsTable from "./OrderDetailsTable";
 import EditOrderModal from "./EditOrderModal";
 import LoadingButton from "../ui/LoadingButton";
 import useOrderActions from "@/app/hooks/useOrderActions";
+import Invoice from "../invoice/Invoice";
+import { useReactToPrint } from "react-to-print";
 
 interface OrderItemProps {
    order: OrderInterface;
@@ -64,6 +66,10 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
       await handleDeleteOrder(selectedOrder.orderId, mutate);
    }, [selectedOrder, mutate]);
 
+   const contentRef = useRef<HTMLDivElement>(null);
+
+   const handlePrint = useReactToPrint({ contentRef });
+
    return (
       <>
          <div className="flex flex-col justify-between border border-gray-200 rounded-lg p-2 hover:shadow-sm">
@@ -89,7 +95,8 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
             <ActionButtons
                onEdit={() => openEditModal(order)}
                onDelete={() => openDeleteModal(order)}
-               onInfo={() => openPaymentModal(order)}
+               onPayBill={() => openPaymentModal(order)}
+               onPrintInvoice={() => handlePrint()}
                isPaid={order.paymentStatus === "paid"}
             />
          </div>
@@ -162,8 +169,13 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
             <PaymentSuccessful
                paymentSuccess={paymentSuccess}
                onClose={onClosePaymentSuccessAlert}
+               order={order}
             />
          )}
+         {/* Hidden invoice for printing */}
+         <div className="hidden">
+            <Invoice ref={contentRef} order={order} />
+         </div>
       </>
    );
 };
