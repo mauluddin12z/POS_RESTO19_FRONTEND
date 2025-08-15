@@ -13,7 +13,7 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
    return (
       <div
          ref={ref}
-         className="flex flex-col justify-between border border-gray-200 px-2 py-4"
+         className="flex flex-col justify-between border border-gray-200 p-2"
       >
          <div className="flex flex-col items-center justify-center">
             <div className="font-bold text-base text=center">
@@ -22,14 +22,13 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
             <div className="text-xs text=center">Citraland</div>
          </div>
          <div className="border-b border-dashed my-2 border-gray-400"></div>
-         <div className="flex flex-col">
+         <div className="flex justify-between">
             <div className="flex gap-x-1">
                <div className="text-xs">Order ID:</div>
                <div className="text-xs">{`${order.orderId}`}</div>
             </div>
-            <div className="flex gap-x-1">
-               <div className="text-xs">Date:</div>
-               <div className="flex flex-col">
+            <div className="flex gap-x-1 justify-end">
+               <div className="flex flex-col items-end">
                   <div className="text-xs">{date}</div>
                   <div className="text-xs">{time}</div>
                </div>
@@ -58,20 +57,21 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
                      <td className="py-2">{priceFormat(item.subtotal)}</td>
                   </tr>
                ))}
-               <tr className="font-bold">
-                  <td className="py-2">Total</td>
-                  <td className="py-2"></td>
-                  <td className="py-2">{priceFormat(order.total)}</td>
+               <tr className="font-bold border-b border-dashed border-gray-400">
+                  <td colSpan={2} className="pb-2 text-left">
+                     Total
+                  </td>
+                  <td className="pb-2">{priceFormat(order.total)}</td>
+               </tr>
+               <tr className="font-bold border-b border-dashed border-gray-400">
+                  <td colSpan={2} className="py-2 text-left">
+                     Payment Method
+                  </td>
+                  <td className="py-2">{order.paymentMethod}</td>
                </tr>
             </tbody>
          </table>
-         <div className="border-b border-dashed my-2 border-gray-400"></div>
-         <div className="flex py-2">
-            <div className="text-xs">Payment Method:</div>
-            <div className="text-xs font-bold ml-2">{order.paymentMethod}</div>
-         </div>
-         <div className="border-b border-dashed my-2 border-gray-400"></div>
-         <div className="flex justify-center items-center p-4">
+         <div className="flex justify-center items-center p-2">
             <div className="text-xs">Thank you for your order!</div>
          </div>
          <div className="border-b border-dashed my-2 border-gray-400"></div>

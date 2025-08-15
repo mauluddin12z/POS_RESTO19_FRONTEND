@@ -84,6 +84,7 @@ const useOrderActions = () => {
       orderId: number,
       updatedItems: CartItemInterface[],
       total: string,
+      paymentMethod: string,
       mutate: () => void,
       onCloseModal?: () => void
    ): Promise<void> => {
@@ -91,6 +92,7 @@ const useOrderActions = () => {
       try {
          const formData = new FormData();
          formData.append("total", total);
+         formData.append("paymentMethod", paymentMethod);
          await updateOrder(orderId, formData);
 
          await deleteOrderDetailByOrderId(orderId);

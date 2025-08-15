@@ -2,7 +2,7 @@
 
 export function formatDateToIndonesian(date: any) {
    const formattedDate = new Intl.DateTimeFormat("id-ID", {
-      weekday: "long", // e.g., "Rabu"
+      // weekday: "long", // e.g., "Rabu"
       day: "numeric", // e.g., "27"
       month: "long", // e.g., "Januari"
       year: "numeric", // e.g., "2025"

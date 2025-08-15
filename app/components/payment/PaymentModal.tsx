@@ -42,10 +42,7 @@ const PaymentModal = ({
                </div>
             </div>
 
-            <OrderDetailsTable
-               orderDetails={order.orderDetails}
-               isExpanded={true}
-            />
+            <OrderDetailsTable order={order} isExpanded={true} />
 
             <div className="flex flex-col mt-2 gap-2 justify-between">
                <PaymentMethod

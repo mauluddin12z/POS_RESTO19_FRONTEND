@@ -85,10 +85,7 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
                </div>
 
                {/* Order Table */}
-               <OrderDetailsTable
-                  orderDetails={order.orderDetails}
-                  isExpanded={false}
-               />
+               <OrderDetailsTable order={order} isExpanded={false} />
             </div>
 
             {/* Action Buttons */}
@@ -125,6 +122,10 @@ const OrderItem = ({ order, mutate }: OrderItemProps) => {
                onClose={closeModal}
                selectedOrder={selectedOrder}
                mutate={mutate}
+               paymentOptions={paymentOptions}
+               paymentMethod={paymentMethod}
+               setPaymentMethod={setPaymentMethod}
+               handlePayment={() => handlePayment(closeModal)}
             />
          )}
 

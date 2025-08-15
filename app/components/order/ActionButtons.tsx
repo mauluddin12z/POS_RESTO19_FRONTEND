@@ -17,14 +17,12 @@ const ActionButtons = ({
 }) => (
    <div className="flex gap-2 mt-2 justify-between">
       <div className="flex gap-2">
-         {!isPaid && (
-            <button
-               onClick={onEdit}
-               className="border border-blue-300 rounded-lg text-blue-500 text-xs p-2.5 hover:bg-blue-600 hover:text-white cursor-pointer"
-            >
-               <FontAwesomeIcon icon={faEdit} />
-            </button>
-         )}
+         <button
+            onClick={onEdit}
+            className="border border-blue-300 rounded-lg text-blue-500 text-xs p-2.5 hover:bg-blue-600 hover:text-white cursor-pointer"
+         >
+            <FontAwesomeIcon icon={faEdit} />
+         </button>
          <button
             onClick={onDelete}
             className="border border-red-300 rounded-lg text-red-500 text-xs p-2.5 hover:bg-red-600 hover:text-white cursor-pointer"

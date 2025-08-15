@@ -10,12 +10,17 @@ import { priceFormat } from "@/app/utils/priceFormat";
 import useOrderActions from "@/app/hooks/useOrderActions";
 import AddOrderItemModal from "./AddOrderItemModal";
 import LoadingButton from "../ui/LoadingButton";
+import PaymentMethod from "../payment/PaymentMethod";
 
 interface EditOrderModalProps {
    isOpen: boolean;
    onClose: () => void;
    selectedOrder: OrderInterface;
    mutate: () => void;
+   paymentOptions: string[];
+   paymentMethod: string;
+   setPaymentMethod: (method: string) => void;
+   handlePayment: (onSuccess?: () => void) => void;
 }
 
 const EditOrderModal = ({
@@ -23,6 +28,10 @@ const EditOrderModal = ({
    onClose,
    selectedOrder,
    mutate,
+   paymentOptions,
+   paymentMethod,
+   setPaymentMethod,
+   handlePayment,
 }: EditOrderModalProps) => {
    const {
       cart,
@@ -59,6 +68,7 @@ const EditOrderModal = ({
             cartItems: mappedItems,
             total,
          });
+         setPaymentMethod(selectedOrder.paymentMethod ?? "");
       }
    }, [isOpen, selectedOrder, setCart]);
 
@@ -88,7 +98,6 @@ const EditOrderModal = ({
                      Add Item
                   </button>
                </div>
-
                {cart.cartItems.length === 0 ? (
                   <div className="text-gray-500 text-center px-4 pt-10 pb-14">
                      Your cart is empty.
@@ -111,45 +120,53 @@ const EditOrderModal = ({
                {cart.cartItems.length > 0 && (
                   <>
                      {/* Summary + Order */}
-                     <div className="sticky bottom-0 bg-white pt-2 pb-4 border-t border-gray-200 mt-auto">
-                        <div className="flex justify-between mb-3">
+                     <div className="sticky bottom-0 bg-white pt-2 pb-4 mt-auto">
+                        <div className="flex justify-between mb-2">
                            <span className="text-sm font-medium">Total:</span>
                            <span className="text-sm font-semibold">
                               {priceFormat(parseInt(cart.total))}
                            </span>
                         </div>
-                        <button
-                           onClick={() => {
-                              handleUpdateOrder(
-                                 selectedOrder.orderId,
-                                 cart.cartItems,
-                                 cart.total,
-                                 mutate,
-                                 onClose
-                              );
-                           }}
-                           className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm font-medium ${
-                              isSubmitting
-                                 ? "opacity-50 cursor-not-allowed"
-                                 : "cursor-pointer"
-                           }`}
-                        >
-                           {isSubmitting ? (
-                              <div className="flex gap-2 justify-center items-center">
-                                 <LoadingButton /> Loading...
-                              </div>
-                           ) : (
-                              "Save Changes"
-                           )}
-                        </button>
-                        <button
-                           onClick={() => {
-                              onClose();
-                           }}
-                           className={`w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer mt-2`}
-                        >
-                           Cancel Edit
-                        </button>
+                        <div className="flex flex-col border-t border-gray-200 pt-2">
+                           <PaymentMethod
+                              paymentOptions={paymentOptions}
+                              paymentMethod={paymentMethod}
+                              setPaymentMethod={setPaymentMethod}
+                           />
+                           <button
+                              onClick={() => {
+                                 handleUpdateOrder(
+                                    selectedOrder.orderId,
+                                    cart.cartItems,
+                                    cart.total,
+                                    paymentMethod,
+                                    mutate,
+                                    onClose
+                                 );
+                              }}
+                              className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm font-medium ${
+                                 isSubmitting
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : "cursor-pointer"
+                              }`}
+                           >
+                              {isSubmitting ? (
+                                 <div className="flex gap-2 justify-center items-center">
+                                    <LoadingButton /> Loading...
+                                 </div>
+                              ) : (
+                                 "Save Changes"
+                              )}
+                           </button>
+                           <button
+                              onClick={() => {
+                                 onClose();
+                              }}
+                              className={`w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer mt-2`}
+                           >
+                              Cancel Edit
+                           </button>
+                        </div>
                      </div>
                   </>
                )}

@@ -1,14 +1,15 @@
-import { OrderDetailInterface } from "@/app/types";
+import { OrderDetailInterface, OrderInterface } from "@/app/types";
 import { priceFormat } from "@/app/utils/priceFormat";
 
 // Reusable component for Order Details Table
 const OrderDetailsTable = ({
-   orderDetails,
+   order,
    isExpanded,
 }: {
-   orderDetails: OrderDetailInterface[];
+   order: OrderInterface;
    isExpanded: boolean;
 }) => {
+   const orderDetails = order.orderDetails;
    const displayedDetails = isExpanded
       ? orderDetails
       : orderDetails.slice(0, 4);
@@ -50,11 +51,21 @@ const OrderDetailsTable = ({
                   <td className="pb-2">....</td>
                </tr>
             )}
-            <tr className="bg-white border-gray-200 border-t text-gray-600">
-               <td className="py-2">Total</td>
-               <td className="py-2"></td>
+            <tr className="bg-white border-gray-200 border-t text-gray-600 font-bold">
+               <td colSpan={2} className="text-left py-2">
+                  Total
+               </td>
                <td className="py-2">{priceFormat(total)}</td>
             </tr>
+            {/* Payment Method */}
+            {order.paymentMethod && (
+               <tr className="bg-white border-gray-200 border-t text-gray-600 font-bold">
+                  <td colSpan={2} className="text-left py-2">
+                     Payment Method
+                  </td>
+                  <td className="py-2">{order.paymentMethod}</td>
+               </tr>
+            )}
          </tbody>
       </table>
    );
