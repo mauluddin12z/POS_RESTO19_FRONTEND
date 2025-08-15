@@ -19,19 +19,19 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
             <div className="font-bold text-base text=center">
                Pempek & Resto 19
             </div>
-            <div className="font-light text-xs text=center">Citraland</div>
+            <div className="text-xs text=center">Citraland</div>
          </div>
          <div className="border-b border-dashed my-2 border-gray-400"></div>
          <div className="flex flex-col">
             <div className="flex gap-x-1">
-               <div className="text-xs font-light">Order ID:</div>
-               <div className="text-xs font-bold">{`${order.orderId}`}</div>
+               <div className="text-xs">Order ID:</div>
+               <div className="text-xs">{`${order.orderId}`}</div>
             </div>
             <div className="flex gap-x-1">
-               <div className="text-xs font-light">Date:</div>
+               <div className="text-xs">Date:</div>
                <div className="flex flex-col">
-                  <div className="text-xs font-bold">{date}</div>
-                  <div className="text-xs font-bold">{time}</div>
+                  <div className="text-xs">{date}</div>
+                  <div className="text-xs">{time}</div>
                </div>
             </div>
          </div>
