@@ -88,7 +88,7 @@ const Cart: React.FC<CartPropsInterface> = ({
                      onClick={() => {
                         onOrder(closeCart);
                      }}
-                     className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm font-medium ${
+                     className={`w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded text-sm font-medium ${
                         isSubmitting
                            ? "opacity-50 cursor-not-allowed"
                            : "cursor-pointer"
@@ -99,7 +99,7 @@ const Cart: React.FC<CartPropsInterface> = ({
                            <LoadingButton /> Loading...
                         </div>
                      ) : (
-                        "Add a new order"
+                        "Create a new order"
                      )}
                   </button>
                   <button

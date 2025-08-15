@@ -21,7 +21,7 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
             </div>
             <div className="font-light text-xs text=center">Citraland</div>
          </div>
-         <div className="border-b border-dashed my-2"></div>
+         <div className="border-b border-dashed my-2 border-gray-400"></div>
          <div className="flex flex-col">
             <div className="flex gap-x-1">
                <div className="text-xs font-light">Order ID:</div>
@@ -35,7 +35,7 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
                </div>
             </div>
          </div>
-         <div className="border-b border-dashed my-2"></div>
+         <div className="border-b border-dashed my-2 border-gray-400"></div>
          <table className="w-full text-xs text-center">
             <thead>
                <tr>
@@ -65,16 +65,16 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
                </tr>
             </tbody>
          </table>
-         <div className="border-b border-dashed my-2"></div>
+         <div className="border-b border-dashed my-2 border-gray-400"></div>
          <div className="flex py-2">
             <div className="text-xs">Payment Method:</div>
             <div className="text-xs font-bold ml-2">{order.paymentMethod}</div>
          </div>
-         <div className="border-b border-dashed my-2"></div>
+         <div className="border-b border-dashed my-2 border-gray-400"></div>
          <div className="flex justify-center items-center p-4">
             <div className="text-xs">Thank you for your order!</div>
          </div>
-         <div className="border-b border-dashed my-2"></div>
+         <div className="border-b border-dashed my-2 border-gray-400"></div>
       </div>
    );
 });
