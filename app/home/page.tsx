@@ -34,7 +34,6 @@ export default function Page() {
    const { categories, isLoading: loadingCategories } =
       useCategories(categoryFilters);
    const { menus, isLoading: loadingMenus } = useMenus(filters);
-
    const handleCategoryClick = useCallback((categoryId: number | null) => {
       setFilters((prev) => ({
          ...prev,

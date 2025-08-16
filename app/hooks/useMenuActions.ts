@@ -26,10 +26,10 @@ const useMenuActions = () => {
 
       if (!formData.menuName.trim()) errors.menuName = "Menu name is required.";
       if (!formData.categoryId) errors.categoryId = "Category is required.";
-      if (!formData.stock || formData.stock <= 0)
-         errors.stock = "Stock must be greater than 0.";
-      if (!formData.price || formData.price <= 0)
-         errors.price = "Price must be greater than 0.";
+      if (formData.stock == null || formData.stock < 0)
+         errors.stock = "Stock must be equal to or greater than 0.";
+      if (formData.price == null || formData.price < 0)
+         errors.price = "Price must be equal to or greater than 0.";
 
       return errors;
    };
