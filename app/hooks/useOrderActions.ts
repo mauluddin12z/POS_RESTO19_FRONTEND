@@ -6,12 +6,12 @@ import { createOrder, deleteOrder, updateOrder } from "../api/orderServices";
 import { useState } from "react";
 import { CartInterface, CartItemInterface, UserInterface } from "../types";
 import { AxiosError } from "axios";
-import useAuth from "./useAuth";
 import { useGlobalAlert } from "../context/AlertContext";
+import { useAuth } from "../context/AuthContext";
 
 const useOrderActions = () => {
    const { showAlert } = useGlobalAlert();
-   const { user } = useAuth() as { user: UserInterface | null };
+   const { user } = useAuth()
    const [isSubmitting, setIsSubmitting] = useState(false);
    // Create new order
    const handleOrder = async (
