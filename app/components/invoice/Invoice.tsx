@@ -13,7 +13,7 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
    return (
       <div
          ref={ref}
-         className="flex flex-col justify-between border border-gray-200 p-2"
+         className="flex flex-col justify-between border border-gray-200 p-4"
       >
          <div className="flex flex-col items-center justify-center">
             <div className="font-bold text-base text=center">
@@ -21,7 +21,7 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
             </div>
             <div className="text-xs text=center">Citraland</div>
          </div>
-         <div className="border-b border-dashed my-2 border-gray-400"></div>
+         <div className="border-b border-dashed my-2"></div>
          <div className="flex justify-between">
             <div className="flex gap-x-1">
                <div className="text-xs">Order ID:</div>
@@ -34,7 +34,7 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
                </div>
             </div>
          </div>
-         <div className="border-b border-dashed my-2 border-gray-400"></div>
+         <div className="border-b border-dashed my-2"></div>
          <table className="w-full text-xs text-center">
             <thead>
                <tr>
@@ -57,13 +57,13 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
                      <td className="py-2">{priceFormat(item.subtotal)}</td>
                   </tr>
                ))}
-               <tr className="font-bold border-b border-dashed border-gray-400">
+               <tr className="font-bold border-b border-dashed">
                   <td colSpan={2} className="pb-2 text-left">
                      Total
                   </td>
                   <td className="pb-2">{priceFormat(order.total)}</td>
                </tr>
-               <tr className="font-bold border-b border-dashed border-gray-400">
+               <tr className="font-bold border-b border-dashed">
                   <td colSpan={2} className="py-2 text-left">
                      Payment Method
                   </td>
@@ -74,7 +74,7 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
          <div className="flex justify-center items-center p-2">
             <div className="text-xs">Thank you for your order!</div>
          </div>
-         <div className="border-b border-dashed my-2 border-gray-400"></div>
+         <div className="border-b border-dashed my-2"></div>
       </div>
    );
 });
