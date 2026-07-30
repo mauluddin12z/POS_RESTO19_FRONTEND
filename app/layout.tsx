@@ -42,8 +42,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Fresh Jus Sekip",
-  description: "Fresh Jus Sekip",
+  title: "Pempek Cek Din",
+  description: "Pempek Cek Din",
   generator: "Next.js",
   manifest: "/app/manifest.json",
   icons: [
