@@ -19,7 +19,7 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
       <div className="flex flex-col items-center justify-center">
         <div className="font-bold text-base text=center">Pempek Pindang Cek Din</div>
         <div className="font-bold text-base text=center">&</div>
-        <div className="text-xs text=center">Seblak Cek Din</div>
+        <div className="font-bold text-base text=center">Seblak Cek Din</div>
       </div>
       <div className="border-b border-dashed my-2"></div>
       <div className="flex justify-between">
