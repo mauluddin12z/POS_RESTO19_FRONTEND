@@ -48,6 +48,61 @@ export default function OrderTable({
       page: 1,
     }));
   };
+
+  let tableContent: React.ReactNode;
+
+  if (isLoading) {
+    tableContent = [...new Array(6)].map((_, i) => (
+      <TableRow key={i}>
+        <TableCell colSpan={6}>
+          <div className="w-full h-3.5">
+            <SkeletonLoading />
+          </div>
+        </TableCell>
+      </TableRow>
+    ));
+  } else if (orders.length === 0) {
+    tableContent = (
+      <TableRow>
+        <TableCell
+          colSpan={6}
+          className="h-32 text-center text-muted-foreground"
+        >
+          Tidak ada data pesanan
+        </TableCell>
+      </TableRow>
+    );
+  } else {
+    tableContent = orders.map((o) => (
+      <TableRow
+        key={o.orderId}
+        onClick={() => setSelectedOrderId(o.orderId)}
+        className={`cursor-pointer ${
+          selectedOrderId === o.orderId ? "bg-blue-50" : ""
+        }`}
+      >
+        <TableCell className="p-3 font-semibold">#{o.orderId}</TableCell>
+
+        <TableCell className="p-3 text-muted-foreground">
+          {momentInstance(o.createdAt).format("DD MMMM YYYY HH:mm")}
+        </TableCell>
+
+        <TableCell>{o.user?.name}</TableCell>
+
+        <TableCell className="p-3 text-muted-foreground">
+          {o.orderDetails.length} item
+        </TableCell>
+
+        <TableCell className="p-3 text-left font-bold">
+          {priceFormat(o.total)}
+        </TableCell>
+
+        <TableCell className="text-left">
+          <PaymentStatus status={o.paymentStatus} />
+        </TableCell>
+      </TableRow>
+    ));
+  }
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -94,50 +149,7 @@ export default function OrderTable({
             </TableHead>
           </TableRow>
         </TableHeader>
-
-        <TableBody>
-          {isLoading
-            ? [...Array(6)].map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell colSpan={6}>
-                    <div className="w-full h-3.5">
-                      <SkeletonLoading />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            : orders?.map((o) => (
-                <TableRow
-                  key={o.orderId}
-                  onClick={() => setSelectedOrderId(o.orderId)}
-                  className={`cursor-pointer ${
-                    selectedOrderId === o.orderId ? "bg-blue-50" : ""
-                  }`}
-                >
-                  <TableCell className="p-3 font-semibold">
-                    #{o.orderId}
-                  </TableCell>
-
-                  <TableCell className="p-3 text-muted-foreground">
-                    {momentInstance(o.createdAt).format("DD MMMM YYYY HH:mm")}
-                  </TableCell>
-
-                  <TableCell>{o.user?.name}</TableCell>
-
-                  <TableCell className="p-3 text-muted-foreground">
-                    {o.orderDetails.length} item
-                  </TableCell>
-
-                  <TableCell className="p-3 text-left font-bold">
-                    {priceFormat(o.total)}
-                  </TableCell>
-
-                  <TableCell className="text-left">
-                    <PaymentStatus status={o.paymentStatus} />
-                  </TableCell>
-                </TableRow>
-              ))}
-        </TableBody>
+        <TableBody>{tableContent}</TableBody>
       </Table>
     </div>
   );
