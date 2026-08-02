@@ -9,11 +9,7 @@ import { useCategories } from "@/api/categoryServices";
 import { PageShell } from "@/components/ui/PageShell";
 import MenuTable from "@/components/menu/MenuTable";
 import Search from "@/components/ui/Search";
-import {
-  CategoryInterface,
-  MenuFormInterface,
-  MenuInterface,
-} from "@/types";
+import { CategoryInterface, MenuFormInterface, MenuInterface } from "@/types";
 import MenuForm from "@/components/menu/MenuForm";
 import useMenuActions from "@/hooks/useMenuActions";
 import { priceFormat } from "@/utils/priceFormat";
@@ -35,6 +31,7 @@ const emptyForm: MenuFormInterface = {
   menuDescription: "",
   stock: "0",
   price: "0",
+  isCustomPrice: false,
   menuImage: null as File | null,
   imagePreview: "",
 };
@@ -45,6 +42,7 @@ const mapMenuToForm = (record: MenuInterface): MenuFormInterface => ({
   menuDescription: record.menuDescription ?? "",
   categoryId: String(record.categoryId),
   price: String(record.price),
+  isCustomPrice: record.isCustomPrice,
   stock: String(record.stock),
   menuImage: null,
   imagePreview: record.menuImageUrl ?? "",
@@ -99,11 +97,20 @@ export default function Page() {
   const close = () => setDialog({ mode: "closed" });
 
   // Handle input change
-  const handleChange = useCallback((e: any) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }, []);
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, type } = e.target;
+    const value = (e.target as HTMLInputElement).value;
+    const checked = (e.target as HTMLInputElement).checked;
 
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
   // Handle file input (for image)
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0];

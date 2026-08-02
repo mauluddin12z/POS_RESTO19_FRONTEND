@@ -30,7 +30,7 @@ function TopItemsSkeleton() {
   );
 }
 
-export default function TopItems({ items = [], isLoading }: Props) {
+export default function TopItems({ items = [], isLoading }: Readonly<Props>) {
   if (isLoading) return <TopItemsSkeleton />;
 
   if (!items.length) {

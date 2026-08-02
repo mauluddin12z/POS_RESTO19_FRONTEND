@@ -7,7 +7,6 @@ import { priceFormat } from "@/utils/priceFormat";
 import useOrderActions from "@/hooks/useOrderActions";
 import { useMenus } from "@/api/menuServices";
 import Image from "next/image";
-import { FormSelect } from "../ui/FormSelect";
 import { FormInput } from "../ui/FormInput";
 import { Minus, Plus, Trash2, ShoppingCart, CupSoda } from "lucide-react";
 import PaymentMethod from "../payment/PaymentMethod";
@@ -30,6 +29,7 @@ interface EditLine {
   name: string;
   imageUrl: string;
   price: number;
+  isCustomPrice: boolean;
   quantity: number;
   notes: string;
   stock: number;
@@ -62,6 +62,7 @@ const EditOrderModal = ({
         price: item.price,
         quantity: item.quantity,
         notes: item.notes || "",
+        isCustomPrice: item.menu.isCustomPrice,
         stock: item.menu.stock,
       })),
     );
@@ -84,6 +85,7 @@ const EditOrderModal = ({
         name: "",
         imageUrl: "",
         price: 0,
+        isCustomPrice: false,
         quantity: 1,
         notes: "",
         stock: 0,
@@ -110,12 +112,16 @@ const EditOrderModal = ({
               name: menu.menuName,
               imageUrl: menu.menuImageUrl,
               price: menu.price,
+              isCustomPrice: menu.isCustomPrice,
               stock: menu.stock,
               quantity: 1,
             }
           : line,
       ),
     );
+  };
+  const changePrice = (id: number, price: number) => {
+    setLines((prev) => prev.map((l) => (l.id === id ? { ...l, price } : l)));
   };
 
   const changeQty = (id: number, qty: number) => {
@@ -146,6 +152,7 @@ const EditOrderModal = ({
       name: line.name,
       imageUrl: line.imageUrl,
       price: line.price,
+      isCustomPrice: line.isCustomPrice,
       quantity: line.quantity,
       subtotal: line.price * line.quantity,
       notes: line.notes,
@@ -217,11 +224,36 @@ const EditOrderModal = ({
                 )}
 
                 <div className="space-y-2">
-                  <MenuSearchSelect
-                    value={line.menuId}
-                    menus={menus?.data || []}
-                    onChange={(menuId) => changeMenu(line.id, menuId)}
-                  />
+                  <div className="flex items-center gap-2">
+                    <MenuSearchSelect
+                      value={line.menuId}
+                      menus={menus?.data || []}
+                      onChange={(menuId) => changeMenu(line.id, menuId)}
+                    />
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs text-muted-foreground">Rp</span>
+
+                      {line?.isCustomPrice ? (
+                        <div className="w-24 shrink-0">
+                          <FormInput
+                            type="number"
+                            min={0}
+                            value={line.price}
+                            onChange={(e) =>
+                              changePrice(line.id, Number(e.target.value))
+                            }
+                            placeholder="0"
+                            className="w-full border-primary focus:ring-primary/20 rounded-md"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-24 rounded-md border border-border bg-muted px-3 py-2 text-sm text-muted-foreground text-right">
+                          {priceFormat(line.price)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
                   <FormInput
                     value={line.notes}

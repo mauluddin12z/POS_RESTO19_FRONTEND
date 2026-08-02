@@ -114,7 +114,7 @@ export default function PenjualanPage() {
     const mapped = mapOrders();
 
     exportToCSV({
-      filename: `${momentInstance(Date.now()).format("DD-MM-YYYY")}_Penjualan_${
+      filename: `${momentInstance(Date.now()).format("YYYYMMDD")}_Penjualan_${
         (filters.dateRange && LABELS[filters.dateRange as RangeType]) ||
         `${filters.fromDate}-${filters.toDate}`
       }.csv`,
@@ -145,7 +145,7 @@ export default function PenjualanPage() {
     const mapped = mapOrders();
 
     await exportToXLSX({
-      filename: `${momentInstance(Date.now()).format("DD-MM-YYYY")}_Penjualan_${
+      filename: `${momentInstance(Date.now()).format("YYYYMMDD")}_Penjualan_${
         (filters.dateRange && LABELS[filters.dateRange as RangeType]) ||
         `${filters.fromDate}-${filters.toDate}`
       }.xlsx`,

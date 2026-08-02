@@ -63,6 +63,7 @@ export default function Page() {
     handleAddToCart,
     handleRemove,
     handleQuantityChange,
+    handlePriceChange,
     handleNotesChange,
     stockMessage,
   } = useCart();
@@ -116,10 +117,10 @@ export default function Page() {
         <div className="hidden lg:flex w-96 bg-white sticky top-4 right-0">
           <Cart
             orderId={orders?.data[0]?.orderId}
-            cart={cart}
             cartItems={cart.cartItems}
             onRemove={handleRemove}
             onQuantityChange={handleQuantityChange}
+            onPriceChange={handlePriceChange}
             onNotesChange={handleNotesChange}
             onOrder={() => handleOrder(cart, setCart, mutate, closeCart)}
             stockMessage={stockMessage}
@@ -133,10 +134,10 @@ export default function Page() {
           <Modal isOpen={IsCartOpen} onClose={closeCart}>
             <Cart
               orderId={orders?.data[0]?.orderId}
-              cart={cart}
               cartItems={cart.cartItems}
               onRemove={handleRemove}
               onQuantityChange={handleQuantityChange}
+              onPriceChange={handlePriceChange}
               onNotesChange={handleNotesChange}
               onOrder={() => handleOrder(cart, setCart, mutate, closeCart)}
               stockMessage={stockMessage}

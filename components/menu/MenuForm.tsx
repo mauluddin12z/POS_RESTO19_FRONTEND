@@ -7,7 +7,7 @@ import { FormTextarea } from "../ui/FormTextarea";
 import { FormInput } from "../ui/FormInput";
 import { FormSelect } from "../ui/FormSelect";
 
-interface formErrors {
+interface FormErrors {
   menuName?: string;
   categoryId?: string;
   price?: string;
@@ -16,7 +16,7 @@ interface formErrors {
 
 interface MenuFormProps {
   formData: any;
-  formErrors: formErrors;
+  formErrors: FormErrors;
   handleChange: (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -37,6 +37,7 @@ const MenuForm = ({
 }: MenuFormProps) => {
   const filters = { page: 1, pageSize: 100000 };
   const { categories } = useCategories(filters);
+
   return (
     <form onSubmit={handleSubmit} id="menu-form" className="space-y-5">
       <div className="mb-4 mt-4 flex justify-center">
@@ -50,6 +51,7 @@ const MenuForm = ({
               Upload Gambar
             </span>
           </label>
+
           <input
             id="upload"
             type="file"
@@ -57,11 +59,11 @@ const MenuForm = ({
             onChange={handleFileChange}
             accept="image/*"
           />
-          {/* Show image preview if available */}
+
           {formData.imagePreview && (
             <img
               src={formData.imagePreview}
-              alt="Menu Image Preview"
+              alt="Menu Preview"
               className="mt-2 rounded-md w-full h-auto object-cover"
             />
           )}
@@ -79,6 +81,8 @@ const MenuForm = ({
           disabled={isDisable}
         />
       </Field>
+
+      {/* Description */}
       <Field
         label="Deskripsi"
         htmlFor="menuDescription"
@@ -95,6 +99,7 @@ const MenuForm = ({
       </Field>
 
       <div className="grid gap-4 sm:grid-cols-3">
+        {/* Category */}
         <Field
           label="Kategori"
           htmlFor="categoryId"
@@ -108,22 +113,26 @@ const MenuForm = ({
               name="categoryId"
               disabled={isDisable}
             >
-              <option value={""}>Pilih Kategori</option>
+              <option value="">Pilih Kategori</option>
+
               {categories?.data?.map((c: CategoryInterface) => (
                 <option key={c.categoryId} value={c.categoryId}>
                   {c.categoryName}
                 </option>
               ))}
             </FormSelect>
+
             <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
         </Field>
 
+        {/* Price */}
         <Field label="Harga" htmlFor="price" error={formErrors.price}>
           <div className="relative">
             <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">
               Rp
             </span>
+
             <input
               name="price"
               id="price"
@@ -134,13 +143,14 @@ const MenuForm = ({
               onChange={handleChange}
               placeholder="0"
               className={
-                "w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled={isDisable}:opacity-60" +
-                " pl-9 tabular-nums"
+                "w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-60 pl-9 tabular-nums"
               }
-              disabled={isDisable}
+              disabled={isDisable || formData.isCustomPrice}
             />
           </div>
         </Field>
+
+        {/* Stock */}
         <Field label="Stok" htmlFor="stock" error={formErrors.stock}>
           <FormInput
             name="stock"
@@ -155,6 +165,28 @@ const MenuForm = ({
           />
         </Field>
       </div>
+
+      {/* Custom Price */}
+      <Field label="Harga Custom" htmlFor="isCustomPrice">
+        <div className="flex items-center gap-3">
+          <input
+            id="isCustomPrice"
+            name="isCustomPrice"
+            type="checkbox"
+            checked={formData.isCustomPrice || false}
+            onChange={handleChange}
+            disabled={isDisable}
+            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+          />
+
+          <label
+            htmlFor="isCustomPrice"
+            className="cursor-pointer text-sm text-foreground"
+          >
+            Harga ditentukan saat transaksi
+          </label>
+        </div>
+      </Field>
     </form>
   );
 };

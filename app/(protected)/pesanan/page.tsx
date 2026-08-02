@@ -3,7 +3,7 @@
 import { useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import { useOrders } from "@/api/orderServices";
-import { OrderFilterInterface, OrderInterface, UserInterface } from "@/types";
+import { OrderFilterInterface, OrderInterface } from "@/types";
 import { PageShell } from "@/components/ui/PageShell";
 import Pagination from "@/components/ui/Pagination";
 import OrderDetailPanel from "@/components/order/OrderDetailPanel";
@@ -119,13 +119,9 @@ export default function Page() {
           {/* ================= RIGHT DETAIL (YOUR COMPONENT) ================= */}
           <aside>
             {selected ? (
-              <OrderDetailPanel
-                order={selected}
-                mutate={mutate}
-                loading={loadingOrders}
-              />
+              <OrderDetailPanel order={selected} mutate={mutate} />
             ) : (
-              <div className="rounded-2xl border bg-card p-5 text-gray-500">
+              <div className="rounded-2xl border bg-card p-4 text-gray-500">
                 Pilih pesanan untuk melihat detail
               </div>
             )}

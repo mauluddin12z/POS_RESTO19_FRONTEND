@@ -25,7 +25,11 @@ function RangeFilterSkeleton() {
   );
 }
 
-export default function RangeFilter({ value, onChange, isLoading }: Props) {
+export default function RangeFilter({
+  value,
+  onChange,
+  isLoading,
+}: Readonly<Props>) {
   if (isLoading) return <RangeFilterSkeleton />;
 
   return (

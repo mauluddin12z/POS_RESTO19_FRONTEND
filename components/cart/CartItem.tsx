@@ -1,16 +1,19 @@
 import { CartItemPropsInterface } from "@/types";
 import { priceFormat } from "@/utils/priceFormat";
-import Image, { ImageLoader } from "next/image";
-import React from "react";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
+import { Minus, Plus, Trash2, Pencil, Check } from "lucide-react";
 
 export default function CartItem({
   item,
   stockMessage,
   onQuantityChange,
+  onPriceChange,
   onNotesChange,
   onRemove,
-}: CartItemPropsInterface) {
+}: Readonly<CartItemPropsInterface>) {
+  const [isEditingPrice, setIsEditingPrice] = useState(false);
+  const [draftPrice, setDraftPrice] = useState(item.price.toString());
 
   const handleIncrement = (id: number, qty: number) => {
     onQuantityChange(id, qty + 1);
@@ -23,6 +26,72 @@ export default function CartItem({
       onRemove(id);
     }
   };
+
+  const commitPrice = () => {
+    const parsed = Number(draftPrice);
+    if (!Number.isNaN(parsed) && parsed >= 0) {
+      onPriceChange(item.id, parsed);
+    } else {
+      setDraftPrice(item.price.toString());
+    }
+    setIsEditingPrice(false);
+  };
+
+  const startEditing = () => {
+    setDraftPrice(item.price.toString());
+    setIsEditingPrice(true);
+  };
+
+  const renderPrice = () => {
+    if (!item.isCustomPrice) {
+      return (
+        <div className="mt-0.5 flex items-center gap-1">
+          <span className="text-xs font-bold text-foreground">Rp</span>
+          <p className="text-xs font-bold text-foreground">
+            {priceFormat(item.price)}
+          </p>
+        </div>
+      );
+    }
+
+    if (isEditingPrice) {
+      return (
+        <div className="mt-0.5 flex items-center gap-1">
+          <span className="text-xs font-bold text-foreground">Rp</span>
+          <input
+            type="number"
+            autoFocus
+            min={0}
+            value={draftPrice}
+            onChange={(e) => setDraftPrice(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && commitPrice()}
+            onBlur={commitPrice}
+            className="w-20 rounded-md border border-primary bg-card px-1.5 py-0.5 text-xs font-bold tabular-nums focus:outline-none focus:ring-2 focus:ring-primary/20"
+          />
+          <button
+            onClick={commitPrice}
+            className="flex h-5 w-5 items-center justify-center rounded-full text-primary hover:bg-primary/10"
+          >
+            <Check className="h-3 w-3" />
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mt-0.5 flex items-center gap-1">
+        <span className="text-xs font-bold text-foreground">Rp</span>
+        <button
+          onClick={startEditing}
+          className="flex items-center gap-1 text-xs font-bold text-foreground hover:text-primary"
+        >
+          {priceFormat(item.price)}
+          <Pencil className="h-3 w-3 text-muted-foreground" />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div className="rounded-xl border border-border bg-background p-3">
       <div className="flex items-start gap-3">
@@ -44,9 +113,9 @@ export default function CartItem({
           <p className="truncate text-sm font-semibold text-foreground">
             {item.name}
           </p>
-          <p className="text-xs font-bold text-foreground">
-            {priceFormat(item.price)}
-          </p>
+
+          {/* PRICE / CUSTOM PRICE EDITOR */}
+          {renderPrice()}
 
           {stockMessage && (
             <p className="text-[10px] text-red-500 mt-1">{stockMessage}</p>

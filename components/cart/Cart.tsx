@@ -1,23 +1,20 @@
 "use client";
 
-import { ShoppingCart, Trash2, Minus, Plus } from "lucide-react";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import React from "react";
 import { priceFormat } from "@/utils/priceFormat";
 import LoadingButton from "../ui/LoadingButton";
-import {
-  CartInterface,
-  CartItemInterface,
-  CartItemPropsInterface,
-} from "@/types";
+import { CartInterface, CartItemInterface } from "@/types";
 import CartItem from "./CartItem";
+import { validateCart } from "@/utils/cartValidation";
 
 export interface CartPropsInterface {
   orderId: number | null;
-  cart: CartInterface;
   cartItems: CartItemInterface[];
   stockMessage: string;
   onRemove: (id: number) => void;
   onQuantityChange: (id: number, quantity: number) => void;
+  onPriceChange: (id: number, price: number) => void;
   onNotesChange: (id: number, notes: string) => void;
   onOrder: (onClose: () => void) => void;
   isSubmitting: boolean;
@@ -30,6 +27,7 @@ const Cart: React.FC<CartPropsInterface> = ({
   stockMessage,
   onRemove,
   onQuantityChange,
+  onPriceChange,
   onNotesChange,
   onOrder,
   isSubmitting,
@@ -40,13 +38,17 @@ const Cart: React.FC<CartPropsInterface> = ({
     0,
   );
 
-  const orderNumber = cartItems.length === 0 ? "" : orderId ? orderId + 1 : 1;
+  const orderNumber = cartItems.length === 0 ? "" : (orderId ?? 0) + 1;
 
   const handleClearAll = () => {
     onRemove(0);
     closeCart();
   };
-
+  const cart: CartInterface = {
+    total: "0",
+    cartItems: cartItems,
+  };
+  const validation = validateCart(cart);
   return (
     <aside className="flex w-full h-full flex-col border border-border bg-card">
       {/* HEADER */}
@@ -89,6 +91,7 @@ const Cart: React.FC<CartPropsInterface> = ({
                 <CartItem
                   item={item}
                   stockMessage={stockMessage}
+                  onPriceChange={onPriceChange}
                   onQuantityChange={onQuantityChange}
                   onNotesChange={onNotesChange}
                   onRemove={onRemove}
@@ -111,7 +114,7 @@ const Cart: React.FC<CartPropsInterface> = ({
 
           <button
             onClick={() => onOrder(closeCart)}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !validation.valid}
             className="mb-2 w-full rounded-xl bg-success py-3 text-sm font-semibold text-success-foreground transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           >
             {isSubmitting ? (

@@ -17,7 +17,7 @@ export default function MenuTable({
   loading,
   openEdit,
   openDelete,
-}: MenuPropsInterface) {
+}: Readonly<MenuPropsInterface>) {
   const tableContent = useMemo(
     () =>
       menus?.map((m: MenuInterface) => (

@@ -1,8 +1,4 @@
-import {
-  CartInterface,
-  CartItemInterface,
-  ProductInterface,
-} from "@/types";
+import { AddToCartPayload, CartInterface, CartItemInterface } from "@/types";
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "cart";
@@ -32,14 +28,21 @@ const clampQuantity = (qty: number, stock: number) => {
 const calculateTotals = (cartItems: CartItemInterface[]) => {
   const updatedCartItems = cartItems.map((item) => {
     const subtotal = Number((item.price * item.quantity).toFixed(2));
-    return { ...item, subtotal };
+
+    return {
+      ...item,
+      subtotal,
+    };
   });
 
   const total = updatedCartItems
     .reduce((acc, item) => acc + item.subtotal, 0)
     .toFixed(2);
 
-  return { updatedCartItems, total };
+  return {
+    updatedCartItems,
+    total,
+  };
 };
 
 const useCart = () => {
@@ -49,14 +52,13 @@ const useCart = () => {
   });
 
   const [stockMessage, setStockMessage] = useState("");
+  const [priceMessage, setPriceMessage] = useState("");
 
-  // Load cart ONCE
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     setCart(safeParseCart(stored));
   }, []);
 
-  // Persist cart safely
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
@@ -65,18 +67,37 @@ const useCart = () => {
     }
   }, [cart]);
 
-  const handleAddToCart = (product: ProductInterface) => {
+  const handleAddToCart = ({ product, price, notes }: AddToCartPayload) => {
+    setStockMessage("");
     setCart((prev) => {
-      const existing = prev.cartItems.find((item) => item.id === product.id);
+      const finalPrice = price ?? product.price;
+
+      const existing = prev.cartItems.find(
+        (item) => item.id === product.menuId,
+      );
+
+      if (product.stock <= 0) {
+        setStockMessage(`Maaf, stok "${product.menuName}" sedang habis.`);
+        return prev;
+      }
 
       let updatedItems: CartItemInterface[];
 
       if (existing) {
+        if (existing.quantity >= existing.stock) {
+          setStockMessage(
+            `Stok "${product.menuName}" tidak mencukupi. Maksimal ${existing.stock} item.`,
+          );
+
+          return prev;
+        }
+
         updatedItems = prev.cartItems.map((item) =>
-          item.id === product.id
+          item.id === product.menuId
             ? {
                 ...item,
-                quantity: clampQuantity(item.quantity + 1, item.stock),
+                quantity: item.quantity + 1,
+                price: finalPrice,
               }
             : item,
         );
@@ -84,13 +105,14 @@ const useCart = () => {
         updatedItems = [
           ...prev.cartItems,
           {
-            id: product.id,
-            imageUrl: product.imageUrl,
-            name: product.name,
-            price: product.price,
+            id: product.menuId,
+            imageUrl: product.menuImageUrl,
+            name: product.menuName,
+            price: finalPrice,
+            isCustomPrice: product.isCustomPrice,
             quantity: 1,
-            subtotal: product.price,
-            notes: "",
+            subtotal: finalPrice,
+            notes: notes ?? "",
             stock: product.stock,
           },
         ];
@@ -128,15 +150,23 @@ const useCart = () => {
       return handleRemove(id);
     }
 
+    setStockMessage("");
+
     setCart((prev) => {
-      const updatedItems = prev.cartItems.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: clampQuantity(quantity, item.stock),
-            }
-          : item,
-      );
+      const updatedItems = prev.cartItems.map((item) => {
+        if (item.id !== id) return item;
+
+        if (quantity > item.stock) {
+          setStockMessage(
+            `Stok "${item.name}" hanya tersedia ${item.stock} item.`,
+          );
+        }
+
+        return {
+          ...item,
+          quantity: clampQuantity(quantity, item.stock),
+        };
+      });
 
       const { updatedCartItems, total } = calculateTotals(updatedItems);
 
@@ -151,7 +181,33 @@ const useCart = () => {
   const handleNotesChange = (id: number, notes: string) => {
     setCart((prev) => {
       const updatedItems = prev.cartItems.map((item) =>
-        item.id === id ? { ...item, notes } : item,
+        item.id === id
+          ? {
+              ...item,
+              notes,
+            }
+          : item,
+      );
+
+      const { updatedCartItems, total } = calculateTotals(updatedItems);
+
+      return {
+        ...prev,
+        cartItems: updatedCartItems,
+        total,
+      };
+    });
+  };
+
+  const handlePriceChange = (id: number, price: number) => {
+    setCart((prev) => {
+      const updatedItems = prev.cartItems.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              price,
+            }
+          : item,
       );
 
       const { updatedCartItems, total } = calculateTotals(updatedItems);
@@ -171,6 +227,7 @@ const useCart = () => {
     handleRemove,
     handleQuantityChange,
     handleNotesChange,
+    handlePriceChange,
     stockMessage,
   };
 };

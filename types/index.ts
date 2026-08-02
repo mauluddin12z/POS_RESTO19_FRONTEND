@@ -10,6 +10,7 @@ export interface MenuInterface {
   menuDescription: string;
   menuImageUrl: string;
   price: number;
+  isCustomPrice: boolean;
   stock: number;
   categoryId: number | null;
   category: CategoryInterface;
@@ -19,6 +20,7 @@ export interface MenuFormInterface {
   menuName: string;
   menuDescription: string;
   price: string;
+  isCustomPrice: boolean;
   stock: string;
   categoryId: string | null;
   menuImage?: File | null;
@@ -81,15 +83,6 @@ export interface OrderFilterInterface {
   sort?: string;
 }
 
-// Product Interfaces
-export interface ProductInterface {
-  id: number;
-  imageUrl: string;
-  name: string;
-  price: number;
-  stock: number;
-}
-
 // Cart Interfaces
 export interface CartInterface {
   total: string;
@@ -101,15 +94,23 @@ export interface CartItemInterface {
   imageUrl: string;
   name: string;
   price: number;
+  isCustomPrice: boolean;
   quantity: number;
   subtotal: number;
   notes: string;
   stock: number;
 }
+
+export interface AddToCartPayload {
+  product: MenuInterface;
+  price?: number;
+  notes?: string;
+}
 export interface CartItemPropsInterface {
   item: CartItemInterface;
   stockMessage: string;
   onQuantityChange: (id: number, quantity: number) => void;
+  onPriceChange: (id: number, price: number) => void;
   onNotesChange: (id: number, notes: string) => void;
   onRemove: (id: number) => void;
 }

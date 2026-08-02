@@ -31,7 +31,7 @@ export default function GlobalFilter({
             isLoading={isLoading}
           />
           <div className="md:block hidden h-6 w-px bg-border self-center mx-1" />
-          <div className="flex">
+          <div className="flex space-x-2">
             <Button type="button" variant="default" onClick={exportCSV}>
               <span className="inline-flex items-center gap-2">
                 <Download className="mr-1 h-3.5 w-3.5" /> <span>CSV</span>

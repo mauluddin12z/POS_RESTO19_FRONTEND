@@ -1,16 +1,18 @@
 import Image from "next/image";
 import SkeletonLoading from "../ui/SkeletonLoading";
 import ProductCard from "./ProductCard";
-import { CartInterface, MenuInterface, ProductInterface } from "@/types";
+import { AddToCartPayload, CartInterface, MenuInterface } from "@/types";
 
 export interface MenuGridPropsInterface {
   menus: MenuInterface[];
   loading: boolean;
-  onAddToCart: (product: ProductInterface) => void;
+  onAddToCart: (payload: AddToCartPayload) => void;
   cart: CartInterface;
   onQuantityChange: (id: number, quantity: number) => void;
   grid?: string;
 }
+const SKELETON_ITEMS = Array.from({ length: 12 }, (_, i) => `skeleton-${i}`);
+
 const MenuGrid: React.FC<MenuGridPropsInterface> = ({
   menus,
   loading,
@@ -22,9 +24,9 @@ const MenuGrid: React.FC<MenuGridPropsInterface> = ({
   if (loading) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
-        {[...Array(12)].map((_, index) => (
+        {SKELETON_ITEMS.map((skeletonKey) => (
           <div
-            key={index}
+            key={skeletonKey}
             className="w-full h-fit flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm"
           >
             <div className="w-full h-full">
@@ -61,14 +63,10 @@ const MenuGrid: React.FC<MenuGridPropsInterface> = ({
     <div
       className={`grid gap-2 ${grid ?? "grid-cols-2 md:grid-cols-3 xl:grid-cols-6"}`}
     >
-      {menus?.map((menu, index) => (
+      {menus?.map((menu) => (
         <ProductCard
-          key={index}
-          id={menu.menuId}
-          productName={menu.menuName}
-          productImageUrl={menu.menuImageUrl}
-          productPrice={menu.price}
-          stock={menu.stock}
+          key={menu.menuId}
+          product={menu}
           onAddToCart={onAddToCart}
           cart={cart}
           onQuantityChange={onQuantityChange}

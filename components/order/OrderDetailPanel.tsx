@@ -7,23 +7,20 @@ import PaymentStatus from "../payment/PaymentStatus";
 import usePayment from "@/hooks/usePayment";
 import PaymentSuccessful from "../payment/PaymentSuccessful";
 import ActionButtons from "./ActionButtons";
-import PaymentModal from "../payment/PaymentModal";
 import EditOrderModal from "./EditOrderModal";
 import useOrderActions from "@/hooks/useOrderActions";
 import Invoice from "../invoice/Invoice";
 import { useReactToPrint } from "react-to-print";
 import moment from "moment";
-import momentInstance from "@/utils/momentConfig";
 import Modal from "../ui/Modal";
 import { CreditCard, ReceiptText, Trash2 } from "lucide-react";
-import { Field } from "../ui/Field";
 import PaymentMethod from "../payment/PaymentMethod";
 import { Button } from "../ui/Button";
+import momentInstance from "@/utils/momentConfig";
 
 interface Props {
   order: OrderInterface & { user: UserInterface };
   mutate: () => void;
-  loading?: boolean;
 }
 
 const OrderDetailPanel = ({ order, mutate }: Props) => {
@@ -34,7 +31,6 @@ const OrderDetailPanel = ({ order, mutate }: Props) => {
 
   const {
     handlePayment,
-    isSubmitting: isSubmittingPayment,
     paymentOptions,
     paymentMethod,
     setPaymentMethod,
@@ -65,7 +61,7 @@ const OrderDetailPanel = ({ order, mutate }: Props) => {
   return (
     <>
       {/* ================= DETAIL UI (YOUR STYLE) ================= */}
-      <aside className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sticky top-4">
+      <aside className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sticky top-0">
         {/* HEADER */}
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold">Pesanan #{order.orderId}</h2>
@@ -174,7 +170,9 @@ const OrderDetailPanel = ({ order, mutate }: Props) => {
                   #{order?.orderId}
                 </div>
                 <p className="text-right text-xs text-muted-foreground">
-                  {order?.createdAt.slice(0, 16)}
+                  {momentInstance(order?.createdAt).format(
+                    "DD MMMM YYYY HH:mm",
+                  )}
                 </p>
               </div>
               <div className="mt-3 space-y-2 text-sm">

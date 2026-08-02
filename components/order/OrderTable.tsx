@@ -6,7 +6,6 @@ import { OrderInterface, UserInterface } from "@/types";
 import momentInstance from "@/utils/momentConfig";
 import { priceFormat } from "@/utils/priceFormat";
 import PaymentStatus from "../payment/PaymentStatus";
-import { ArrowDown, ArrowDownUp } from "lucide-react";
 import {
   SortableHeader,
   Table,
@@ -33,7 +32,7 @@ export default function OrderTable({
   setSelectedOrderId,
   updateFilter,
   filters,
-}: OrderTableInterface) {
+}: Readonly<OrderTableInterface>) {
   const handleSort = (field: string) => {
     let newSort = field;
 

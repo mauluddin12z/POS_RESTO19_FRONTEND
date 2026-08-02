@@ -2,11 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "../ui/Modal";
 import MenuGrid from "../menu/MenuGrid";
 import { useMenus } from "@/api/menuServices";
-import {
-  CartInterface,
-  MenuFilterInterface,
-  ProductInterface,
-} from "@/types";
+import { CartInterface, MenuFilterInterface, AddToCartPayload } from "@/types";
 import Pagination from "../ui/Pagination";
 import Search from "../ui/Search";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -14,7 +10,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 interface AddOrderItemModalProps {
   isAddItemModalOpen: boolean;
   closeAddItemModal: () => void;
-  onAddToCart: (product: ProductInterface) => void;
+  onAddToCart: (payload: AddToCartPayload) => void;
   cart: CartInterface;
   onQuantityChange: (id: number, quantity: number) => void;
 }
@@ -25,7 +21,7 @@ export default function AddOrderItemModal({
   onAddToCart,
   cart,
   onQuantityChange,
-}: AddOrderItemModalProps) {
+}: Readonly<AddOrderItemModalProps>) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<MenuFilterInterface>({
     categoryId: null,

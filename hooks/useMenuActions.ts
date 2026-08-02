@@ -29,11 +29,11 @@ const useMenuActions = () => {
       errors.categoryId = "Kategori wajib dipilih.";
     }
 
-    if (isNaN(stock) || stock <= 0) {
+    if (Number.isNaN(stock) || stock <= 0) {
       errors.stock = "Stok harus bernilai 0 atau lebih.";
     }
 
-    if (isNaN(price) || price <= 0) {
+    if (!formData.isCustomPrice && (Number.isNaN(price) || price <= 0)) {
       errors.price = "Harga harus bernilai 0 atau lebih.";
     }
 
@@ -74,6 +74,7 @@ const useMenuActions = () => {
       formDataToSend.append("menuDescription", formData.menuDescription ?? "");
       formDataToSend.append("stock", formData.stock);
       formDataToSend.append("price", formData.price);
+      formDataToSend.append("isCustomPrice", String(formData.isCustomPrice));
 
       if (formData.menuImage instanceof File) {
         formDataToSend.append("menuImage", formData.menuImage);
@@ -133,6 +134,7 @@ const useMenuActions = () => {
       formDataToSend.append("menuDescription", formData.menuDescription);
       formDataToSend.append("categoryId", formData.categoryId || "");
       formDataToSend.append("price", formData.price.toString());
+      formDataToSend.append("isCustomPrice", String(formData.isCustomPrice));
       formDataToSend.append("stock", formData.stock.toString());
 
       if (formData.menuImage instanceof File) {

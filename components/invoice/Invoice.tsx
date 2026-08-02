@@ -17,9 +17,11 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
       className="flex flex-col justify-between border border-gray-200 p-4"
     >
       <div className="flex flex-col items-center justify-center">
-        <div className="font-bold text-base text=center">Pempek Pindang Cek Din</div>
-        <div className="font-bold text-base text=center">&</div>
-        <div className="font-bold text-base text=center">Seblak Cek Din</div>
+        <div className="font-bold text-sm text=center">
+          Pempek Pindang Cek Din
+        </div>
+        <div className="font-bold text-sm text=center">&</div>
+        <div className="font-bold text-sm text=center">Seblak Cek Din</div>
       </div>
       <div className="border-b border-dashed my-2"></div>
       <div className="flex justify-between">
@@ -50,8 +52,8 @@ const Invoice = forwardRef<HTMLDivElement, InvoiceProps>(({ order }, ref) => {
           </tr>
         </thead>
         <tbody>
-          {order.orderDetails.map((item, index) => (
-            <tr key={index}>
+          {order.orderDetails.map((item) => (
+            <tr key={item.orderDetailId}>
               <td className="py-2">{item.quantity}</td>
               <td className="py-2">{item.menu.menuName}</td>
               <td className="py-2">{priceFormat(item.subtotal)}</td>

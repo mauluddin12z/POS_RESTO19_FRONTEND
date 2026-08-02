@@ -1,6 +1,8 @@
 import { InputHTMLAttributes } from "react";
 
-export function FormInput(props: InputHTMLAttributes<HTMLInputElement>) {
+export function FormInput(
+  props: Readonly<InputHTMLAttributes<HTMLInputElement>>,
+) {
   return (
     <input
       {...props}

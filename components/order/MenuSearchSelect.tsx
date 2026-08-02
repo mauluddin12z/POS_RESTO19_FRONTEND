@@ -14,7 +14,7 @@ export default function MenuSearchSelect({
   value,
   menus,
   onChange,
-}: MenuSearchSelectProps) {
+}: Readonly<MenuSearchSelectProps>) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -62,7 +62,7 @@ export default function MenuSearchSelect({
   }, [open]);
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative flex-1">
       {/* Trigger */}
       <button
         type="button"
@@ -70,9 +70,7 @@ export default function MenuSearchSelect({
         className="flex w-full items-center justify-between gap-2 rounded-xl border border-border px-3 py-2 text-left text-sm transition-colors hover:bg-secondary"
       >
         <span className="truncate">
-          {selected
-            ? `${selected.menuName} · ${priceFormat(selected.price)}`
-            : "Pilih menu..."}
+          {selected ? `${selected.menuName}` : "Pilih menu..."}
         </span>
         <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
       </button>
