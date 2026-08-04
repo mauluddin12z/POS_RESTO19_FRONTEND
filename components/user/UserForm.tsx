@@ -51,7 +51,7 @@ const UserForm = ({
             value={formData.name}
             onChange={handleChange}
             maxLength={100}
-            placeholder="Contoh: Andi Pratama"
+            placeholder="Contoh: Kasir Resto"
           />
         </Field>
 

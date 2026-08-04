@@ -37,7 +37,7 @@ export default function MenuTable({
                   unoptimized
                 />
               )}
-              <div>
+              <div className="sm:w-fit w-32">
                 <p className="font-semibold text-gray-900">{m.menuName}</p>
                 {m.menuDescription && (
                   <p className="line-clamp-1 text-xs text-gray-500">

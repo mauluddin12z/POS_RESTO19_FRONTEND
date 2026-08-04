@@ -78,6 +78,7 @@ export default function ProductCard({
               onClick={handleRemove}
               disabled={quantity === 0}
               className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary text-primary transition-colors hover:bg-primary hover:text-primary-foreground disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+              type="button"
             >
               <Minus className="h-4 w-4" />
             </button>
@@ -90,6 +91,7 @@ export default function ProductCard({
               onClick={handleAdd}
               disabled={product.stock === 0}
               className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary text-primary transition-colors hover:bg-primary hover:text-primary-foreground cursor-pointer disabled:cursor-not-allowed"
+              type="button"
             >
               <Plus className="h-4 w-4" />
             </button>
@@ -99,6 +101,7 @@ export default function ProductCard({
             onClick={handleAdd}
             disabled={product.stock === 0}
             className="w-full h-8 rounded-full border-2 border-primary text-primary text-sm font-medium transition-colors hover:bg-primary hover:text-primary-foreground disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+            type="button"
           >
             Order
           </button>
