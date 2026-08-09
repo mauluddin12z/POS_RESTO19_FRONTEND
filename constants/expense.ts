@@ -12,7 +12,7 @@ export const expensePaymentMethods = [
 export const emptyExpenseForm: ExpenseFormInterface = {
   expenseId: "",
   expenseName: "",
-  category: "Bahan Baku",
+  category: "",
   paymentMethod: "Cash",
   amount: "0",
   expenseDate: new Date().toISOString().slice(0, 10),
