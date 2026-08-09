@@ -22,10 +22,10 @@ interface ExpenseFilterBarProps {
   setQuery: (value: string) => void;
   methodFilter: string;
   setMethodFilter: (value: string) => void;
-  startDate: string;
-  setStartDate: (value: string) => void;
-  endDate: string;
-  setEndDate: (value: string) => void;
+  fromDate: string;
+  setFromDate: (value: string) => void;
+  toDate: string;
+  setToDate: (value: string) => void;
   applyPreset: (preset: DatePreset) => void;
   onExportCSV: () => void;
   onExportXLSX: () => void;
@@ -36,10 +36,10 @@ export default function ExpenseFilterBar({
   setQuery,
   methodFilter,
   setMethodFilter,
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
+  fromDate,
+  setFromDate,
+  toDate,
+  setToDate,
   applyPreset,
   onExportCSV,
   onExportXLSX,
@@ -74,18 +74,18 @@ export default function ExpenseFilterBar({
           <CalendarRange className="h-14 w-14 text-muted-foreground" />
           <input
             type="date"
-            value={startDate}
-            max={endDate || undefined}
-            onChange={(e) => setStartDate(e.target.value)}
+            value={fromDate}
+            max={toDate || undefined}
+            onChange={(e) => setFromDate(e.target.value)}
             className={inputClass + " w-auto"}
             aria-label="Tanggal mulai"
           />
           <span className="text-sm text-muted-foreground">s/d</span>
           <input
             type="date"
-            value={endDate}
-            min={startDate || undefined}
-            onChange={(e) => setEndDate(e.target.value)}
+            value={toDate}
+            min={fromDate || undefined}
+            onChange={(e) => setToDate(e.target.value)}
             className={inputClass + " w-auto"}
             aria-label="Tanggal akhir"
           />

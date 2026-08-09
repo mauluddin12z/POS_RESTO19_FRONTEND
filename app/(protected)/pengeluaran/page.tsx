@@ -29,10 +29,10 @@ export default function Page() {
     setQuery,
     methodFilter,
     setMethodFilter,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate,
+    fromDate,
+    setFromDate,
+    toDate,
+    setToDate,
     applyPreset,
     filters,
     setPage,
@@ -84,10 +84,10 @@ export default function Page() {
           setQuery={setQuery}
           methodFilter={methodFilter}
           setMethodFilter={setMethodFilter}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
           applyPreset={applyPreset}
           onExportCSV={() => exportExpensesToCSV(sortedRows)}
           onExportXLSX={() => exportExpensesToXLSX(sortedRows)}
