@@ -75,6 +75,7 @@ export default function Page() {
               <div className="flex flex-wrap gap-1.5">
                 {statusFilters.map((s) => (
                   <button
+                    type="button"
                     key={s}
                     onClick={() => handleStatusFilter(s)}
                     className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${

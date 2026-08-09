@@ -4,6 +4,15 @@ export interface CategoryInterface {
   categoryName: string;
 }
 
+export interface ExpenseInterface {
+  expenseId: string;
+  expenseName: string;
+  category: string;
+  paymentMethod: string;
+  amount: string;
+  expenseDate: string;
+  description: string;
+}
 export interface MenuInterface {
   menuId: number;
   menuName: string;
@@ -25,6 +34,15 @@ export interface MenuFormInterface {
   categoryId: string | null;
   menuImage?: File | null;
   imagePreview?: string;
+}
+export interface ExpenseFormInterface {
+  expenseId?: string;
+  expenseName: string;
+  category: string;
+  paymentMethod: string;
+  amount: string;
+  expenseDate: string;
+  description: string;
 }
 export interface CategoryFormInterface {
   categoryId?: string;
@@ -52,6 +70,19 @@ export interface MenuFilterInterface {
   menuName?: string;
   searchQuery?: string;
   price?: {
+    gte?: number | null;
+    lte?: number | null;
+  };
+  sort?: string;
+  page: number;
+  pageSize: number;
+}
+export interface ExpenseFilterInterface {
+  expenseName?: string;
+  category?: string;
+  paymentMethod?: string;
+  searchQuery?: string;
+  amount?: {
     gte?: number | null;
     lte?: number | null;
   };

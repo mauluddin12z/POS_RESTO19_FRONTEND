@@ -17,15 +17,24 @@ import ExpenseFormModal from "@/components/expense/ExpenseFormModal";
 import DeleteExpenseModal from "@/components/expense/DeleteExpenseModal";
 
 import { ExpenseInterface } from "@/types";
+import {
+  exportExpensesToCSV,
+  exportExpensesToXLSX,
+} from "@/constants/exportExpenses";
 
 export default function Page() {
-  // Search / category / payment method filters
+  // Search / category / payment method / date range filters
   const {
-    searchQuery,
-    setSearchQuery,
+    query,
+    setQuery,
+    methodFilter,
+    setMethodFilter,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    applyPreset,
     filters,
-    setCategory,
-    setPaymentMethod,
     setPage,
   } = useExpenseFilters();
 
@@ -71,12 +80,17 @@ export default function Page() {
         <ExpenseStats rows={rows} />
 
         <ExpenseFilterBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          category={filters.category}
-          paymentMethod={filters.paymentMethod}
-          onCategoryChange={setCategory}
-          onPaymentMethodChange={setPaymentMethod}
+          query={query}
+          setQuery={setQuery}
+          methodFilter={methodFilter}
+          setMethodFilter={setMethodFilter}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          applyPreset={applyPreset}
+          onExportCSV={() => exportExpensesToCSV(sortedRows)}
+          onExportXLSX={() => exportExpensesToXLSX(sortedRows)}
         />
 
         <ExpenseTable

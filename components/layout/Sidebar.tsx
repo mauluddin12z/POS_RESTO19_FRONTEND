@@ -12,6 +12,7 @@ import {
   Users,
   LogOut,
   ArrowLeft,
+  Wallet,
 } from "lucide-react";
 
 import Modal from "../ui/Modal";
@@ -53,6 +54,12 @@ export default function Sidebar() {
       roles: ["admin", "superadmin"],
     },
     {
+      label: "Pengeluaran",
+      icon: Wallet,
+      href: "/pengeluaran",
+      roles: ["admin", "superadmin"],
+    },
+    {
       label: "Menu",
       icon: ListOrdered,
       href: "/menu",
@@ -74,7 +81,7 @@ export default function Sidebar() {
 
   const handleLogoutClick = async () => {
     setIsLoggingOut(true);
-    await handleLogout();
+    handleLogout();
     router.push("/login");
   };
 
@@ -82,7 +89,7 @@ export default function Sidebar() {
     return (
       <aside className="flex w-20 flex-col items-center justify-between border-r border-border bg-card py-4">
         <div className="flex flex-col gap-2">
-          {[...Array(5)].map((_, i) => (
+          {[...new Array(6)].map((_, i) => (
             <div
               key={i}
               className="w-16 h-14 rounded-xl bg-gray-200 animate-pulse"
@@ -118,6 +125,7 @@ export default function Sidebar() {
 
         {/* LOGOUT */}
         <button
+          type="button"
           onClick={() => setIsLogoutModalOpen(true)}
           className={`${baseClass} ${inactive} mb-8`}
         >
