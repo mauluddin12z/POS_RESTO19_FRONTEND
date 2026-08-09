@@ -26,6 +26,14 @@ export const MESSAGES = {
     UPDATE_FAILED: "Gagal memperbarui pesanan.",
     DELETE_FAILED: "Gagal menghapus pesanan.",
   },
+  EXPENSE: {
+    CREATE_SUCCESS: "Pengeluaran berhasil dibuat.",
+    UPDATE_SUCCESS: "Pengeluaran berhasil diperbarui.",
+    DELETE_SUCCESS: "Pengeluaran berhasil dihapus.",
+    CREATE_FAILED: "Gagal membuat Pengeluaran.",
+    UPDATE_FAILED: "Gagal memperbarui Pengeluaran.",
+    DELETE_FAILED: "Gagal menghapus Pengeluaran.",
+  },
 
   PAYMENT: {
     REQUIRED_METHOD: "Silakan pilih metode pembayaran.",

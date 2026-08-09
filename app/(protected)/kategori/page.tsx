@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import { CategoryFormInterface, CategoryInterface } from "@/types";
 import Pagination from "@/components/ui/Pagination";
@@ -129,6 +129,7 @@ export default function Page() {
         description="Kelompokkan menu Anda untuk navigasi yang lebih cepat"
         actions={
           <button
+            type="button"
             onClick={openCreate}
             className="flex items-center gap-1 rounded-lg bg-primary hover:opacity-90 px-3 py-2 text-sm font-semibold text-white cursor-pointer transition-colors"
           >
@@ -164,6 +165,7 @@ export default function Page() {
 
                   <div className="mt-4 flex gap-2 border-t border-border pt-4">
                     <button
+                      type="button"
                       onClick={() => openEdit(category)}
                       className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-border py-2 text-xs font-semibold transition hover:bg-primary hover:text-primary-foreground hover:border-primary cursor-pointer"
                     >

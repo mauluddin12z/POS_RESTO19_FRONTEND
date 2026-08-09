@@ -178,6 +178,7 @@ export default function Page() {
         description="Kelola daftar menu dan harga produk"
         actions={
           <button
+            type="button"
             onClick={openCreate}
             className="flex items-center gap-1 rounded-lg bg-primary hover:opacity-90 px-3 py-2 text-sm font-semibold text-white cursor-pointer transition-colors"
           >
@@ -196,6 +197,7 @@ export default function Page() {
             />
             <div className="flex flex-wrap gap-1.5">
               <button
+                type="button"
                 onClick={() =>
                   setFilters((prev) => ({
                     ...prev,
@@ -213,6 +215,7 @@ export default function Page() {
               </button>
               {categories?.data?.map((c: CategoryInterface) => (
                 <button
+                  type="button"
                   key={c.categoryId}
                   onClick={() =>
                     setFilters((prev: any) => ({
