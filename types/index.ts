@@ -64,6 +64,7 @@ export interface CategoryFilterInterface {
   sort?: string;
   page: number;
   pageSize: number;
+  allFromPage?: boolean;
 }
 export interface MenuFilterInterface {
   categoryId?: number | null | { in?: number[] };
@@ -76,6 +77,7 @@ export interface MenuFilterInterface {
   sort?: string;
   page: number;
   pageSize: number;
+  allFromPage?: boolean;
 }
 export interface ExpenseFilterInterface {
   expenseName?: string;
@@ -89,11 +91,13 @@ export interface ExpenseFilterInterface {
   sort?: string;
   page: number;
   pageSize: number;
+  allFromPage?: boolean;
 }
 
 export interface OrderFilterInterface {
   page: number;
   pageSize: number;
+  allFromPage?: boolean;
 
   searchQuery?: string;
 
@@ -187,6 +191,7 @@ export interface PaginationPropsInterface {
   totalPages: number;
   currentPage: number;
   pageSize: number;
+  allFromPage?: boolean;
   hasNextPage: boolean;
   isLoading: boolean;
   onPageChange: (page: number) => void;

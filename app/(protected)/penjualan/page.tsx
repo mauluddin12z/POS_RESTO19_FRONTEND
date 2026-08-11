@@ -33,8 +33,8 @@ export default function PenjualanPage() {
   const { filters, updateFilter, setDate, setDateRange } = useGlobalFilter();
   const [searchQuery, setSearchQuery] = useState("");
   const { orders, isLoading } = useOrders(filters);
-  const { orders: analyticsData } = useOrders({ ...filters, pageSize: 100000 });
-  const { orders: exportedFile } = useOrders({ ...filters, pageSize: 100000 });
+  const { orders: analyticsData } = useOrders({ ...filters, allFromPage: true });
+  const { orders: exportedFile } = useOrders({ ...filters, allFromPage: true });
   const analyticsDataList = analyticsData?.data ?? [];
   const orderList = orders?.data ?? [];
 

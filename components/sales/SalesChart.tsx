@@ -35,7 +35,7 @@ export default function SalesChart({ data, title, isLoading }: Props) {
         <ResponsiveContainer width="100%" height={256}>
           <BarChart data={data}>
             <XAxis dataKey="label" tick={{ fontSize: 12 }} />
-            <YAxis tickFormatter={(v) => v.toLocaleString()} />
+            <YAxis tickFormatter={(v) => v.toLocaleString()} tick={{ fontSize: 10 }}/>
             <Tooltip
               contentStyle={{ borderRadius: 8 }}
               formatter={(v: any) => priceFormat(v)}

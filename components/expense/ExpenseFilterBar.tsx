@@ -51,7 +51,7 @@ export default function ExpenseFilterBar({
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Cari judul, vendor, atau catatan…"
+          placeholder="Cari data pengeluaran, atau catatan…"
           className={inputClass + " pl-9"}
         />
       </div>
