@@ -26,7 +26,7 @@ export default function Page() {
       gte: null,
       lte: null,
     },
-    sort: "-categoryId",
+    sort: "-orderCount",
     page: 1,
     pageSize: 12,
   });
